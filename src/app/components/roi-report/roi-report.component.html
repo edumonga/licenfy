@@ -1,0 +1,152 @@
+<div class="roi-container">
+  <!-- Header -->
+  <div class="roi-header">
+    <div>
+      <div class="subtitle-badge">
+        <span class="material-symbols-rounded icon-sm">trending_up</span>
+        Retorno Financeiro Mensurável
+      </div>
+      <h1 class="page-title">Relatório de Economia Gerada (ROI)</h1>
+      <p class="page-desc">Painel executivo que contabiliza a economia gerada ao acionar garantias dentro do prazo e evitar multas regulatórias e paralisações.</p>
+    </div>
+  </div>
+
+  <!-- Big Number ROI Banner -->
+  <div class="roi-hero-card">
+    <div class="roi-hero-main">
+      <span class="hero-label">ECONOMIA TOTAL ACUMULADA PELA PLATAFORMA</span>
+      <div class="hero-val">R$ {{ roi().totalFinancialGain | number:'1.2-2' }}</div>
+      <p class="hero-desc">
+        Ganhos auditados combinando multas regulatórias eliminadas, peças em garantia acionadas e horas operacionais reduzidas nas filiais.
+      </p>
+    </div>
+
+    <div class="roi-hero-stats">
+      <div class="hero-stat-pill">
+        <span class="stat-pill-label">Multiplicador de ROI</span>
+        <span class="stat-pill-val text-primary">{{ roiMultiplier }}</span>
+      </div>
+      <div class="hero-stat-pill">
+        <span class="stat-pill-label">Retorno Líquido</span>
+        <span class="stat-pill-val">R$ {{ netRoi | number:'1.2-2' }}</span>
+      </div>
+      <div class="hero-stat-pill">
+        <span class="stat-pill-label">Horas Poupadas</span>
+        <span class="stat-pill-val">{{ roi().operationalHoursSaved }}h</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- 3 Blocos de Detalhamento de Economia -->
+  <div class="roi-kpi-grid">
+    <!-- Bloco 1: Multas Evitadas -->
+    <div class="roi-kpi-card">
+      <div class="kpi-top">
+        <div class="kpi-icon-box regular">
+          <span class="material-symbols-rounded">gavel</span>
+        </div>
+        <span class="kpi-badge">Prevenção Legal</span>
+      </div>
+      <div class="kpi-value">R$ {{ roi().totalFinesAvoided | number:'1.2-2' }}</div>
+      <h3 class="kpi-title">Multas Regulatórias Evitadas</h3>
+      <p class="kpi-desc">Valor calculado com base nas tabelas de infração dos órgãos (Prefeituras, Bombeiros, ANVISA e Órgãos Ambientais).</p>
+    </div>
+
+    <!-- Bloco 2: Garantias Acionadas -->
+    <div class="roi-kpi-card">
+      <div class="kpi-top">
+        <div class="kpi-icon-box primary">
+          <span class="material-symbols-rounded">verified</span>
+        </div>
+        <span class="kpi-badge">Gestão de Ativos</span>
+      </div>
+      <div class="kpi-value">R$ {{ roi().warrantiesTriggeredSavings | number:'1.2-2' }}</div>
+      <h3 class="kpi-title">Peças e Reparos em Garantia</h3>
+      <p class="kpi-desc">Serviços e trocas de componentes realizadas sem custo ao consultar a nota fiscal e vigência via QR Code.</p>
+    </div>
+
+    <!-- Bloco 3: Horas Operacionais -->
+    <div class="roi-kpi-card">
+      <div class="kpi-top">
+        <div class="kpi-icon-box dark">
+          <span class="material-symbols-rounded">hourglass_top</span>
+        </div>
+        <span class="kpi-badge">Eficiência B2B</span>
+      </div>
+      <div class="kpi-value">{{ roi().operationalHoursSaved }} horas</div>
+      <h3 class="kpi-title">Tempo de Equipe Otimizado</h3>
+      <p class="kpi-desc">Eliminação de planilhas manuais e digitação burocrática pelo uso do OCR inteligente e alertas automáticos.</p>
+    </div>
+  </div>
+
+  <!-- Tabelas de Detalhamento: Multas Prevenidas e Garantias Acionadas -->
+  <div class="roi-tables-grid">
+    <!-- Tabela 1: Multas Prevenidas -->
+    <div class="roi-sub-card">
+      <div class="sub-card-header">
+        <span class="material-symbols-rounded text-primary">security</span>
+        <div>
+          <h3 class="sub-card-title">Autuações e Multas Prevenidas</h3>
+          <p class="sub-card-desc">Obrigações renovadas dentro do prazo antes da autuação</p>
+        </div>
+      </div>
+
+      <div class="table-responsive">
+        <table class="roi-table">
+          <thead>
+            <tr>
+              <th>Obrigação / Licença</th>
+              <th>Órgão</th>
+              <th>Filial</th>
+              <th class="text-right">Multa Evitada</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let f of roi().finesAvoidedList">
+              <td><strong>{{ f.licenseTitle }}</strong></td>
+              <td>{{ f.regulatoryBody }}</td>
+              <td>{{ f.branchName }}</td>
+              <td class="text-right text-regular font-bold">
+                + R$ {{ f.estimatedFine | number:'1.2-2' }}
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Tabela 2: Garantias Acionadas -->
+    <div class="roi-sub-card">
+      <div class="sub-card-header">
+        <span class="material-symbols-rounded text-primary">build</span>
+        <div>
+          <h3 class="sub-card-title">Garantias de Ativos Acionadas a Tempo</h3>
+          <p class="sub-card-desc">Economia em manutenções cobertas pelo fabricante</p>
+        </div>
+      </div>
+
+      <div class="table-responsive">
+        <table class="roi-table">
+          <thead>
+            <tr>
+              <th>Equipamento</th>
+              <th>Componente / Serviço</th>
+              <th>Data</th>
+              <th class="text-right">Economia Gerada</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let w of roi().warrantiesSavedList">
+              <td><strong>{{ w.assetName }}</strong></td>
+              <td>{{ w.partOrService }}</td>
+              <td>{{ w.dateClaimed }}</td>
+              <td class="text-right text-primary font-bold">
+                + R$ {{ w.valueSaved | number:'1.2-2' }}
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>

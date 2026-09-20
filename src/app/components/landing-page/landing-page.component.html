@@ -1,0 +1,462 @@
+<!-- Barra de Notificação Superior Corporativa com Onda Azul à Esquerda -->
+<div class="announcement-bar">
+  <!-- Onda Orgânica Azul à Esquerda igual ao print do Pipefy -->
+  <div class="announcement-wave-left"></div>
+  
+  <div class="announcement-content">
+    <span class="announcement-text">
+      Licenfy é reconhecida pela gestão e automação de licenças e alvarás pelo Gartner®
+    </span>
+    <button class="announcement-btn" (click)="openDemoModal()">Saiba mais</button>
+  </div>
+</div>
+
+<!-- Header / Barra de Navegação -->
+<header class="main-header">
+  <div class="header-container">
+    <div class="header-left">
+      <!-- Logo Oficial Licenfy -->
+      <a href="#" (click)="$event.preventDefault()" class="brand-logo" title="Licenfy">
+        <img src="logo.png" alt="Licenfy" class="logo-img" />
+      </a>
+
+      <!-- Menu de Navegação -->
+      <nav class="nav-menu">
+        <div class="nav-dropdown">
+          <button class="nav-link">
+            Plataforma
+            <span class="material-symbols-rounded chevron">expand_more</span>
+          </button>
+        </div>
+        <div class="nav-dropdown">
+          <button class="nav-link">
+            Soluções
+            <span class="material-symbols-rounded chevron">expand_more</span>
+          </button>
+        </div>
+        <div class="nav-dropdown">
+          <button class="nav-link">
+            Indústrias
+            <span class="material-symbols-rounded chevron">expand_more</span>
+          </button>
+        </div>
+        <a href="#modulos" class="nav-link">Módulos</a>
+        <div class="nav-dropdown">
+          <button class="nav-link">
+            Recursos
+            <span class="material-symbols-rounded chevron">expand_more</span>
+          </button>
+        </div>
+        <a href="#roi" class="nav-link">Planos</a>
+      </nav>
+    </div>
+
+    <div class="header-right">
+      <button class="lang-selector" title="Português do Brasil">
+        <span class="material-symbols-rounded">language</span>
+      </button>
+
+      <button class="btn-text" (click)="goToApp('dashboard')">
+        Entrar
+      </button>
+
+      <button class="btn-primary-pill" (click)="goToApp('dashboard')">
+        Teste grátis
+      </button>
+    </div>
+  </div>
+</header>
+
+<!-- Hero Section Exatamente no Estilo Pipefy com Animações Fluidas -->
+<section class="hero-section">
+  <!-- Formas Orgânicas Azuis Animadas (Pipefy Signature Shapes) -->
+  <div class="hero-bg-shape-right floating-shape"></div>
+  <div class="hero-bg-shape-left floating-shape-slow"></div>
+
+  <div class="hero-container">
+    <!-- Coluna Esquerda: Headline & Chamadas Alinhadas à Esquerda -->
+    <div class="hero-content">
+      <h1 class="hero-title">Com workflows, OCR e automação, a blindagem regulatória começa em 5 minutos</h1>
+
+      <p class="hero-subtitle">
+        O Licenfy é a forma mais simples e ágil de centralizar suas licenças, alvarás e ativos com o poder do monitoramento contínuo e réguas no WhatsApp.
+      </p>
+
+      <div class="hero-cta-group">
+        <button class="btn-cta-blue" (click)="openDemoModal()">
+          <span>Agende uma demo</span>
+          <span class="material-symbols-rounded arrow-icon">north_east</span>
+        </button>
+
+        <button class="btn-cta-light" (click)="goToApp('dashboard')">
+          <span>Teste grátis</span>
+        </button>
+      </div>
+
+      <!-- Quick Trust Indicators -->
+      <div class="hero-trust-badges">
+        <div class="trust-item">
+          <span class="material-symbols-rounded text-success">check_circle</span>
+          <span>Zero risco de interdição nas filiais</span>
+        </div>
+        <div class="trust-item">
+          <span class="material-symbols-rounded text-success">check_circle</span>
+          <span>OCR de alvarás em PDF com 99.4% de precisão</span>
+        </div>
+        <div class="trust-item">
+          <span class="material-symbols-rounded text-success">check_circle</span>
+          <span>Pronto para redes com 1 a 100+ unidades</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Coluna Direita: Carrossel de Imagens dos Recursos e Soluções Licenfy -->
+    <div class="hero-carousel-wrapper" (mouseenter)="stopCarouselAutoPlay()" (mouseleave)="startCarouselAutoPlay()">
+      <div class="hero-image-carousel-card floating-card">
+        
+        <!-- Viewport do Carrossel com as 3 Imagens -->
+        <div class="carousel-viewport">
+          <div class="carousel-track" [style.transform]="'translateX(-' + (currentSlideIndex() * 100) + '%)'">
+            @for (slide of slides; track slide.id; let i = $index) {
+              <div class="carousel-slide-item" [class.active]="currentSlideIndex() === i">
+                <img 
+                  [src]="slide.image" 
+                  [alt]="slide.alt"
+                  class="carousel-img" 
+                  loading="eager"
+                  (click)="goToApp('dashboard')"
+                  title="Clique para testar o Licenfy"
+                />
+              </div>
+            }
+          </div>
+
+          <!-- Botões de Navegação Direta Sobrepostos -->
+          <button 
+            type="button" 
+            class="carousel-arrow-btn prev" 
+            (click)="prevSlide()" 
+            aria-label="Slide anterior"
+            title="Slide anterior">
+            <span class="material-symbols-rounded">chevron_left</span>
+          </button>
+
+          <button 
+            type="button" 
+            class="carousel-arrow-btn next" 
+            (click)="nextSlide()" 
+            aria-label="Próximo slide"
+            title="Próximo slide">
+            <span class="material-symbols-rounded">chevron_right</span>
+          </button>
+        </div>
+
+        <!-- Barra Inferior com Indicadores e Abas Interativas -->
+        <div class="carousel-bottom-bar">
+          <div class="carousel-nav-tabs">
+            @for (slide of slides; track slide.id; let i = $index) {
+              <button 
+                type="button"
+                class="c-pill-btn" 
+                [class.active]="currentSlideIndex() === i"
+                (click)="setSlide(i)"
+                [title]="slide.title">
+                <span class="pill-dot"></span>
+                <span class="pill-title">{{ slide.title }}</span>
+              </button>
+            }
+          </div>
+
+          <!-- Indicador Numérico -->
+          <div class="carousel-counter-badge">
+            {{ currentSlideIndex() + 1 }} / {{ slides.length }}
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Seção: "Escolhido por líderes de mercado" (Social Proof) -->
+<section class="social-proof-section">
+  <div class="section-container">
+    <h3 class="social-proof-title">Escolhido por líderes com alta complexidade regulatória em todo o Brasil</h3>
+    
+    <div class="logos-grid">
+      <div class="logo-box">
+        <span class="material-symbols-rounded logo-icon">storefront</span>
+        <span class="logo-text">REDE VAREJO S.A.</span>
+      </div>
+      <div class="logo-box">
+        <span class="material-symbols-rounded logo-icon">local_shipping</span>
+        <span class="logo-text">LOGÍSTICA BRASIL</span>
+      </div>
+      <div class="logo-box">
+        <span class="material-symbols-rounded logo-icon">factory</span>
+        <span class="logo-text">INDÚSTRIA ALFA</span>
+      </div>
+      <div class="logo-box">
+        <span class="material-symbols-rounded logo-icon">local_hospital</span>
+        <span class="logo-text">HEALTH & PHARMA</span>
+      </div>
+      <div class="logo-box">
+        <span class="material-symbols-rounded logo-icon">apartment</span>
+        <span class="logo-text">GRUPO ENGENHARIA</span>
+      </div>
+      <div class="logo-box">
+        <span class="material-symbols-rounded logo-icon">bolt</span>
+        <span class="logo-text">ENERGIA & SANEAMENTO</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Seção de Recursos Principais (Módulos do Licenfy) -->
+<section id="modulos" class="features-section">
+  <div class="section-container">
+    <div class="section-badge-header">
+      <span class="badge-pill">BLINDAGEM COMPLETA</span>
+      <h2 class="section-headline">Da gaveta ao controle absoluto em 4 pilares</h2>
+      <p class="section-subheadline">
+        O fim do pesadelo das planilhas esquecidas, multas municipais e surpresas na hora da fiscalização.
+      </p>
+    </div>
+
+    <div class="features-grid">
+      <!-- Card 1: OCR Automatizado -->
+      <div class="feature-card hover-lift" (click)="goToApp('vault')">
+        <div class="feature-icon-wrapper bg-blue-subtle">
+          <span class="material-symbols-rounded text-primary">document_scanner</span>
+        </div>
+        <h3 class="feature-title">Cofre Digital & OCR Automatizado</h3>
+        <p class="feature-desc">
+          Basta arrastar o PDF do alvará. O sistema de OCR lê e cataloga automaticamente órgão emissor, datas de emissão e vencimento, além de condicionantes técnicas.
+        </p>
+        <div class="feature-link">
+          <span>Explorar Cofre Digital</span>
+          <span class="material-symbols-rounded">arrow_forward</span>
+        </div>
+      </div>
+
+      <!-- Card 2: Dossiê Fiscalização -->
+      <div class="feature-card highlighted hover-lift" (click)="goToApp('inspection')">
+        <div class="feature-tag">1-CLIQUE</div>
+        <div class="feature-icon-wrapper bg-primary">
+          <span class="material-symbols-rounded text-white">policy</span>
+        </div>
+        <h3 class="feature-title">Modo Fiscalização</h3>
+        <p class="feature-desc">
+          O fiscal da prefeitura ou bombeiro chegou de surpresa na filial? Em 1 clique você gera o dossiê oficial consolidado com QR Code público de autenticidade para apresentar no balcão.
+        </p>
+        <div class="feature-link">
+          <span>Ver Dossiê em Ação</span>
+          <span class="material-symbols-rounded">arrow_forward</span>
+        </div>
+      </div>
+
+      <!-- Card 3: Gestão de Ativos Físicos & QR Code -->
+      <div class="feature-card hover-lift" (click)="goToApp('assets')">
+        <div class="feature-icon-wrapper bg-amber-subtle">
+          <span class="material-symbols-rounded text-amber">qr_code_2</span>
+        </div>
+        <h3 class="feature-title">Ativos Físicos com QR Code</h3>
+        <p class="feature-desc">
+          Gere etiquetas para colar em extintores, elevadores, geradores e ar-condicionado. A equipe local aponta a câmera do celular e confere a validade da recarga sem login.
+        </p>
+        <div class="feature-link">
+          <span>Ver Gestão de Ativos</span>
+          <span class="material-symbols-rounded">arrow_forward</span>
+        </div>
+      </div>
+
+      <!-- Card 4: WhatsApp Réguas -->
+      <div class="feature-card hover-lift" (click)="goToApp('notifications')">
+        <div class="feature-icon-wrapper bg-emerald-subtle">
+          <span class="material-symbols-rounded text-emerald">chat</span>
+        </div>
+        <h3 class="feature-title">Réguas Proativas no WhatsApp</h3>
+        <p class="feature-desc">
+          Dispare notificações no WhatsApp do gerente da unidade e da diretoria com 90, 60 e 30 dias de antecedência. Garanta que a renovação comece a tempo.
+        </p>
+        <div class="feature-link">
+          <span>Configurar Réguas</span>
+          <span class="material-symbols-rounded">arrow_forward</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Seção de ROI e Economia Comprovada -->
+<section id="roi" class="roi-banner-section">
+  <div class="section-container">
+    <div class="roi-banner-box">
+      <div class="roi-banner-left">
+        <span class="roi-badge">RETORNO SOBRE INVESTIMENTO</span>
+        <h2 class="roi-banner-title">O custo de uma única interdição paga 10 anos de Licenfy</h2>
+        <p class="roi-banner-subtitle">
+          Empresas que utilizam o Licenfy reduzem a zero o índice de multas e economizam milhares de horas de trabalho operacional do jurídico e de facilities.
+        </p>
+
+        <div class="roi-numbers-row">
+          <div class="roi-number-item">
+            <span class="number-val">R$ 480k+</span>
+            <span class="number-label">Economia média em multas por ano</span>
+          </div>
+          <div class="roi-number-item">
+            <span class="number-val">0</span>
+            <span class="number-label">Dias de interdição nas empresas clientes</span>
+          </div>
+          <div class="roi-number-item">
+            <span class="number-val">99.8%</span>
+            <span class="number-label">Conformidade nas fiscalizações presenciais</span>
+          </div>
+        </div>
+
+        <div class="roi-action-group">
+          <button class="btn-cta-blue" (click)="openDemoModal()">
+            <span>Calcular ROI da minha empresa</span>
+            <span class="material-symbols-rounded">north_east</span>
+          </button>
+          <button class="btn-cta-white" (click)="goToApp('roi')">
+            <span>Ver Relatório de ROI do SaaS</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Footer Corporativo Enterprise -->
+<footer class="main-footer">
+  <div class="footer-container">
+    <div class="footer-top">
+      <div class="footer-col-brand">
+        <img src="logo.png" alt="Licenfy" class="footer-logo" />
+        <p class="footer-brand-desc">
+          A plataforma definitiva de conformidade regulatória, gestão de alvarás e ativos com tecnologia de ponta para médias e grandes empresas.
+        </p>
+        <div class="security-badges">
+          <span class="sec-badge">
+            <span class="material-symbols-rounded icon-xs">lock</span>
+            Criptografia Bancária
+          </span>
+          <span class="sec-badge">
+            <span class="material-symbols-rounded icon-xs">verified_user</span>
+            100% LGPD Compliant
+          </span>
+        </div>
+      </div>
+
+      <div class="footer-col">
+        <h4 class="footer-col-title">Plataforma</h4>
+        <ul class="footer-links">
+          <li><a href="#" (click)="$event.preventDefault(); goToApp('dashboard')">Dashboard de Risco</a></li>
+          <li><a href="#" (click)="$event.preventDefault(); goToApp('vault')">Cofre Digital & OCR</a></li>
+          <li><a href="#" (click)="$event.preventDefault(); goToApp('assets')">Ativos & QR Code</a></li>
+          <li><a href="#" (click)="$event.preventDefault(); goToApp('inspection')">Modo Fiscalização</a></li>
+          <li><a href="#" (click)="$event.preventDefault(); goToApp('notifications')">Réguas WhatsApp</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <h4 class="footer-col-title">Setores</h4>
+        <ul class="footer-links">
+          <li><a href="#" (click)="$event.preventDefault()">Redes de Varejo</a></li>
+          <li><a href="#" (click)="$event.preventDefault()">Centros de Distribuição</a></li>
+          <li><a href="#" (click)="$event.preventDefault()">Indústrias & Manufatura</a></li>
+          <li><a href="#" (click)="$event.preventDefault()">Saúde & Clínicas</a></li>
+          <li><a href="#" (click)="$event.preventDefault()">Construção Civil</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <h4 class="footer-col-title">Contato & Demonstração</h4>
+        <ul class="footer-links">
+          <li><a href="mailto:contato@licenfy.com.br">contato&#64;licenfy.com.br</a></li>
+          <li><a href="tel:+551140001234">+55 11 4000-1234</a></li>
+          <li><a href="#" (click)="$event.preventDefault(); openDemoModal()">Agendar com Consultor</a></li>
+        </ul>
+        <button class="btn-footer-saas" (click)="goToApp('dashboard')">
+          <span>Acessar Plataforma SaaS</span>
+          <span class="material-symbols-rounded">arrow_forward</span>
+        </button>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <div class="copy-text">
+        © 2026 Licenfy Tecnologia S.A. Todos os direitos reservados.
+      </div>
+      <div class="footer-legal-links">
+        <a href="#" (click)="$event.preventDefault()">Termos de Uso</a>
+        <a href="#" (click)="$event.preventDefault()">Política de Privacidade</a>
+        <a href="#" (click)="$event.preventDefault()">Segurança da Informação</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<!-- Modal de Demonstração / Contato com Especialista -->
+@if (isDemoModalOpen()) {
+  <div class="demo-modal-overlay" (click)="closeDemoModal()">
+    <div class="demo-modal-box" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <div class="modal-title-wrap">
+          <span class="material-symbols-rounded text-primary">calendar_month</span>
+          <h3>Agende uma Demonstração Personalizada</h3>
+        </div>
+        <button class="modal-close" (click)="closeDemoModal()">
+          <span class="material-symbols-rounded">close</span>
+        </button>
+      </div>
+
+      <div class="modal-body">
+        <p class="modal-intro">
+          Veja como o Licenfy elimina o risco de multas e interdições nas suas filiais com inteligência artificial e OCR.
+        </p>
+
+        <form class="demo-form" (submit)="$event.preventDefault(); goToApp('dashboard')">
+          <div class="form-row">
+            <div class="form-field">
+              <label>Seu Nome Completo</label>
+              <input type="text" placeholder="Ex: Carlos Eduardo" class="form-input" required />
+            </div>
+            <div class="form-field">
+              <label>E-mail Corporativo</label>
+              <input type="email" placeholder="carlos@empresa.com.br" class="form-input" required />
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-field">
+              <label>WhatsApp</label>
+              <input type="tel" placeholder="(11) 99999-8888" class="form-input" required />
+            </div>
+            <div class="form-field">
+              <label>Quantidade de Filiais / Unidades</label>
+              <select class="form-select">
+                <option>1 a 5 filiais</option>
+                <option>6 a 20 filiais</option>
+                <option>21 a 50 filiais</option>
+                <option>Mais de 50 filiais</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="modal-actions">
+            <button type="submit" class="btn-cta-blue w-full">
+              <span>Agendar com Especialista</span>
+              <span class="material-symbols-rounded">arrow_forward</span>
+            </button>
+
+            <button type="button" class="btn-cta-light w-full mt-2" (click)="closeDemoModal(); goToApp('dashboard')">
+              <span>Entrar no Sistema Direto (Sandbox)</span>
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+}

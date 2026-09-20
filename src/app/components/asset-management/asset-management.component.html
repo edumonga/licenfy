@@ -1,0 +1,334 @@
+<div class="assets-container">
+  <!-- Header -->
+  <div class="assets-header">
+    <div>
+      <div class="subtitle-badge">
+        <span class="material-symbols-rounded icon-sm">qr_code_2</span>
+        Operação na Ponta sem Necessidade de App
+      </div>
+      <h1 class="page-title">Gestão de Ativos Físicos e Etiquetas QR Code</h1>
+      <p class="page-desc">Etiquetas físicas aplicadas nos equipamentos. Ao escanear pelo celular, qualquer colaborador acessa garantias, manutenções e NFs.</p>
+    </div>
+  </div>
+
+  <!-- Barra de Filtros e Categorias -->
+  <div class="assets-toolbar">
+    <div class="category-tabs">
+      <button 
+        class="cat-tab" 
+        [class.active]="selectedCategory() === 'all'" 
+        (click)="selectedCategory.set('all')">
+        Todos os Ativos ({{ assets().length }})
+      </button>
+      <button 
+        class="cat-tab" 
+        [class.active]="selectedCategory() === 'Extintores'" 
+        (click)="selectedCategory.set('Extintores')">
+        <span class="material-symbols-rounded icon-xs">local_fire_department</span>
+        Extintores & AVCB
+      </button>
+      <button 
+        class="cat-tab" 
+        [class.active]="selectedCategory() === 'Geradores'" 
+        (click)="selectedCategory.set('Geradores')">
+        <span class="material-symbols-rounded icon-xs">bolt</span>
+        Geradores
+      </button>
+      <button 
+        class="cat-tab" 
+        [class.active]="selectedCategory() === 'Climatização'" 
+        (click)="selectedCategory.set('Climatização')">
+        <span class="material-symbols-rounded icon-xs">ac_unit</span>
+        Climatização & Chillers
+      </button>
+    </div>
+  </div>
+
+  <!-- Grid de Ativos Físicos -->
+  <div class="assets-grid">
+    <div *ngFor="let asset of filteredAssetsList" class="asset-card">
+      <div class="asset-card-top">
+        <div class="asset-tag-badge">
+          <span class="material-symbols-rounded icon-xs">qr_code</span>
+          {{ asset.assetTag }}
+        </div>
+        <span class="badge-status" [ngClass]="asset.maintenanceStatus">
+          <span class="status-dot" [ngClass]="asset.maintenanceStatus"></span>
+          {{ asset.maintenanceStatus === 'regular' ? 'Em Dia' : (asset.maintenanceStatus === 'attention' ? 'Revisão Próxima' : 'Urgente') }}
+        </span>
+      </div>
+
+      <h3 class="asset-title">{{ asset.name }}</h3>
+      
+      <div class="asset-specs-list">
+        <div class="spec-row">
+          <span class="spec-label">
+            <span class="material-symbols-rounded icon-xs text-muted">apartment</span>
+            Unidade:
+          </span>
+          <span class="spec-val">{{ asset.branchName }}</span>
+        </div>
+        <div class="spec-row">
+          <span class="spec-label">
+            <span class="material-symbols-rounded icon-xs text-muted">pin_drop</span>
+            Localização:
+          </span>
+          <span class="spec-val">{{ asset.locationDetails }}</span>
+        </div>
+        <div class="spec-row">
+          <span class="spec-label">
+            <span class="material-symbols-rounded icon-xs text-muted">receipt_long</span>
+            Nota Fiscal:
+          </span>
+          <span class="spec-val mono-font">{{ asset.invoiceNumber }}</span>
+        </div>
+        <div class="spec-row">
+          <span class="spec-label">
+            <span class="material-symbols-rounded icon-xs text-muted">verified</span>
+            Garantia do Fabricante:
+          </span>
+          <span class="spec-val" [class.text-attention]="asset.daysUntilWarrantyExpires <= 45">
+            {{ asset.warrantyExpirationDate | date:'dd/MM/yyyy' }} ({{ asset.daysUntilWarrantyExpires }}d)
+          </span>
+        </div>
+      </div>
+
+      <!-- Diferencial: Vinculado à Obrigação Legal -->
+      <div *ngIf="asset.linkedLicenseTitle" class="linked-license-box">
+        <div class="linked-license-header">
+          <span class="material-symbols-rounded icon-xs text-primary">link</span>
+          <span>Unificação Legal + Operacional</span>
+        </div>
+        <div class="linked-license-name">{{ asset.linkedLicenseTitle }}</div>
+      </div>
+
+      <!-- Histórico resumido de manutenções -->
+      <div class="maintenance-summary-box">
+        <div class="mnt-header">
+          <span>Última Intervenção: {{ asset.lastMaintenanceDate | date:'dd/MM/yyyy' }}</span>
+          <span class="mnt-count">{{ asset.maintenances.length }} manutenções registradas</span>
+        </div>
+      </div>
+
+      <!-- Ações do Ativo -->
+      <div class="asset-card-actions">
+        <button class="btn btn-primary btn-sm flex-1" (click)="openQrModal(asset)">
+          <span class="material-symbols-rounded icon-sm">print</span>
+          Etiqueta QR Code
+        </button>
+        <button class="btn btn-outline btn-sm flex-1" (click)="openMobileSimulator(asset)">
+          <span class="material-symbols-rounded icon-sm">smartphone</span>
+          Visão do Operador
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal 1: Pré-visualização da Etiqueta Física QR Code para Impressão -->
+  <div *ngIf="selectedAssetForQr() as asset" class="modal-backdrop" (click)="closeQrModal()">
+    <div class="modal-content qr-modal-dialog printable-area" (click)="$event.stopPropagation()">
+      <div class="modal-header no-print">
+        <div class="modal-title-wrap">
+          <span class="material-symbols-rounded text-primary">label</span>
+          <h3>Etiqueta Física com QR Code Patrimonial</h3>
+        </div>
+        <button class="btn-close no-print" (click)="closeQrModal()">
+          <span class="material-symbols-rounded">close</span>
+        </button>
+      </div>
+
+      <div class="modal-body">
+        <p class="modal-desc no-print">
+          Etiqueta industrial autoadesiva pronta para aplicação direta no equipamento. O QR Code permite consulta instantânea pelo navegador do celular sem instalar aplicativos.
+        </p>
+
+        <!-- Etiqueta Física Realista -->
+        <div class="physical-tag">
+          <div class="tag-brand-row">
+            <img src="logo.png" alt="Licenfy" class="tag-logo-img" />
+            <div class="tag-compliance-stamp">
+              <span class="material-symbols-rounded icon-xs">verified</span>
+              COMPLIANCE VERIFIED
+            </div>
+          </div>
+
+          <div class="tag-body">
+            <div class="tag-qr-section">
+              <!-- QR Code Vetorial SVG de Alta Precisão -->
+              <svg class="qr-svg" viewBox="0 0 120 120">
+                <!-- Finder Pattern Top Left -->
+                <rect x="10" y="10" width="30" height="30" fill="#1f2937" rx="3" />
+                <rect x="16" y="16" width="18" height="18" fill="#ffffff" rx="2" />
+                <rect x="21" y="21" width="8" height="8" fill="#2563eb" rx="1" />
+                
+                <!-- Finder Pattern Top Right -->
+                <rect x="80" y="10" width="30" height="30" fill="#1f2937" rx="3" />
+                <rect x="86" y="16" width="18" height="18" fill="#ffffff" rx="2" />
+                <rect x="91" y="21" width="8" height="8" fill="#2563eb" rx="1" />
+
+                <!-- Finder Pattern Bottom Left -->
+                <rect x="10" y="80" width="30" height="30" fill="#1f2937" rx="3" />
+                <rect x="16" y="86" width="18" height="18" fill="#ffffff" rx="2" />
+                <rect x="21" y="91" width="8" height="8" fill="#2563eb" rx="1" />
+
+                <!-- Data Matrix Pixels -->
+                <rect x="48" y="12" width="6" height="6" fill="#1f2937" />
+                <rect x="58" y="18" width="6" height="6" fill="#1f2937" />
+                <rect x="68" y="12" width="6" height="6" fill="#2563eb" />
+                <rect x="48" y="32" width="6" height="6" fill="#2563eb" />
+                <rect x="58" y="32" width="6" height="6" fill="#1f2937" />
+                <rect x="68" y="38" width="6" height="6" fill="#1f2937" />
+                
+                <rect x="12" y="52" width="6" height="6" fill="#1f2937" />
+                <rect x="24" y="52" width="6" height="6" fill="#2563eb" />
+                <rect x="36" y="60" width="6" height="6" fill="#1f2937" />
+                <rect x="48" y="52" width="6" height="6" fill="#1f2937" />
+                <rect x="60" y="52" width="6" height="6" fill="#1f2937" />
+                <rect x="72" y="60" width="6" height="6" fill="#2563eb" />
+                <rect x="84" y="52" width="6" height="6" fill="#1f2937" />
+                <rect x="96" y="60" width="6" height="6" fill="#1f2937" />
+
+                <rect x="48" y="74" width="6" height="6" fill="#1f2937" />
+                <rect x="58" y="82" width="6" height="6" fill="#2563eb" />
+                <rect x="68" y="74" width="6" height="6" fill="#1f2937" />
+                <rect x="80" y="82" width="6" height="6" fill="#1f2937" />
+                <rect x="92" y="74" width="6" height="6" fill="#2563eb" />
+                <rect x="86" y="94" width="6" height="6" fill="#1f2937" />
+                <rect x="100" y="94" width="6" height="6" fill="#1f2937" />
+              </svg>
+              <span class="qr-scan-hint">Aponte a câmera</span>
+            </div>
+
+            <div class="tag-info-section">
+              <div class="tag-patrimonio">
+                <span class="tag-patrimonio-label">PATRIMÔNIO</span>
+                <span class="tag-patrimonio-val">{{ asset.assetTag }}</span>
+              </div>
+              <div class="tag-asset-name">{{ asset.name }}</div>
+              <div class="tag-location">{{ asset.locationDetails }}</div>
+              <div class="tag-branch-name">{{ asset.branchName }}</div>
+              <div class="tag-warranty-note">
+                <strong>Garantia até:</strong> {{ asset.warrantyExpirationDate | date:'dd/MM/yyyy' }}
+              </div>
+            </div>
+          </div>
+
+          <div class="tag-footer">
+            <span>SISTEMA DE GESTÃO E COMPLIANCE LICENFY</span>
+            <span>ID: {{ asset.id }}</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-footer no-print">
+        <button class="btn btn-outline" (click)="closeQrModal()">Fechar</button>
+        <button class="btn btn-primary" (click)="printTag()">
+          <span class="material-symbols-rounded">print</span>
+          Imprimir Etiqueta Adesiva
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal 2: Simulador da "Visão do Operador no Celular" (Sem necessidade de app) -->
+  <div *ngIf="selectedAssetForMobile() as asset" class="modal-backdrop" (click)="closeMobileSimulator()">
+    <div class="modal-content mobile-sim-dialog" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <div class="modal-title-wrap">
+          <span class="material-symbols-rounded text-primary">smartphone</span>
+          <h3>Simulador: Visão do Operador no Chão de Loja / Fábrica</h3>
+        </div>
+        <button class="btn-close" (click)="closeMobileSimulator()">
+          <span class="material-symbols-rounded">close</span>
+        </button>
+      </div>
+
+      <div class="mobile-sim-container">
+        <!-- Chassi do Smartphone -->
+        <div class="phone-frame">
+          <div class="phone-notch">
+            <div class="speaker"></div>
+            <div class="camera"></div>
+          </div>
+
+          <!-- Conteúdo da WebApp Mobile que abre via QR Code -->
+          <div class="phone-screen">
+            <div class="mobile-app-header">
+              <img src="logo.png" alt="Licenfy" class="mobile-logo-img" />
+              <span class="badge-status regular">Conectado</span>
+            </div>
+
+            <div class="mobile-app-body">
+              <div class="mobile-asset-title-card">
+                <span class="mobile-tag-code">{{ asset.assetTag }}</span>
+                <h4 class="mobile-name">{{ asset.name }}</h4>
+                <div class="mobile-location">
+                  <span class="material-symbols-rounded icon-xs">pin_drop</span>
+                  {{ asset.locationDetails }} ({{ asset.branchName }})
+                </div>
+              </div>
+
+              <!-- Garantia Status -->
+              <div class="mobile-status-block">
+                <div class="mobile-block-title">
+                  <span class="material-symbols-rounded icon-xs text-primary">security</span>
+                  Garantia Vigente
+                </div>
+                <div class="mobile-warranty-info">
+                  <span>Válida até {{ asset.warrantyExpirationDate | date:'dd/MM/yyyy' }}</span>
+                  <span class="days-badge">{{ asset.daysUntilWarrantyExpires }} dias restantes</span>
+                </div>
+                <div class="mobile-nf-badge">
+                  NF de Compra: {{ asset.invoiceNumber }}
+                </div>
+              </div>
+
+              <!-- Histórico de Manutenções do Ativo -->
+              <div class="mobile-history-block">
+                <div class="mobile-block-title">
+                  <span class="material-symbols-rounded icon-xs text-primary">history</span>
+                  Histórico de Intervenções
+                </div>
+                <div *ngFor="let m of asset.maintenances" class="mobile-history-item">
+                  <div class="history-item-top">
+                    <span class="history-type">{{ m.type }}</span>
+                    <span class="history-date">{{ m.date | date:'dd/MM/yyyy' }}</span>
+                  </div>
+                  <p class="history-notes">{{ m.notes }}</p>
+                  <div class="history-tech">Técnico: {{ m.technicianOrCompany }}</div>
+                </div>
+              </div>
+
+              <!-- Botão de Ação Rápida para o Operador -->
+              <button class="mobile-action-btn" (click)="onReportIncident()" [disabled]="incidentReported()">
+                <span class="material-symbols-rounded icon-sm">support_agent</span>
+                {{ incidentReported() ? 'Chamado Registrado com Sucesso!' : 'Reportar Ocorrência / Acionar Garantia' }}
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div class="mobile-sim-explanation">
+          <h4 class="explanation-title">Como funciona na prática?</h4>
+          <p class="explanation-desc">
+            O funcionário ou técnico terceirizado aponta a câmera nativa do iPhone ou Android para a etiqueta física colada na máquina.
+          </p>
+          <ul class="explanation-points">
+            <li>
+              <span class="material-symbols-rounded icon-sm text-primary">check_circle</span>
+              <strong>Zero atrito:</strong> Não exige download na App Store ou Play Store.
+            </li>
+            <li>
+              <span class="material-symbols-rounded icon-sm text-primary">check_circle</span>
+              <strong>Evita despesas desnecessárias:</strong> Consulta na hora se a peça ainda está coberta pela garantia da nota fiscal.
+            </li>
+            <li>
+              <span class="material-symbols-rounded icon-sm text-primary">check_circle</span>
+              <strong>Rastreabilidade:</strong> Histórico das revisões preventivas atualizado em tempo real.
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

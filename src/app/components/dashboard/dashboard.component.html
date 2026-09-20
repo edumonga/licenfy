@@ -1,0 +1,256 @@
+<div class="dashboard-container">
+  <!-- Top Banner / Boas-vindas e Contexto -->
+  <div class="dashboard-header">
+    <div>
+      <div class="subtitle-badge">
+        <span class="material-symbols-rounded icon-sm">verified_user</span>
+        Piloto Automático de Compliance Legal e Operacional
+      </div>
+      <h1 class="page-title">Dashboard de Risco e Conformidade</h1>
+      <p class="page-desc">Monitoramento preventivo de alvarás, licenças ambientais, vistorias e garantias de ativos.</p>
+    </div>
+
+    <div class="header-actions">
+      <button class="btn btn-outline" (click)="goToVault()">
+        <span class="material-symbols-rounded">cloud_upload</span>
+        Upload de Licença
+      </button>
+      <button class="btn btn-primary" (click)="goToInspection()">
+        <span class="material-symbols-rounded">policy</span>
+        Dossiê Fiscalização (1-Clique)
+      </button>
+    </div>
+  </div>
+
+  <!-- Seletor de Filiais -->
+  <div class="branch-selector-bar">
+    <span class="selector-label">
+      <span class="material-symbols-rounded">apartment</span>
+      Filtrar Unidade:
+    </span>
+    <div class="branch-pills">
+      <button 
+        class="branch-pill" 
+        [class.active]="selectedBranchId() === 'all'"
+        (click)="selectBranch('all')">
+        Todas as Unidades (Visão Consolidada)
+      </button>
+      <button 
+        *ngFor="let b of branches()" 
+        class="branch-pill" 
+        [class.active]="selectedBranchId() === b.id"
+        (click)="selectBranch(b.id)">
+        <span class="status-dot" [ngClass]="b.status"></span>
+        {{ b.name }}
+        <span class="pill-score">{{ b.complianceScore }}%</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Grid Principal: Score de Risco + Cartões de Status -->
+  <div class="metrics-grid">
+    <!-- Card do Score de Compliance -->
+    <div class="score-card">
+      <div class="score-header">
+        <div>
+          <span class="card-caption">Índice Geral de Regularidade</span>
+          <h2 class="score-title">Score de Compliance</h2>
+        </div>
+        <span class="badge-status" [ngClass]="status()">
+          <span class="status-dot" [ngClass]="status()"></span>
+          {{ status() === 'regular' ? 'Conforme' : (status() === 'attention' ? 'Atenção' : 'Risco Crítico') }}
+        </span>
+      </div>
+
+      <div class="score-visual-container">
+        <!-- SVG Gauge Circular -->
+        <div class="svg-gauge-wrap">
+          <svg class="gauge-svg" viewBox="0 0 160 160">
+            <circle class="gauge-bg" cx="80" cy="80" r="68"></circle>
+            <circle 
+              class="gauge-progress" 
+              [ngClass]="status()"
+              cx="80" 
+              cy="80" 
+              r="68"
+              [style.strokeDashoffset]="427 - (427 * score() / 100)">
+            </circle>
+          </svg>
+          <div class="gauge-center-content">
+            <span class="gauge-value">{{ score() }}%</span>
+            <span class="gauge-unit">Conformidade</span>
+          </div>
+        </div>
+
+        <div class="score-breakdown">
+          <div class="breakdown-item">
+            <span class="breakdown-label">
+              <span class="material-symbols-rounded text-regular icon-sm">check_circle</span>
+              Licenças Válidas
+            </span>
+            <span class="breakdown-num">{{ summary().regular }}</span>
+          </div>
+          <div class="breakdown-item">
+            <span class="breakdown-label">
+              <span class="material-symbols-rounded text-attention icon-sm">schedule</span>
+              Renovação Próxima (< 30d)
+            </span>
+            <span class="breakdown-num text-attention">{{ summary().attention }}</span>
+          </div>
+          <div class="breakdown-item">
+            <span class="breakdown-label">
+              <span class="material-symbols-rounded text-urgent icon-sm">error</span>
+              Risco Crítico / Iminente
+            </span>
+            <span class="breakdown-num text-urgent">{{ summary().urgent }}</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="score-footer">
+        <span class="material-symbols-rounded icon-sm text-primary">shield</span>
+        <span>Zero multas nos últimos 12 meses nas filiais monitoradas.</span>
+      </div>
+    </div>
+
+    <!-- 3 Cartões de Status por Cores -->
+    <div class="status-cards-col">
+      <!-- Card Regular -->
+      <div class="stat-box regular">
+        <div class="stat-top">
+          <div class="stat-icon-wrapper regular">
+            <span class="material-symbols-rounded">verified</span>
+          </div>
+          <span class="badge-status regular">Regular</span>
+        </div>
+        <div class="stat-number">{{ summary().regular }}</div>
+        <div class="stat-label">Documentos & Licenças em dia</div>
+        <p class="stat-desc">Sem pendências jurídicas ou de órgãos fiscalizadores.</p>
+      </div>
+
+      <!-- Card Atenção -->
+      <div class="stat-box attention">
+        <div class="stat-top">
+          <div class="stat-icon-wrapper attention">
+            <span class="material-symbols-rounded">notification_important</span>
+          </div>
+          <span class="badge-status attention">Atenção</span>
+        </div>
+        <div class="stat-number">{{ summary().attention }}</div>
+        <div class="stat-label">Prazos em contagem regressiva</div>
+        <p class="stat-desc">Disparos de réguas em andamento (30 a 60 dias).</p>
+      </div>
+
+      <!-- Card Urgente -->
+      <div class="stat-box urgent">
+        <div class="stat-top">
+          <div class="stat-icon-wrapper urgent">
+            <span class="material-symbols-rounded">warning</span>
+          </div>
+          <span class="badge-status urgent">Urgente</span>
+        </div>
+        <div class="stat-number">{{ summary().urgent }}</div>
+        <div class="stat-label">Risco iminente ou pendência crítica</div>
+        <p class="stat-desc">Ação emergencial recomendada para evitar auto de infração.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Destaque do Diferencial: Unificação Legal + Operacional -->
+  <div class="unification-banner">
+    <div class="unification-icon">
+      <span class="material-symbols-rounded">link</span>
+    </div>
+    <div class="unification-content">
+      <div class="unification-badge">Diferencial Licenfy: Unificação Legal + Operacional</div>
+      <h3 class="unification-title">Conexão de Obrigação Jurídica ao Ativo Físico de Manutenção</h3>
+      <p class="unification-text">
+        O sistema detectou que a renovação do <strong>AVCB da Matriz SP (Vence em 25 dias)</strong> depende diretamente 
+        da recarga periódica e vistoria hidrostática da <strong>Bateria de Extintores (EQ-0199)</strong>. A ordem de serviço já pode ser gerada antes do pedido no Corpo de Bombeiros.
+      </p>
+    </div>
+    <button class="btn btn-outline" (click)="goToAssets()">
+      <span class="material-symbols-rounded">inventory_2</span>
+      Ver Ativo Vinculado
+    </button>
+  </div>
+
+  <!-- Tabela de Documentos e Alertas de Prazos -->
+  <div class="table-card">
+    <div class="table-header">
+      <div>
+        <h3 class="table-title">Monitoramento Ativo de Obrigações</h3>
+        <p class="table-subtitle">Alvarás, licenças ambientais, sanitárias e vistorias sob gestão contínua</p>
+      </div>
+      <div class="table-tools">
+        <button class="btn btn-outline" (click)="goToVault()">
+          <span class="material-symbols-rounded">folder_open</span>
+          Acessar Cofre Digital
+        </button>
+      </div>
+    </div>
+
+    <div class="table-responsive">
+      <table class="licenfy-table">
+        <thead>
+          <tr>
+            <th>Status</th>
+            <th>Documento / Obrigação</th>
+            <th>Órgão Emissor</th>
+            <th>Unidade / Filial</th>
+            <th>Vencimento</th>
+            <th>Ativo Vinculado</th>
+            <th class="text-right">Ação Preventiva</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let lic of licenses()">
+            <td>
+              <span class="badge-status" [ngClass]="lic.status">
+                <span class="status-dot" [ngClass]="lic.status"></span>
+                {{ lic.status === 'regular' ? 'Regular' : (lic.status === 'attention' ? 'Atenção' : 'Urgente') }}
+              </span>
+            </td>
+            <td>
+              <div class="doc-title-cell">
+                <span class="doc-title">{{ lic.title }}</span>
+                <span class="doc-num">{{ lic.documentNumber }}</span>
+              </div>
+            </td>
+            <td>
+              <span class="badge-subtle">{{ lic.issuingBody }}</span>
+            </td>
+            <td>
+              <span class="branch-cell-name">{{ lic.branchName }}</span>
+            </td>
+            <td>
+              <div class="expiration-cell">
+                <span class="exp-date">{{ lic.expirationDate | date:'dd/MM/yyyy' }}</span>
+                <span class="exp-countdown" [ngClass]="lic.status">
+                  <span class="material-symbols-rounded icon-xs">timelapse</span>
+                  {{ lic.daysRemaining }} dias restantes
+                </span>
+              </div>
+            </td>
+            <td>
+              <div *ngIf="lic.linkedAssetName" class="linked-asset-badge" (click)="goToAssets()">
+                <span class="material-symbols-rounded icon-xs">build</span>
+                {{ lic.linkedAssetName }}
+              </div>
+              <span *ngIf="!lic.linkedAssetName" class="text-muted-sm">Sem vínculo direto</span>
+            </td>
+            <td class="text-right">
+              <button 
+                class="btn btn-outline btn-sm action-btn" 
+                (click)="notifyManager(lic)"
+                [disabled]="justNotifiedId === lic.id">
+                <span class="material-symbols-rounded icon-sm text-primary">send_to_mobile</span>
+                {{ justNotifiedId === lic.id ? 'Alerta Enviado!' : 'Alertar WhatsApp' }}
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

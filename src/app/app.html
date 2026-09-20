@@ -1,0 +1,178 @@
+@if (currentView() === 'landing') {
+  <app-landing-page />
+} @else {
+  <div class="licenfy-layout">
+    <!-- Sidebar de Navegação Corporativa -->
+    <aside class="licenfy-sidebar no-print">
+      <!-- Logo Oficial Licenfy -->
+      <div class="sidebar-logo-block" (click)="setView('landing')" style="cursor: pointer;" title="Voltar para a Página Inicial do Site">
+        <img src="logo.png" alt="Licenfy" class="sidebar-logo" />
+        <span class="version-tag">PRO B2B</span>
+      </div>
+
+      <!-- Navegação Principal -->
+      <nav class="sidebar-nav">
+        <div class="nav-group-title">Módulos do Sistema</div>
+
+        <button 
+          class="nav-item" 
+          [class.active]="currentTab() === 'dashboard'"
+          (click)="setTab('dashboard')">
+          <span class="material-symbols-rounded">dashboard</span>
+          <span>Dashboard de Risco</span>
+        </button>
+
+        <button 
+          class="nav-item" 
+          [class.active]="currentTab() === 'vault'"
+          (click)="setTab('vault')">
+          <span class="material-symbols-rounded">folder_zip</span>
+          <span>Cofre Digital & OCR</span>
+        </button>
+
+        <button 
+          class="nav-item" 
+          [class.active]="currentTab() === 'assets'"
+          (click)="setTab('assets')">
+          <span class="material-symbols-rounded">qr_code_2</span>
+          <span>Gestão de Ativos & QR</span>
+        </button>
+
+        <button 
+          class="nav-item" 
+          [class.active]="currentTab() === 'notifications'"
+          (click)="setTab('notifications')">
+          <span class="material-symbols-rounded">chat</span>
+          <span>Réguas WhatsApp</span>
+        </button>
+
+        <button 
+          class="nav-item" 
+          [class.active]="currentTab() === 'inspection'"
+          (click)="setTab('inspection')">
+          <span class="material-symbols-rounded">policy</span>
+          <span>Modo Fiscalização</span>
+        </button>
+
+        <button 
+          class="nav-item" 
+          [class.active]="currentTab() === 'roi'"
+          (click)="setTab('roi')">
+          <span class="material-symbols-rounded">trending_up</span>
+          <span>Relatório de ROI</span>
+        </button>
+      </nav>
+
+      <!-- Botão para voltar à Landing Page na Sidebar -->
+      <div style="padding: 0 16px 12px;">
+        <button class="nav-item" style="border: 1px dashed var(--color-border); justify-content: center; width: 100%;" (click)="setView('landing')">
+          <span class="material-symbols-rounded text-primary">arrow_back</span>
+          <span>Voltar ao Site</span>
+        </button>
+      </div>
+
+      <!-- Card de Compliance no Rodapé da Sidebar -->
+      <div class="sidebar-compliance-card">
+        <div class="comp-card-top">
+          <span class="material-symbols-rounded icon-sm text-primary">verified</span>
+          <span>Score Consolidado</span>
+        </div>
+        <div class="comp-score-row">
+          <span class="comp-score-val">{{ score() }}%</span>
+          <span class="badge-status" [ngClass]="status()">
+            {{ status() === 'regular' ? 'Conforme' : (status() === 'attention' ? 'Atenção' : 'Risco') }}
+          </span>
+        </div>
+        <div class="comp-bar-bg">
+          <div class="comp-bar-fill" [style.width.%]="score()"></div>
+        </div>
+      </div>
+
+      <!-- Perfil da Empresa / Usuário -->
+      <div class="sidebar-user-footer">
+        <div class="user-avatar-initials">MS</div>
+        <div class="user-info-text">
+          <div class="user-name">Mariana Silveira</div>
+          <div class="user-org">Grupo Alpha Brasil S.A.</div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Área Principal -->
+    <div class="licenfy-main-wrapper">
+      <!-- Topbar Superior -->
+      <header class="licenfy-topbar no-print">
+        <div class="topbar-left">
+          <span class="breadcrumb-app">Licenfy Compliance</span>
+          <span class="breadcrumb-sep">/</span>
+          <span class="breadcrumb-current">
+            @switch (currentTab()) {
+              @case ('dashboard') { Dashboard de Risco por Cores }
+              @case ('vault') { Cofre Digital com Leitura OCR }
+              @case ('assets') { Gestão de Ativos & Etiquetas QR Code }
+              @case ('notifications') { Notificações WhatsApp & E-mail }
+              @case ('inspection') { Dossiê do Modo Fiscalização (1-Clique) }
+              @case ('roi') { Relatório de Economia Gerada (ROI) }
+            }
+          </span>
+        </div>
+
+        <div class="topbar-right">
+          <!-- Botão para voltar à Landing Page -->
+          <button class="btn btn-outline btn-sm" (click)="setView('landing')" title="Ver Landing Page institucional">
+            <span class="material-symbols-rounded icon-sm text-primary">storefront</span>
+            Site Oficial
+          </button>
+
+          <!-- Switcher de Unidade / Filial -->
+          <div class="topbar-branch-box">
+            <span class="material-symbols-rounded icon-sm text-muted">domain</span>
+            <select 
+              [ngModel]="selectedBranchId()" 
+              (ngModelChange)="onBranchChange($event)"
+              class="topbar-branch-select">
+              <option value="all">Todas as Filiais (3 Unidades)</option>
+              <option *ngFor="let b of branches()" [value]="b.id">{{ b.name }}</option>
+            </select>
+          </div>
+
+          <!-- Botão de Ação Rápida: Modo Fiscalização -->
+          <button class="btn btn-outline btn-sm" (click)="setTab('inspection')" title="Abrir Modo Fiscalização">
+            <span class="material-symbols-rounded icon-sm text-primary">policy</span>
+            Modo Fiscalização
+          </button>
+
+          <!-- Indicador de Notificação -->
+          <button class="topbar-icon-btn" (click)="setTab('notifications')" title="Notificações Recentes">
+            <span class="material-symbols-rounded">notifications</span>
+            <span class="notif-badge">4</span>
+          </button>
+        </div>
+      </header>
+
+      <!-- Conteúdo Dinâmico das Abas -->
+      <main class="licenfy-content-body">
+        @switch (currentTab()) {
+          @case ('dashboard') {
+            <app-dashboard />
+          }
+          @case ('vault') {
+            <app-digital-vault />
+          }
+          @case ('assets') {
+            <app-asset-management />
+          }
+          @case ('notifications') {
+            <app-notifications />
+          }
+          @case ('inspection') {
+            <app-inspection-mode />
+          }
+          @case ('roi') {
+            <app-roi-report />
+          }
+        }
+      </main>
+    </div>
+  </div>
+}

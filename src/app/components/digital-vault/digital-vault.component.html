@@ -1,0 +1,233 @@
+<div class="vault-container">
+  <!-- Header -->
+  <div class="vault-header">
+    <div>
+      <div class="subtitle-badge">
+        <span class="material-symbols-rounded icon-sm">lock</span>
+        Cofre Digital Criptografado & Leitura Automática
+      </div>
+      <h1 class="page-title">Cofre Digital com OCR Inteligente</h1>
+      <p class="page-desc">Centralize todos os PDFs, notas fiscais e alvarás. O sistema lê as informações e preenche as datas automaticamente.</p>
+    </div>
+  </div>
+
+  <!-- Seção de Upload & Leitura OCR (Simulação de IA) -->
+  <div class="ocr-section-card">
+    <div class="ocr-section-header">
+      <div class="ocr-title-wrap">
+        <div class="ocr-icon-bubble">
+          <span class="material-symbols-rounded">document_scanner</span>
+        </div>
+        <div>
+          <h2 class="ocr-title">Área de Upload & Digitalização OCR</h2>
+          <p class="ocr-desc">Arraste documentos PDF ou escolha um exemplo oficial para simular a extração automática de dados.</p>
+        </div>
+      </div>
+      <div class="ocr-quick-samples">
+        <span class="sample-label">Simular com modelo:</span>
+        <button class="btn btn-outline btn-xs" (click)="simulateOcrUpload('alvara')">
+          <span class="material-symbols-rounded icon-xs text-primary">description</span>
+          Alvará Prefeitura SP
+        </button>
+        <button class="btn btn-outline btn-xs" (click)="simulateOcrUpload('bombeiros')">
+          <span class="material-symbols-rounded icon-xs text-primary">local_fire_department</span>
+          Laudo AVCB Bombeiros
+        </button>
+        <button class="btn btn-outline btn-xs" (click)="simulateOcrUpload('sanitaria')">
+          <span class="material-symbols-rounded icon-xs text-primary">health_and_safety</span>
+          Licença Sanitária ANVISA
+        </button>
+      </div>
+    </div>
+
+    <!-- Dropzone interativo -->
+    <div class="dropzone" [class.scanning]="isScanning()" (click)="simulateOcrUpload('alvara')">
+      <!-- Animação do Scanner Laser quando está lendo -->
+      <div *ngIf="isScanning()" class="scanner-laser-bar"></div>
+
+      <div *ngIf="!isScanning() && !scannedSuccess()" class="dropzone-idle">
+        <div class="dropzone-icon-circle">
+          <span class="material-symbols-rounded drop-icon">cloud_upload</span>
+        </div>
+        <h3 class="drop-main-text">Arraste seu PDF ou imagem aqui</h3>
+        <p class="drop-sub-text">Suporta PDF, JPG, PNG e XML de NFe (Até 25MB)</p>
+        <button class="btn btn-primary btn-sm" (click)="$event.stopPropagation(); simulateOcrUpload('alvara')">
+          <span class="material-symbols-rounded icon-sm">upload_file</span>
+          Selecionar Arquivo do Computador
+        </button>
+      </div>
+
+      <!-- Estado: Escaneando -->
+      <div *ngIf="isScanning()" class="dropzone-scanning">
+        <div class="spinner-ring"></div>
+        <h3 class="scan-title">Inteligência Artificial Processando Documento...</h3>
+        <p class="scan-step-text">{{ scanStep() }}</p>
+        <div class="scan-progress-bar">
+          <div class="scan-progress-fill"></div>
+        </div>
+      </div>
+
+      <!-- Estado: Concluído -->
+      <div *ngIf="!isScanning() && scannedSuccess()" class="dropzone-completed">
+        <div class="completed-icon-circle">
+          <span class="material-symbols-rounded">check</span>
+        </div>
+        <h3 class="completed-title">Leitura OCR Concluída com Alta Precisão!</h3>
+        <p class="completed-sub">Revise os campos preenchidos automaticamente abaixo antes de arquivar no cofre.</p>
+      </div>
+    </div>
+
+    <!-- Painel de Campos Extraídos pelo OCR -->
+    <div *ngIf="scannedSuccess()" class="extracted-form-panel">
+      <div class="form-panel-header">
+        <span class="material-symbols-rounded text-primary">auto_awesome</span>
+        <h3>Dados Extraídos pelo OCR (Zero Preenchimento Burocrático)</h3>
+      </div>
+
+      <div class="form-grid">
+        <div class="form-group">
+          <label>Título da Obrigação / Licença</label>
+          <input type="text" [(ngModel)]="extractedData.title" class="form-control" />
+        </div>
+
+        <div class="form-group">
+          <label>Órgão Emissor</label>
+          <input type="text" [(ngModel)]="extractedData.issuingBody" class="form-control" />
+        </div>
+
+        <div class="form-group">
+          <label>Categoria Jurídica</label>
+          <select [(ngModel)]="extractedData.category" class="form-control">
+            <option value="Alvará">Alvará de Funcionamento</option>
+            <option value="Bombeiros">Corpo de Bombeiros / AVCB</option>
+            <option value="Sanitária">Vigilância Sanitária</option>
+            <option value="Ambiental">Licenciamento Ambiental</option>
+            <option value="Segurança do Trabalho">Segurança do Trabalho / NR</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>Número do Registro / Protocolo</label>
+          <input type="text" [(ngModel)]="extractedData.documentNumber" class="form-control" />
+        </div>
+
+        <div class="form-group">
+          <label>Unidade / Filial Pertencente</label>
+          <select [(ngModel)]="extractedData.branchId" class="form-control">
+            <option *ngFor="let b of branches()" [value]="b.id">{{ b.name }} ({{ b.city }}-{{ b.state }})</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>Data de Vencimento Oficial</label>
+          <input type="date" [(ngModel)]="extractedData.expirationDate" class="form-control" />
+        </div>
+
+        <div class="form-group">
+          <label>Estimativa de Multa se Não Renovado (R$)</label>
+          <input type="number" [(ngModel)]="extractedData.estimatedFineIfExpired" class="form-control" />
+        </div>
+
+        <div class="form-group">
+          <label>Ativo Físico Vinculado (Opcional)</label>
+          <input type="text" [(ngModel)]="extractedData.linkedAssetName" class="form-control" placeholder="Ex: Extintores Bloco B" />
+        </div>
+
+        <div class="form-group full-width">
+          <label>Notas de Validação OCR</label>
+          <textarea [(ngModel)]="extractedData.legalRequirementNote" class="form-control" rows="2"></textarea>
+        </div>
+      </div>
+
+      <div class="form-actions">
+        <button class="btn btn-outline" (click)="scannedSuccess.set(false)">Cancelar</button>
+        <button class="btn btn-primary" (click)="saveExtractedDocument()">
+          <span class="material-symbols-rounded">save</span>
+          Confirmar e Arquivar no Cofre Digital
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Repositório de Documentos Arquivados -->
+  <div class="vault-list-card">
+    <div class="vault-list-top">
+      <div>
+        <h3 class="section-title">Documentos e Licenças no Cofre Digital</h3>
+        <p class="section-sub">Total de {{ filteredList.length }} documentos indexados e protegidos</p>
+      </div>
+
+      <div class="vault-filters">
+        <div class="search-input-box">
+          <span class="material-symbols-rounded icon-sm search-icon">search</span>
+          <input 
+            type="text" 
+            placeholder="Buscar por licença, órgão ou número..." 
+            [ngModel]="searchTerm()" 
+            (ngModelChange)="searchTerm.set($event)"
+            class="search-input" />
+        </div>
+
+        <select [ngModel]="filterCategory()" (ngModelChange)="filterCategory.set($event)" class="category-select">
+          <option value="all">Todas as Categorias</option>
+          <option value="Alvará">Alvarás</option>
+          <option value="Bombeiros">Bombeiros / AVCB</option>
+          <option value="Sanitária">Sanitária</option>
+          <option value="Ambiental">Ambiental</option>
+          <option value="Segurança do Trabalho">Segurança do Trabalho</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="docs-grid">
+      <div *ngFor="let doc of filteredList" class="doc-item-card">
+        <div class="doc-card-header">
+          <div class="doc-type-icon">
+            <span class="material-symbols-rounded">picture_as_pdf</span>
+          </div>
+          <span class="badge-status" [ngClass]="doc.status">
+            <span class="status-dot" [ngClass]="doc.status"></span>
+            {{ doc.status === 'regular' ? 'Válido' : (doc.status === 'attention' ? 'Renovar em Breve' : 'Vencendo') }}
+          </span>
+        </div>
+
+        <h4 class="doc-card-title">{{ doc.title }}</h4>
+        <div class="doc-meta-item">
+          <span class="material-symbols-rounded icon-xs text-muted">account_balance</span>
+          <span>{{ doc.issuingBody }}</span>
+        </div>
+        <div class="doc-meta-item">
+          <span class="material-symbols-rounded icon-xs text-muted">apartment</span>
+          <span>{{ doc.branchName }}</span>
+        </div>
+        <div class="doc-meta-item">
+          <span class="material-symbols-rounded icon-xs text-muted">tag</span>
+          <span class="mono-text">{{ doc.documentNumber }}</span>
+        </div>
+
+        <div class="doc-card-divider"></div>
+
+        <div class="doc-validity-row">
+          <div>
+            <div class="validity-label">Vencimento</div>
+            <div class="validity-date">{{ doc.expirationDate | date:'dd/MM/yyyy' }}</div>
+          </div>
+          <div class="validity-countdown" [ngClass]="doc.status">
+            {{ doc.daysRemaining }} dias
+          </div>
+        </div>
+
+        <div class="doc-card-actions">
+          <span class="file-size-tag">
+            <span class="material-symbols-rounded icon-xs">attach_file</span>
+            {{ doc.fileSize || '1.5 MB' }}
+          </span>
+          <button class="btn btn-outline btn-xs" title="Visualizar Documento">
+            <span class="material-symbols-rounded icon-xs">visibility</span>
+            Ver PDF
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

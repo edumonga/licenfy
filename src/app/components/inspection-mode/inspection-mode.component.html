@@ -1,0 +1,178 @@
+<div class="inspection-container">
+  <!-- Barra Superior de Controle (Oculta na Impressão) -->
+  <div class="inspection-control-bar no-print">
+    <div>
+      <div class="subtitle-badge">
+        <span class="material-symbols-rounded icon-sm">shield</span>
+        Modo Fiscalização Imediata (1-Clique)
+      </div>
+      <h1 class="page-title">Dossiê Unificado de Conformidade Legal</h1>
+      <p class="page-desc">Compilação instantânea de todos os alvarás, laudos e licenças vigentes, pronta para auditoria externa e fiscais.</p>
+    </div>
+
+    <div class="control-actions">
+      <div class="branch-select-group">
+        <label>Unidade a Fiscalizar:</label>
+        <select [ngModel]="selectedBranchId()" (ngModelChange)="selectBranch($event)" class="branch-select">
+          <option *ngFor="let b of branches()" [value]="b.id">{{ b.name }} ({{ b.city }}/{{ b.state }})</option>
+        </select>
+      </div>
+
+      <button class="btn btn-primary" (click)="printDossier()">
+        <span class="material-symbols-rounded">print</span>
+        Imprimir / Exportar PDF do Dossiê
+      </button>
+    </div>
+  </div>
+
+  <!-- Documento Oficial do Dossiê (Área Imprimível) -->
+  <div class="dossier-paper printable-area">
+    <!-- Cabeçalho Oficial -->
+    <div class="dossier-header">
+      <div class="brand-block">
+        <img src="logo.png" alt="Licenfy" class="dossier-logo" />
+        <div class="system-caption">PLATAFORMA INTEGRADA DE COMPLIANCE E REGULARIDADE OPERACIONAL</div>
+      </div>
+
+      <div class="auth-stamp">
+        <div class="stamp-title">
+          <span class="material-symbols-rounded icon-xs text-primary">verified</span>
+          CERTIFICADO DIGITAL DE CONFORMIDADE
+        </div>
+        <div class="stamp-row"><strong>Emissão:</strong> {{ generatedTimestamp() }}</div>
+        <div class="stamp-row"><strong>Autenticação:</strong> <span class="hash-code">{{ verificationHash() }}</span></div>
+        <div class="stamp-row"><strong>Status Geral:</strong> <span class="status-badge-text">REGULAR E AUDITADO</span></div>
+      </div>
+    </div>
+
+    <!-- Dados da Unidade Fiscalizada -->
+    <div class="company-card">
+      <div class="company-grid">
+        <div class="company-item">
+          <span class="c-label">Razão Social / Filial</span>
+          <span class="c-val">{{ currentBranch().name }}</span>
+        </div>
+        <div class="company-item">
+          <span class="c-label">CNPJ Oficial</span>
+          <span class="c-val mono-font">{{ currentBranch().cnpj }}</span>
+        </div>
+        <div class="company-item">
+          <span class="c-label">Município / UF</span>
+          <span class="c-val">{{ currentBranch().city }} - {{ currentBranch().state }}</span>
+        </div>
+        <div class="company-item">
+          <span class="c-label">Responsável Legal / Jurídico</span>
+          <span class="c-val">{{ currentBranch().responsibleManager }}</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Resumo Executivo para o Fiscal -->
+    <div class="exec-summary">
+      <div class="summary-metric-box">
+        <span class="metric-num">{{ currentBranch().complianceScore }}%</span>
+        <span class="metric-label">Score de Regularidade</span>
+      </div>
+      <div class="summary-metric-box">
+        <span class="metric-num">{{ branchLicenses().length }}</span>
+        <span class="metric-label">Licenças Válidas Anexadas</span>
+      </div>
+      <div class="summary-metric-box">
+        <span class="metric-num">{{ currentBranch().assetsCount.total }}</span>
+        <span class="metric-label">Ativos Físicos Inspecionados</span>
+      </div>
+      <div class="summary-metric-box">
+        <span class="metric-num text-regular">ZERO</span>
+        <span class="metric-label">Autuações Pendentes</span>
+      </div>
+    </div>
+
+    <!-- Relação de Licenças e Laudos Válidos -->
+    <div class="dossier-section">
+      <h3 class="section-heading">
+        <span class="material-symbols-rounded icon-sm text-primary">fact_check</span>
+        1. Relação Oficial de Alvarás, Licenças e Laudos Técnicos
+      </h3>
+
+      <table class="dossier-table">
+        <thead>
+          <tr>
+            <th>Documento / Obrigação</th>
+            <th>Órgão Expedidor</th>
+            <th>Nº Registro / Protocolo</th>
+            <th>Data de Emissão</th>
+            <th>Validade Oficial</th>
+            <th>Status Legal</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let lic of branchLicenses()">
+            <td>
+              <strong>{{ lic.title }}</strong>
+              <div *ngIf="lic.legalRequirementNote" class="doc-legal-note">{{ lic.legalRequirementNote }}</div>
+            </td>
+            <td>{{ lic.issuingBody }}</td>
+            <td class="mono-font">{{ lic.documentNumber }}</td>
+            <td>{{ lic.issueDate | date:'dd/MM/yyyy' }}</td>
+            <td>
+              <strong>{{ lic.expirationDate | date:'dd/MM/yyyy' }}</strong>
+            </td>
+            <td>
+              <span class="badge-status" [ngClass]="lic.status">
+                <span class="status-dot" [ngClass]="lic.status"></span>
+                {{ lic.status === 'regular' ? 'Vigente' : 'Em Renovação' }}
+              </span>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Interdependência Operacional (Extintores, Geradores, Manutenções) -->
+    <div class="dossier-section">
+      <h3 class="section-heading">
+        <span class="material-symbols-rounded icon-sm text-primary">precision_manufacturing</span>
+        2. Certificação de Manutenção Preventiva dos Ativos de Segurança
+      </h3>
+
+      <div class="operational-box">
+        <p class="op-desc">
+          Todos os equipamentos críticos vinculados às licenças municipais e estaduais possuem plano de manutenção preventiva contínuo e etiquetas patrimoniais com QR Code registradas na plataforma:
+        </p>
+        <div class="op-grid">
+          <div class="op-card">
+            <div class="op-card-title">Sistemas de Prevenção e Combate a Incêndio</div>
+            <div class="op-card-item"><strong>Recarga de Extintores:</strong> Teste hidrostático e anéis de identificação atualizados.</div>
+            <div class="op-card-item"><strong>Pressurização dos Hidrantes:</strong> Válvulas e mangueiras com laudo de teste estanque.</div>
+          </div>
+          <div class="op-card">
+            <div class="op-card-title">Instalações Elétricas & SPDA (Para-raios)</div>
+            <div class="op-card-item"><strong>Laudo NR-10:</strong> Termografia de painéis e aterramento conformes à norma regulamentadora.</div>
+            <div class="op-card-item"><strong>Geradores de Emergência:</strong> Bateria de testes de partida quinzenais registrada.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Rodapé do Dossiê com Carimbo Jurídico -->
+    <div class="dossier-footer">
+      <div class="footer-signatures">
+        <div class="signature-col">
+          <div class="sig-line"></div>
+          <div class="sig-name">{{ currentBranch().responsibleManager }}</div>
+          <div class="sig-title">Gestor Responsável de Compliance & Operações</div>
+        </div>
+
+        <div class="signature-col">
+          <div class="sig-line"></div>
+          <div class="sig-name">Licenfy Automated Compliance Engine</div>
+          <div class="sig-title">Assinatura Digital ICP-Brasil Padrão PAdES</div>
+        </div>
+      </div>
+
+      <div class="dossier-hash-footer">
+        Dossiê emitido em ambiente seguro pela plataforma Licenfy. Código de validação pública: <strong>{{ verificationHash() }}</strong>. Documento válido para exibição a auditores e autoridades públicas fiscalizadoras.
+      </div>
+    </div>
+  </div>
+</div>
