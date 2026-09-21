@@ -94,7 +94,7 @@
   margin: 0 auto;
   padding: 0 18px;
   display: grid;
-  grid-template-columns: 170px minmax(0, 1fr) 170px;
+  grid-template-columns: 170px minmax(0, 1fr) max-content;
   align-items: center;
   border-bottom: 1px solid #eef2f7;
   transition: border-color 0.25s ease, border-radius 0.25s ease, box-shadow 0.25s ease;
@@ -129,7 +129,7 @@
 .brand-logo {
   display: flex;
   align-items: center;
-  width: 154px;
+  width: 170px;
   height: 48px;
   text-decoration: none;
 }
@@ -153,7 +153,7 @@
   border: none;
   font-family: inherit;
   font-size: 0.84rem;
-  font-weight: 650;
+  font-weight: 600;
   color: #64748b;
   cursor: pointer;
   display: inline-flex;
@@ -183,6 +183,7 @@
   align-items: center;
   justify-content: flex-end;
   gap: 8px;
+  white-space: nowrap;
 }
 
 .lang-selector {
@@ -581,7 +582,7 @@
   gap: 8px;
   color: #334155;
   font-size: 0.72rem;
-  font-weight: 750;
+  font-weight: 700;
   letter-spacing: 0.07em;
   text-transform: uppercase;
 }
@@ -664,7 +665,7 @@
 .carousel-slide-caption strong {
   font-family: 'Plus Jakarta Sans', sans-serif;
   font-size: 1.1rem;
-  font-weight: 750;
+  font-weight: 700;
 }
 
 .carousel-img {
@@ -1937,7 +1938,7 @@
 .logo-text {
   font-family: 'Plus Jakarta Sans', sans-serif;
   font-size: 0.88rem;
-  font-weight: 750;
+  font-weight: 700;
   letter-spacing: -0.015em;
 }
 
@@ -2312,8 +2313,8 @@
 .footer-logo {
   width: 152px;
   height: 48px;
-  object-fit: cover;
-  object-position: center;
+  object-fit: contain;
+  object-position: left center;
   margin: -8px 0 8px -16px;
 }
 
@@ -2348,7 +2349,7 @@
   margin-bottom: 17px;
   color: #0052cc;
   font-size: 0.9rem;
-  font-weight: 750;
+  font-weight: 700;
 }
 
 .footer-links {
@@ -2538,6 +2539,35 @@
 
 /* Responsividade */
 @media (max-width: 1024px) {
+  .main-header {
+    padding-inline: 16px;
+  }
+
+  .header-container {
+    padding-inline: 12px;
+  }
+
+  .nav-menu {
+    gap: 8px;
+  }
+
+  .nav-link {
+    font-size: 0.78rem;
+  }
+
+  .header-right {
+    gap: 6px;
+  }
+
+  .btn-text {
+    padding-inline: 11px;
+  }
+
+  .btn-primary-pill {
+    min-width: 110px;
+    padding-inline: 14px;
+  }
+
   .hero-container {
     grid-template-columns: 1fr;
     gap: 40px;
@@ -2723,3 +2753,334 @@
   }
 }
 
+/* Mobile-first safeguards: keep decorative artwork and content in separate layers. */
+:host *,
+:host *::before,
+:host *::after {
+  min-width: 0;
+}
+
+:host :is(h1, h2, h3, h4, p, a, button, span) {
+  overflow-wrap: break-word;
+}
+
+@media (max-width: 1024px) {
+  .hero-section {
+    min-height: auto;
+  }
+
+  /* The hero is read vertically on tablets and phones, so the desktop ornaments
+     must not cross its text or calls to action. */
+  .hero-bg-shape-right,
+  .hero-bg-shape-left {
+    display: none;
+  }
+}
+
+@media (max-width: 768px) {
+  .announcement-bar {
+    min-height: 0;
+    padding: 8px 16px;
+  }
+
+  .announcement-wave-left {
+    display: none;
+  }
+
+  .announcement-content {
+    gap: 6px 10px;
+  }
+
+  .announcement-text {
+    max-width: 34ch;
+    font-size: 0.76rem;
+  }
+
+  .main-header,
+  .main-header.is-floating {
+    height: 66px;
+    padding: 0 12px;
+  }
+
+  .header-container,
+  .main-header.is-floating .header-container {
+    height: 54px;
+    padding: 0 8px;
+    gap: 6px;
+  }
+
+  /* logo.png has generous transparent padding; cover uses the useful artwork
+     without increasing the header or competing with the action buttons. */
+  .brand-logo {
+    width: 116px;
+    height: 36px;
+  }
+
+  .brand-logo .logo-img {
+    object-fit: cover;
+    object-position: center;
+  }
+
+  .header-right {
+    gap: 6px;
+    flex-shrink: 0;
+  }
+
+  .btn-text {
+    padding: 6px 8px;
+    font-size: 0.78rem;
+  }
+
+  .btn-primary-pill {
+    min-width: 0;
+    min-height: 36px;
+    padding: 7px 11px;
+    font-size: 0.76rem;
+  }
+
+  .hero-section {
+    padding: 34px 20px 48px;
+  }
+
+  .hero-container {
+    gap: 32px;
+    padding: 0;
+  }
+
+  .hero-content {
+    width: 100%;
+  }
+
+  .hero-title {
+    max-width: 20ch;
+    margin: 0 auto 18px;
+    font-size: clamp(1.8rem, 8.3vw, 2.25rem);
+    line-height: 1.15;
+    letter-spacing: -0.04em;
+  }
+
+  .hero-subtitle {
+    max-width: 35ch;
+    margin: 0 auto 28px;
+    font-size: 0.96rem;
+    line-height: 1.55;
+  }
+
+  .hero-cta-group {
+    margin-bottom: 28px;
+    gap: 10px;
+  }
+
+  .hero-cta-group button,
+  .roi-action-group button {
+    min-height: 52px;
+    padding: 12px 18px;
+    text-align: center;
+  }
+
+  .hero-trust-badges {
+    width: 100%;
+    padding-top: 18px;
+    gap: 12px;
+  }
+
+  .trust-item {
+    width: 100%;
+    align-items: flex-start;
+    font-size: 0.84rem;
+    line-height: 1.45;
+    text-align: left;
+  }
+
+  .trust-item .material-symbols-rounded {
+    margin-top: 1px;
+  }
+
+  .hero-image-carousel-card {
+    border-radius: 18px;
+  }
+
+  .social-proof-section {
+    padding: 42px 0;
+  }
+
+  .section-container {
+    padding: 0 20px;
+  }
+
+  .features-section {
+    padding: 64px 0;
+  }
+
+  .section-badge-header {
+    margin-bottom: 34px;
+  }
+
+  .section-headline {
+    font-size: clamp(1.8rem, 8vw, 2.25rem);
+    line-height: 1.15;
+  }
+
+  .section-subheadline {
+    font-size: 0.98rem;
+  }
+
+  .feature-card {
+    padding: 24px 20px;
+  }
+
+  .roi-banner-section {
+    padding: 48px 0;
+  }
+
+  .roi-banner-box {
+    border-radius: 20px;
+    padding: 32px 22px;
+  }
+
+  .roi-banner-title {
+    font-size: clamp(1.8rem, 8vw, 2.25rem);
+    line-height: 1.16;
+  }
+
+  .roi-banner-subtitle {
+    font-size: 0.96rem;
+    margin-bottom: 28px;
+  }
+
+  .roi-numbers-row {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 18px;
+    margin-bottom: 30px;
+  }
+
+  .number-val {
+    font-size: 2rem;
+  }
+
+  .roi-action-group {
+    width: 100%;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
+  }
+
+  .roi-action-group .btn-cta-white {
+    width: 100%;
+  }
+
+  .footer-showcase {
+    padding: 72px 16px 16px;
+  }
+
+  .footer-orb {
+    opacity: 0.55;
+  }
+
+  .footer-cta {
+    margin-bottom: 64px;
+  }
+
+  .footer-cta h2 {
+    font-size: clamp(2.5rem, 13vw, 4rem);
+  }
+
+  .footer-cta-actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .footer-cta-primary,
+  .footer-cta-secondary {
+    width: 100%;
+    min-height: 48px;
+  }
+
+  .main-footer {
+    padding: 30px 20px 24px;
+    border-radius: 24px;
+  }
+
+  .footer-top {
+    gap: 28px;
+    padding-bottom: 30px;
+  }
+
+  .footer-logo {
+    width: 144px;
+    height: 44px;
+    margin: -6px 0 6px -12px;
+  }
+
+  .footer-bottom {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+  }
+
+  .footer-socials {
+    margin-left: 0;
+  }
+
+  .copy-text {
+    white-space: normal;
+    line-height: 1.45;
+  }
+
+  .demo-modal-overlay {
+    padding: 16px;
+    align-items: flex-start;
+    overflow-y: auto;
+  }
+
+  .demo-modal-box {
+    margin: auto 0;
+    padding: 24px 20px;
+  }
+
+  .floating-assistant-container {
+    right: 12px;
+    bottom: 12px;
+    max-width: calc(100vw - 24px);
+  }
+
+  .assistant-bubble,
+  .assistant-chat-modal {
+    width: min(350px, calc(100vw - 24px));
+    max-width: calc(100vw - 24px);
+  }
+}
+
+@media (max-width: 360px) {
+  .hero-section {
+    padding-inline: 16px;
+  }
+
+  .section-container {
+    padding-inline: 16px;
+  }
+
+  .brand-logo {
+    width: 104px;
+    height: 34px;
+  }
+
+  .header-right {
+    gap: 4px;
+  }
+
+  .btn-text {
+    padding-inline: 6px;
+    font-size: 0.74rem;
+  }
+
+  .btn-primary-pill {
+    padding-inline: 8px;
+    font-size: 0.72rem;
+  }
+
+  .hero-title {
+    font-size: 1.78rem;
+  }
+}

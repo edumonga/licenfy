@@ -75,7 +75,7 @@
   align-items: center;
   width: 100%;
   margin-bottom: 22px;
-  transform: translate(36px, -24px);
+  transform: translateY(-20px);
 }
 
 .auth-brand-logo {
@@ -408,9 +408,14 @@
     padding: 30px 24px;
     justify-content: flex-end;
   }
-  .brand-content img {
-    width: 84px;
-    margin-bottom: 12px;
+  .brand-logo-center {
+    margin-bottom: 18px;
+    transform: translateY(-12px);
+  }
+  .brand-content .auth-brand-logo {
+    width: 148px;
+    max-width: 80%;
+    margin-bottom: 0;
   }
   .brand-content h1 {
     font-size: 1.45rem;
@@ -450,5 +455,4 @@
     font-size: 1.35rem;
   }
 }
-
 
