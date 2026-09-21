@@ -52,6 +52,19 @@
   align-items: center;
 }
 
+@media (max-width: 600px) {
+  .header-actions {
+    width: 100%;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .header-actions .btn {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
+
 /* Branch Selector Bar */
 .branch-selector-bar {
   display: flex;
@@ -170,6 +183,18 @@
   margin-bottom: 20px;
 }
 
+@media (max-width: 600px) {
+  .score-visual-container {
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+  }
+  .score-breakdown {
+    width: 100%;
+  }
+}
+
+
 .svg-gauge-wrap {
   position: relative;
   width: 140px;
@@ -284,11 +309,18 @@
   gap: 16px;
 }
 
-@media (max-width: 768px) {
+@media (min-width: 601px) and (max-width: 960px) {
+  .status-cards-col {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 600px) {
   .status-cards-col {
     grid-template-columns: 1fr;
   }
 }
+
 
 .stat-box {
   background: var(--color-white);
@@ -364,6 +396,19 @@
   box-shadow: var(--shadow-md);
 }
 
+@media (max-width: 768px) {
+  .unification-banner {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 14px;
+    padding: 16px;
+  }
+  .unification-banner .btn {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
 .unification-icon {
   width: 52px;
   height: 52px;
@@ -433,14 +478,17 @@
 
 .table-responsive {
   overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
 }
 
 .licenfy-table {
   width: 100%;
+  min-width: 680px;
   border-collapse: collapse;
   text-align: left;
   font-size: 0.875rem;
 }
+
 
 .licenfy-table th {
   background: var(--color-bg-subtle);

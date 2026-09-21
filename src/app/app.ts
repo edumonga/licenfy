@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { LicenfyService } from './core/services/licenfy.service';
@@ -46,6 +46,8 @@ export class App {
   readonly score = this.service.overallComplianceScore;
   readonly status = this.service.overallComplianceStatus;
 
+  readonly isMobileMenuOpen = signal(false);
+
   constructor() {
     // Configura a chave Gemini no localStorage se ainda não estiver configurada
     if (!this.gemini.isConfigured()) {
@@ -53,12 +55,22 @@ export class App {
     }
   }
 
+  toggleMobileMenu() {
+    this.isMobileMenuOpen.update(v => !v);
+  }
+
+  closeMobileMenu() {
+    this.isMobileMenuOpen.set(false);
+  }
+
   setView(view: 'landing' | 'auth' | 'app') {
     this.service.setView(view);
+    this.closeMobileMenu();
   }
 
   setTab(tab: 'dashboard' | 'units' | 'vault' | 'assets' | 'notifications' | 'inspection' | 'roi') {
     this.service.setTab(tab);
+    this.closeMobileMenu();
   }
 
   onBranchChange(id: string) {

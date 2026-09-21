@@ -4,11 +4,19 @@
   <app-auth />
 } @else {
   <div class="licenfy-layout">
+    <!-- Backdrop para fechar menu no mobile -->
+    <div class="mobile-sidebar-backdrop" [class.open]="isMobileMenuOpen()" (click)="closeMobileMenu()"></div>
+
     <!-- Sidebar de Navegação Corporativa -->
-    <aside class="licenfy-sidebar no-print">
-      <!-- Logo Oficial Licenfy -->
-      <div class="sidebar-logo-block" (click)="setView('landing')" style="cursor: pointer;" title="Voltar para a Página Inicial do Site">
-        <img src="logo-auth.png" alt="Licenfy" class="sidebar-logo" />
+    <aside class="licenfy-sidebar no-print" [class.mobile-open]="isMobileMenuOpen()">
+      <!-- Logo Oficial Licenfy e Botão de Fechar Mobile -->
+      <div class="sidebar-logo-block">
+        <div class="sidebar-brand-click" (click)="setView('landing')" style="cursor: pointer;" title="Voltar para a Página Inicial do Site">
+          <img src="logo-auth.png" alt="Licenfy" class="sidebar-logo" />
+        </div>
+        <button class="btn-close-sidebar show-mobile-only" (click)="closeMobileMenu()" title="Fechar menu">
+          <span class="material-symbols-rounded">close</span>
+        </button>
       </div>
 
       <!-- Navegação Principal -->
@@ -90,17 +98,22 @@
       <!-- Topbar Superior -->
       <header class="licenfy-topbar no-print">
         <div class="topbar-left">
-          <span class="breadcrumb-app">Licenfy Compliance</span>
-          <span class="breadcrumb-sep">/</span>
+          <!-- Botão Hambúrguer Mobile -->
+          <button class="btn-mobile-menu show-mobile-only" (click)="toggleMobileMenu()" title="Abrir menu de módulos">
+            <span class="material-symbols-rounded">menu</span>
+          </button>
+          
+          <span class="breadcrumb-app hide-mobile">Licenfy Compliance</span>
+          <span class="breadcrumb-sep hide-mobile">/</span>
           <span class="breadcrumb-current">
             @switch (currentTab()) {
               @case ('dashboard') { Dashboard }
-              @case ('units') { Unidades, responsáveis e hierarquia }
-              @case ('vault') { Cofre Digital com Leitura OCR }
-              @case ('assets') { Gestão de Ativos & Etiquetas QR Code }
-              @case ('notifications') { Notificações Corporativas por E-mail }
-              @case ('inspection') { Dossiê do Modo Fiscalização }
-              @case ('roi') { Relatório de Economia Gerada (ROI) }
+              @case ('units') { Unidades & Hierarquia }
+              @case ('vault') { Cofre Digital & OCR }
+              @case ('assets') { Gestão de Ativos & QR }
+              @case ('notifications') { Alertas de E-mail }
+              @case ('inspection') { Modo Fiscalização }
+              @case ('roi') { Relatório de ROI }
             }
           </span>
         </div>
@@ -113,15 +126,15 @@
               [ngModel]="selectedBranchId()" 
               (ngModelChange)="onBranchChange($event)"
               class="topbar-branch-select">
-              <option value="all">Todas as Filiais (3 Unidades)</option>
+              <option value="all">Todas as Filiais</option>
               <option *ngFor="let b of branches()" [value]="b.id">{{ b.name }}</option>
             </select>
           </div>
 
           <!-- Botão de Ação Rápida: Modo Fiscalização -->
-          <button class="btn btn-outline btn-sm" (click)="setTab('inspection')" title="Abrir Modo Fiscalização">
+          <button class="btn btn-outline btn-sm topbar-action-btn" (click)="setTab('inspection')" title="Abrir Modo Fiscalização">
             <span class="material-symbols-rounded icon-sm text-primary">policy</span>
-            Modo Fiscalização
+            <span class="btn-label-text hide-mobile">Fiscalização</span>
           </button>
 
           <!-- Indicador de Notificação -->
@@ -131,9 +144,9 @@
           </button>
 
           <!-- Botão Sair da Plataforma -->
-          <button class="btn btn-outline btn-sm" (click)="logout()" title="Encerrar sessão">
+          <button class="btn btn-outline btn-sm topbar-action-btn" (click)="logout()" title="Encerrar sessão">
             <span class="material-symbols-rounded icon-sm text-danger">logout</span>
-            Sair
+            <span class="btn-label-text hide-mobile">Sair</span>
           </button>
         </div>
       </header>
