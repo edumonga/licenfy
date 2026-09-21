@@ -21,7 +21,7 @@ function normalizeResult(text: string) {
   };
 }
 
-export default async function handler(req: any, res: any) {
+async function handler(req: any, res: any) {
   if (req.method !== 'POST') return sendJson(res, 405, { message: 'Método não permitido.' });
   const apiKey = process.env.GEMINI_API_KEY;
   if (!apiKey) return sendJson(res, 503, { message: 'OCR indisponível: configure GEMINI_API_KEY na Vercel.' });
@@ -50,3 +50,7 @@ export default async function handler(req: any, res: any) {
   }
   return sendJson(res, 502, { message: `OCR indisponível: ${lastError}` });
 }
+
+// O projeto usa o runtime CommonJS da Vercel; evitar `export default` impede
+// a falha de carregamento de módulo ES antes de a função ser executada.
+module.exports = handler;
