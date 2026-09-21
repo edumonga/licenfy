@@ -216,7 +216,7 @@ export class LicenfyService {
     {
       id: 'ast-001',
       assetTag: 'EQ-0821',
-      qrCodeValue: 'https://app.licenfy.com.br/asset/EQ-0821',
+      qrCodeValue: 'https://licenfy.vercel.app/asset/EQ-0821',
       name: 'Gerador Diesel de Emergência Stemac 180kVA',
       category: 'Geradores',
       branchId: 'rj-filial',
@@ -257,7 +257,7 @@ export class LicenfyService {
     {
       id: 'ast-002',
       assetTag: 'EQ-0450',
-      qrCodeValue: 'https://app.licenfy.com.br/asset/EQ-0450',
+      qrCodeValue: 'https://licenfy.vercel.app/asset/EQ-0450',
       name: 'Sistema de Climatização Central VRF Daikin 30HP',
       category: 'Climatização',
       branchId: 'sp-matriz',
@@ -288,7 +288,7 @@ export class LicenfyService {
     {
       id: 'ast-003',
       assetTag: 'EQ-0199',
-      qrCodeValue: 'https://app.licenfy.com.br/asset/EQ-0199',
+      qrCodeValue: 'https://licenfy.vercel.app/asset/EQ-0199',
       name: 'Bateria de Extintores e Hidrantes - Bloco A e B',
       category: 'Extintores',
       branchId: 'sp-matriz',
@@ -321,7 +321,7 @@ export class LicenfyService {
     {
       id: 'ast-004',
       assetTag: 'EQ-0904',
-      qrCodeValue: 'https://app.licenfy.com.br/asset/EQ-0904',
+      qrCodeValue: 'https://licenfy.vercel.app/asset/EQ-0904',
       name: 'Chiller de Refrigeração Industrial Trane 120TR',
       category: 'Climatização',
       branchId: 'pr-cd',
@@ -600,8 +600,4 @@ export class LicenfyService {
     this.notificationLogs.update(logs => [newLog, ...logs]);
   }
 
-  // Alias para compatibilidade
-  sendSimulatedWhatsApp(license: LicenseDocument) {
-    this.sendSimulatedEmail(license);
-  }
 }

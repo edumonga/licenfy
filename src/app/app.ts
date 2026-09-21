@@ -1,9 +1,8 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, computed, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { LicenfyService } from './core/services/licenfy.service';
 import { AuthService } from './core/services/auth.service';
-import { GeminiOcrService } from './core/services/gemini-ocr.service';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { DigitalVaultComponent } from './components/digital-vault/digital-vault.component';
 import { AssetManagementComponent } from './components/asset-management/asset-management.component';
@@ -36,7 +35,6 @@ import { AuthComponent } from './components/auth/auth.component';
 export class App {
   readonly service = inject(LicenfyService);
   readonly auth = inject(AuthService);
-  readonly gemini = inject(GeminiOcrService);
 
   readonly currentView = this.service.currentView;
   readonly currentTab = this.service.currentTab;
@@ -47,12 +45,15 @@ export class App {
   readonly status = this.service.overallComplianceStatus;
 
   readonly isMobileMenuOpen = signal(false);
+  readonly publicAssetTag = signal(this.getPublicAssetTag());
+  readonly publicAsset = computed(() => {
+    const assetTag = this.publicAssetTag();
+    return assetTag ? this.service.assets().find(asset => asset.assetTag === assetTag) || null : null;
+  });
 
-  constructor() {
-    // Configura a chave Gemini no localStorage se ainda não estiver configurada
-    if (!this.gemini.isConfigured()) {
-      this.gemini.setApiKey('');
-    }
+  private getPublicAssetTag(): string | null {
+    const match = window.location.pathname.match(/^\/asset\/([^/]+)\/?$/);
+    return match ? decodeURIComponent(match[1]) : null;
   }
 
   toggleMobileMenu() {

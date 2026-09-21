@@ -1,4 +1,4 @@
-import { Component, inject, signal, OnInit, OnDestroy, HostListener } from '@angular/core';
+import { Component, computed, inject, signal, OnInit, OnDestroy, HostListener } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { LicenfyService } from '../../core/services/licenfy.service';
@@ -30,6 +30,10 @@ export class LandingPageComponent implements OnInit, OnDestroy {
 
   readonly isDemoModalOpen = signal<boolean>(false);
   readonly isHeaderFloating = signal<boolean>(false);
+  readonly accumulatedSavingsDisplay = computed(() => {
+    const totalInThousands = this.service.roiData().totalFinancialGain / 1000;
+    return `R$ ${totalInThousands.toLocaleString('pt-BR', { minimumFractionDigits: 1, maximumFractionDigits: 1 })}k+`;
+  });
 
   // Carrossel de Imagens dos Recursos Oficiais Licenfy
   readonly slides: ImageSlide[] = [

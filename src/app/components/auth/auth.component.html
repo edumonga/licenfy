@@ -8,13 +8,13 @@
         <img src="logo-auth.png" alt="Licenfy" class="auth-brand-logo" />
       </div>
       <span class="brand-overline">PLATAFORMA DE COMPLIANCE</span>
-      <h1>Controle operacional, sem perder o ritmo da operação.</h1>
+      <h1>Controle total, sem perder o ritmo do dia a dia.</h1>
       <p>Documentos, prazos, ativos e responsáveis em um só lugar.</p>
       <div class="brand-points">
         <span><i>✓</i> Acesso seguro para sua equipe</span>
         <span><i>✓</i> Alertas e histórico auditável</span>
         <span><i>✓</i> Visão consolidada por unidade</span>
-        <span><i>✓</i> Acesso de teste imediato (sem banco de dados)</span>
+        <span><i>✓</i> Ambiente de teste com dados de exemplo</span>
       </div>
     </div>
     <span class="brand-footer">© 2026 Licenfy Tecnologia</span>
@@ -40,8 +40,8 @@
 
         <form (submit)="$event.preventDefault(); submitLogin()" class="auth-form">
           <label>
-            Usuário ou e-mail
-            <input [(ngModel)]="loginData.login" name="login" autocomplete="username" placeholder="Seu usuário ou e-mail" required />
+            E-mail corporativo
+            <input [(ngModel)]="loginData.login" name="login" type="email" autocomplete="email" placeholder="seu@empresa.com.br" required />
           </label>
           <label>
             Senha
@@ -59,6 +59,7 @@
             {{ isLoading() ? 'Autenticando...' : 'Entrar na plataforma' }}
             <span class="material-symbols-rounded">arrow_forward</span>
           </button>
+          <a class="forgot-password-link" href="mailto:suporte@licenfy.com.br?subject=Recupera%C3%A7%C3%A3o%20de%20senha">Esqueci minha senha</a>
         </form>
 
         <p class="auth-switch">

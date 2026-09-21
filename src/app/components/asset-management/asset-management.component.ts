@@ -70,7 +70,7 @@ export class AssetManagementComponent {
     const warranty = this.newAsset.warrantyExpirationDate || '2027-09-20';
     const days = Math.max(1, Math.ceil((new Date(warranty).getTime() - new Date('2026-09-20').getTime()) / 86400000));
     this.service.addAsset({
-      id: 'ast-' + Date.now(), assetTag: this.newAsset.assetTag, qrCodeValue: `https://app.licenfy.com.br/asset/${this.newAsset.assetTag}`,
+      id: 'ast-' + Date.now(), assetTag: this.newAsset.assetTag, qrCodeValue: `https://licenfy.vercel.app/asset/${encodeURIComponent(this.newAsset.assetTag)}`,
       name: this.newAsset.name, category: 'Segurança', branchId: branch.id, branchName: branch.name,
       locationDetails: 'Localização a confirmar', brandModel: 'Modelo a confirmar', serialNumber: 'Não informado', invoiceNumber: this.newAsset.invoiceNumber,
       purchaseDate: '2026-09-20', warrantyExpirationDate: warranty, isWarrantyActive: true, daysUntilWarrantyExpires: days,

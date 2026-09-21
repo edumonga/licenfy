@@ -556,8 +556,8 @@
   align-items: center;
   gap: 10px;
   padding: 10px 16px;
-  background: rgba(239, 68, 68, 0.08);
-  border: 1px solid rgba(239, 68, 68, 0.25);
+  background: rgba(37, 99, 235, 0.07);
+  border: 1px solid rgba(37, 99, 235, 0.2);
   border-radius: 10px;
   font-size: 0.82rem;
   color: var(--color-text-muted);
@@ -568,6 +568,7 @@
   border-color: rgba(37, 99, 235, 0.2);
 }
 .gemini-status-bar.configured .material-symbols-rounded { color: var(--color-primary); }
+.gemini-status-bar .material-symbols-rounded { color: var(--color-primary); }
 .gemini-status-bar strong { color: var(--color-slate-dark); }
 .gemini-status-bar span:first-of-type { flex: 1; }
 
@@ -637,4 +638,3 @@
 }
 .ocr-error-bar .material-symbols-rounded { color: #dc2626; flex-shrink: 0; }
 .ocr-error-bar span { flex: 1; }
-

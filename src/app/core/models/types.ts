@@ -106,7 +106,7 @@ export interface PhysicalAsset {
 export interface NotificationRule {
   id: string;
   daysBeforeExpiration: number; // 90, 60, 30, 7
-  channels: ('whatsapp' | 'email')[];
+  channels: 'email'[];
   recipients: string[]; // Telefone celular ou emails
   active: boolean;
   alertLevel: 'informativo' | 'alerta' | 'critico';
@@ -115,7 +115,7 @@ export interface NotificationRule {
 export interface NotificationLog {
   id: string;
   timestamp: string;
-  channel: 'whatsapp' | 'email';
+  channel: 'email';
   recipient: string;
   licenseOrAssetName: string;
   branchName: string;

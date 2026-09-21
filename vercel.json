@@ -1,0 +1,7 @@
+{
+  "buildCommand": "npm run build",
+  "outputDirectory": "dist/licenfy/browser",
+  "rewrites": [
+    { "source": "/asset/:assetTag", "destination": "/index.html" }
+  ]
+}

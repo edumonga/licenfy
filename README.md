@@ -36,6 +36,16 @@ ng build
 
 This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
 
+## Vercel: OCR e QR Codes
+
+O OCR usa a função TypeScript `api/ocr.ts`. Configure a variável de ambiente `GEMINI_API_KEY` no projeto Vercel para os ambientes Production, Preview e Development. A chave fica exclusivamente no servidor e nunca é enviada ao navegador.
+
+Depois de configurar a variável, faça um novo deploy. O endpoint `/api/ocr` aceita PDF, JPG e PNG de até 4 MB.
+
+Os QR Codes apontam para `https://licenfy.vercel.app/asset/<patrimonio>`. O `vercel.json` redireciona essa URL para a página pública de identificação do ativo. Os ativos de demonstração já são consultáveis dessa forma.
+
+Ativos criados na interface atual ainda vivem apenas na memória do navegador. Para que novos ativos continuem disponíveis depois de um reload ou em outro dispositivo, conecte o cadastro a um banco de dados (por exemplo, Vercel Postgres ou KV).
+
 ## Running unit tests
 
 To execute unit tests with the [Vitest](https://vitest.dev/) test runner, use the following command:

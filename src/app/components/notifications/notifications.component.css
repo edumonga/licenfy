@@ -655,7 +655,6 @@ input:checked + .slider:before {
   font-size: 0.75rem;
   font-weight: 600;
 }
-.channel-pill.whatsapp { background: #dcfce7; color: #15803d; }
 .channel-pill.email { background: #f1f5f9; color: #475569; }
 
 .log-time {

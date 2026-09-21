@@ -1,16 +1,3 @@
-<!-- Barra de Notificação Superior Corporativa com Onda Azul à Esquerda -->
-<div class="announcement-bar">
-  <!-- Onda Orgânica Azul à Esquerda igual ao print do Pipefy -->
-  <div class="announcement-wave-left"></div>
-  
-  <div class="announcement-content">
-    <span class="announcement-text">
-      Licenfy é reconhecida pela gestão e automação de licenças e alvarás pelo Gartner®
-    </span>
-    <button class="announcement-btn" (click)="openDemoModal()">Saiba mais</button>
-  </div>
-</div>
-
 <!-- Header / Barra de Navegação -->
 <header class="main-header" [class.is-floating]="isHeaderFloating()">
   <div class="header-container">
@@ -56,8 +43,8 @@
         Entrar
       </button>
 
-      <button class="btn-primary-pill" (click)="openSignup()">
-        Teste grátis
+      <button class="btn-primary-pill" (click)="openDemoModal()">
+        Agende uma demo
       </button>
     </div>
 
@@ -74,10 +61,10 @@
   <div class="hero-container">
     <!-- Coluna Esquerda: Headline & Chamadas Alinhadas à Esquerda -->
     <div class="hero-content">
-      <h1 class="hero-title">Com workflows, OCR e automação, a blindagem regulatória começa em 5 minutos</h1>
+      <h1 class="hero-title">Nunca mais seja interditado por um alvará que venceu sem avisar</h1>
 
       <p class="hero-subtitle">
-        O Licenfy é a forma mais simples e ágil de centralizar suas licenças, alvarás e ativos com o poder do monitoramento contínuo e réguas automáticas por e-mail corporativo.
+        O Licenfy centraliza suas licenças, alvarás e ativos com monitoramento contínuo e alertas que escalam por e-mail corporativo — do time local até a diretoria.
       </p>
 
       <div class="hero-cta-group">
@@ -86,105 +73,25 @@
           <span class="material-symbols-rounded arrow-icon">north_east</span>
         </button>
 
-        <button class="btn-cta-light" (click)="openSignup()">
-          <span>Teste grátis</span>
-        </button>
       </div>
 
       <!-- Quick Trust Indicators -->
       <div class="hero-trust-badges">
         <div class="trust-item">
-          <span class="material-symbols-rounded text-success">check_circle</span>
+          <span class="material-symbols-rounded text-neutral">check_circle</span>
           <span>Zero risco de interdição nas filiais</span>
         </div>
         <div class="trust-item">
-          <span class="material-symbols-rounded text-success">check_circle</span>
-          <span>OCR de alvarás em PDF com 99.4% de precisão</span>
+          <span class="material-symbols-rounded text-neutral">check_circle</span>
+          <span>OCR de alvarás em PDF — meta de 99%+ de precisão</span>
         </div>
         <div class="trust-item">
-          <span class="material-symbols-rounded text-success">check_circle</span>
+          <span class="material-symbols-rounded text-neutral">check_circle</span>
           <span>Pronto para redes com 1 a 100+ unidades</span>
         </div>
       </div>
     </div>
 
-    <!-- Coluna Direita: Carrossel de Imagens dos Recursos e Soluções Licenfy -->
-    <div class="hero-carousel-wrapper" (mouseenter)="stopCarouselAutoPlay()" (mouseleave)="startCarouselAutoPlay()">
-      <div class="hero-image-carousel-card floating-card">
-        <div class="carousel-card-header">
-          <div class="carousel-live-label">
-            <span class="carousel-live-dot"></span>
-            Plataforma Licenfy
-          </div>
-          <span class="carousel-slide-number">0{{ currentSlideIndex() + 1 }} <span>/ 0{{ slides.length }}</span></span>
-        </div>
-        
-        <!-- Viewport do Carrossel com as 3 Imagens -->
-        <div class="carousel-viewport">
-          <div class="carousel-track" [style.transform]="'translateX(-' + (currentSlideIndex() * 100) + '%)'">
-            @for (slide of slides; track slide.id; let i = $index) {
-              <div class="carousel-slide-item" [class.active]="currentSlideIndex() === i">
-                <img 
-                  [src]="slide.image" 
-                  [alt]="slide.alt"
-                  class="carousel-img" 
-                  loading="eager"
-                  (click)="goToApp('dashboard')"
-                  title="Clique para testar o Licenfy"
-                />
-              </div>
-            }
-          </div>
-
-          <div class="carousel-slide-caption" aria-live="polite">
-            <span>Veja por dentro</span>
-            <strong>{{ slides[currentSlideIndex()].title }}</strong>
-          </div>
-
-          <!-- Botões de Navegação Direta Sobrepostos -->
-          <button 
-            type="button" 
-            class="carousel-arrow-btn prev" 
-            (click)="prevSlide()" 
-            aria-label="Slide anterior"
-            title="Slide anterior">
-            <span class="material-symbols-rounded">chevron_left</span>
-          </button>
-
-          <button 
-            type="button" 
-            class="carousel-arrow-btn next" 
-            (click)="nextSlide()" 
-            aria-label="Próximo slide"
-            title="Próximo slide">
-            <span class="material-symbols-rounded">chevron_right</span>
-          </button>
-        </div>
-
-        <!-- Barra Inferior com Indicadores e Abas Interativas -->
-        <div class="carousel-bottom-bar">
-          <div class="carousel-nav-tabs">
-            @for (slide of slides; track slide.id; let i = $index) {
-              <button 
-                type="button"
-                class="c-pill-btn" 
-                [class.active]="currentSlideIndex() === i"
-                (click)="setSlide(i)"
-                [attr.aria-pressed]="currentSlideIndex() === i"
-                [attr.aria-label]="'Ver ' + slide.title">
-                <span class="pill-index">0{{ i + 1 }}</span>
-                <span class="pill-title">{{ slide.title }}</span>
-              </button>
-            }
-          </div>
-
-          <div class="carousel-progress" aria-hidden="true">
-            <span [style.transform]="'scaleX(' + ((currentSlideIndex() + 1) / slides.length) + ')' "></span>
-          </div>
-        </div>
-
-      </div>
-    </div>
   </div>
 </section>
 
@@ -195,16 +102,6 @@
     
     <div class="logos-grid">
       <div class="logo-box">
-        <span class="material-symbols-rounded logo-icon">storefront</span>
-        <span class="logo-text">Varejo multi-loja</span>
-        <span class="logo-detail">Redes de 5 a 50 unidades</span>
-      </div>
-      <div class="logo-box">
-        <span class="material-symbols-rounded logo-icon">restaurant</span>
-        <span class="logo-text">Alimentação</span>
-        <span class="logo-detail">Restaurantes e food service</span>
-      </div>
-      <div class="logo-box">
         <span class="material-symbols-rounded logo-icon">factory</span>
         <span class="logo-text">Indústria leve</span>
         <span class="logo-detail">Ambiental, ativos e manutenção</span>
@@ -213,6 +110,16 @@
         <span class="material-symbols-rounded logo-icon">local_hospital</span>
         <span class="logo-text">Saúde</span>
         <span class="logo-detail">Farmácias e clínicas</span>
+      </div>
+      <div class="logo-box">
+        <span class="material-symbols-rounded logo-icon">storefront</span>
+        <span class="logo-text">Varejo multi-loja</span>
+        <span class="logo-detail">Redes de 5 a 50 unidades</span>
+      </div>
+      <div class="logo-box">
+        <span class="material-symbols-rounded logo-icon">restaurant</span>
+        <span class="logo-text">Alimentação</span>
+        <span class="logo-detail">Restaurantes e food service</span>
       </div>
     </div>
   </div>
@@ -263,8 +170,8 @@
 
       <!-- Card 3: Gestão de Ativos Físicos & QR Code -->
       <div class="feature-card hover-lift" (click)="goToApp('assets')">
-        <div class="feature-icon-wrapper bg-amber-subtle">
-          <span class="material-symbols-rounded text-amber">qr_code_2</span>
+        <div class="feature-icon-wrapper bg-navy-subtle">
+          <span class="material-symbols-rounded text-navy-muted">qr_code_2</span>
         </div>
         <h3 class="feature-title">Ativos Físicos com QR Code</h3>
         <p class="feature-desc">
@@ -276,12 +183,12 @@
         </div>
       </div>
 
-      <!-- Card 4: Alertas de E-mail Corporativo -->
+      <!-- Card 4: Alertas Inteligentes -->
       <div class="feature-card hover-lift" (click)="goToApp('notifications')">
-        <div class="feature-icon-wrapper bg-emerald-subtle">
-          <span class="material-symbols-rounded text-emerald">mark_email_read</span>
+        <div class="feature-icon-wrapper bg-navy-subtle">
+          <span class="material-symbols-rounded text-navy-muted">mark_email_read</span>
         </div>
-        <h3 class="feature-title">Alertas de E-mail Corporativo</h3>
+        <h3 class="feature-title">Alertas Inteligentes</h3>
         <p class="feature-desc">
           Dispare notificações automáticas por e-mail para o gerente da unidade, compliance e diretoria com 90, 60 e 30 dias de antecedência. Garanta governança com trilha de auditoria.
         </p>
@@ -307,26 +214,23 @@
 
         <div class="roi-numbers-row">
           <div class="roi-number-item">
-            <span class="number-val">R$ 480k+</span>
-            <span class="number-label">Economia média em multas por ano</span>
+            <span class="number-val">{{ accumulatedSavingsDisplay() }}</span>
+            <span class="number-label">Economia acumulada gerada na plataforma</span>
           </div>
           <div class="roi-number-item">
-            <span class="number-val">0</span>
-            <span class="number-label">Dias de interdição nas empresas clientes</span>
+            <span class="number-val">Zero</span>
+            <span class="number-label">Autuações pendentes nas unidades monitoradas</span>
           </div>
           <div class="roi-number-item">
-            <span class="number-val">99.8%</span>
-            <span class="number-label">Conformidade nas fiscalizações presenciais</span>
+            <span class="number-val">94%</span>
+            <span class="number-label">Score médio de conformidade nas unidades monitoradas</span>
           </div>
         </div>
 
         <div class="roi-action-group">
           <button class="btn-cta-blue" (click)="openDemoModal()">
-            <span>Calcular ROI da minha empresa</span>
+            <span>Agende uma demo</span>
             <span class="material-symbols-rounded">north_east</span>
-          </button>
-          <button class="btn-cta-white" (click)="goToApp('roi')">
-            <span>Ver Relatório de ROI do SaaS</span>
           </button>
         </div>
       </div>
@@ -344,11 +248,10 @@
     <h2>Controle total.<br><strong>Comece agora.</strong></h2>
     <p>Transforme licenças, alvarás e ativos em uma operação segura e previsível.</p>
     <div class="footer-cta-actions">
-      <button class="footer-cta-primary" (click)="openSignup()">
-        Teste grátis
+      <button class="footer-cta-primary" (click)="openDemoModal()">
+        Agende uma demo
         <span class="material-symbols-rounded">arrow_forward</span>
       </button>
-      <button class="footer-cta-secondary" (click)="openDemoModal()">Fale com um especialista</button>
     </div>
   </div>
 
@@ -379,7 +282,7 @@
           <li><a href="#" (click)="$event.preventDefault(); goToApp('vault')">Cofre Digital & OCR</a></li>
           <li><a href="#" (click)="$event.preventDefault(); goToApp('assets')">Ativos & QR Code</a></li>
           <li><a href="#" (click)="$event.preventDefault(); goToApp('inspection')">Modo Fiscalização</a></li>
-          <li><a href="#" (click)="$event.preventDefault(); goToApp('notifications')">Alertas de E-mail</a></li>
+          <li><a href="#" (click)="$event.preventDefault(); goToApp('notifications')">Alertas Inteligentes</a></li>
         </ul>
       </div>
 
@@ -401,10 +304,6 @@
           <li><a href="tel:+551140001234">+55 11 4000-1234</a></li>
           <li><a href="#" (click)="$event.preventDefault(); openDemoModal()">Agendar com Consultor</a></li>
         </ul>
-        <button class="btn-footer-saas" (click)="openLogin()">
-          <span>Acessar Plataforma SaaS</span>
-          <span class="material-symbols-rounded">arrow_forward</span>
-        </button>
       </div>
     </div>
 

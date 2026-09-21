@@ -24,44 +24,12 @@
         </div>
       </div>
       <div class="ocr-quick-samples">
-        @if (!isGeminiConfigured()) {
-          <span class="sample-label">Simular com modelo:</span>
-          <button class="btn btn-outline btn-xs" (click)="simulateOcrUpload('alvara')">
-            <span class="material-symbols-rounded icon-xs text-primary">description</span>
-            Alvará Prefeitura SP
-          </button>
-          <button class="btn btn-outline btn-xs" (click)="simulateOcrUpload('bombeiros')">
-            <span class="material-symbols-rounded icon-xs text-primary">local_fire_department</span>
-            Laudo AVCB Bombeiros
-          </button>
-          <button class="btn btn-outline btn-xs" (click)="simulateOcrUpload('sanitaria')">
-            <span class="material-symbols-rounded icon-xs text-primary">health_and_safety</span>
-            Licença Sanitária ANVISA
-          </button>
-        }
       </div>
     </div>
-    <!-- Banner de status Gemini -->
-    <div class="gemini-status-bar" [class.configured]="isGeminiConfigured()">
+    <div class="gemini-status-bar configured">
       <span class="material-symbols-rounded icon-sm">auto_awesome</span>
-      @if (isGeminiConfigured()) {
-        <span><strong>Gemini Vision AI ativado</strong> — uploads reais serão processados pelo Gemini Flash AI</span>
-        <button class="btn-gemini-change" (click)="showApiKeyInput.set(!showApiKeyInput())">Trocar chave</button>
-      } @else {
-        <span><strong>Gemini não configurado</strong> — modo simulação ativo. Configure sua chave para OCR real.</span>
-        <button class="btn-gemini-config" (click)="showApiKeyInput.set(!showApiKeyInput())">Configurar chave Gemini</button>
-      }
+      <span><strong>OCR inteligente protegido</strong> — documentos são processados com segurança pela plataforma.</span>
     </div>
-
-    @if (showApiKeyInput()) {
-      <div class="gemini-key-form">
-        <span class="material-symbols-rounded icon-sm text-primary">key</span>
-        <input [(ngModel)]="geminiKeyInput" name="geminiKey" type="password" class="gemini-key-input" placeholder="Cole aqui sua chave da API Gemini (aistudio.google.com/apikey)" />
-        <button class="btn btn-primary btn-sm" (click)="saveGeminiKey()" [disabled]="!geminiKeyInput.trim()">
-          <span class="material-symbols-rounded icon-sm">save</span> Salvar
-        </button>
-      </div>
-    }
 
     <!-- Dropzone interativo -->
     <div class="dropzone" [class.scanning]="isScanning()">
@@ -73,20 +41,12 @@
           <span class="material-symbols-rounded drop-icon">cloud_upload</span>
         </div>
         <h3 class="drop-main-text">Arraste seu PDF ou imagem aqui</h3>
-        <p class="drop-sub-text">Suporta PDF, JPG, PNG e XML de NFe (Até 25MB)</p>
+        <p class="drop-sub-text">Suporta PDF, JPG e PNG (até 4 MB)</p>
         <label class="btn btn-primary btn-sm file-picker">
           <span class="material-symbols-rounded icon-sm">upload_file</span>
           Selecionar Arquivo do Computador
           <input type="file" accept=".pdf,.jpg,.jpeg,.png" (change)="onFileSelected($event)" />
         </label>
-        @if (!isGeminiConfigured()) {
-          <span class="demo-mode-hint">ou simule com um modelo:</span>
-          <div class="demo-btns">
-            <button class="btn btn-outline btn-xs" (click)="simulateOcrUpload('alvara')">Simular Alvará</button>
-            <button class="btn btn-outline btn-xs" (click)="simulateOcrUpload('bombeiros')">Simular AVCB</button>
-            <button class="btn btn-outline btn-xs" (click)="simulateOcrUpload('sanitaria')">Simular VISA</button>
-          </div>
-        }
       </div>
 
       <!-- Estado: Escaneando -->

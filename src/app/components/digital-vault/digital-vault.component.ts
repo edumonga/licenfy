@@ -28,10 +28,6 @@ export class DigitalVaultComponent {
   readonly ocrError = signal<string>('');
   readonly usedRealAi = signal<boolean>(false);
 
-  // Configuração da chave Gemini
-  readonly showApiKeyInput = signal<boolean>(false);
-  geminiKeyInput = '';
-
   // Formulário de Extração
   extractedData = {
     title: 'Alvará de Licença e Localização - 2026/2027',
@@ -60,18 +56,6 @@ export class DigitalVaultComponent {
     });
   }
 
-  isGeminiConfigured(): boolean {
-    return this.gemini.isConfigured();
-  }
-
-  saveGeminiKey() {
-    if (this.geminiKeyInput.trim()) {
-      this.gemini.setApiKey(this.geminiKeyInput.trim());
-      this.geminiKeyInput = '';
-      this.showApiKeyInput.set(false);
-    }
-  }
-
   async onFileSelected(event: Event) {
     const file = (event.target as HTMLInputElement).files?.[0];
     if (!file) return;
@@ -82,15 +66,19 @@ export class DigitalVaultComponent {
     this.isScanning.set(true);
     this.scannedSuccess.set(false);
 
-    if (this.gemini.isConfigured()) {
-      // OCR REAL com Gemini Vision
-      this.scanStep.set('Enviando documento para Gemini Vision AI...');
-      try {
+    if (file.size > 4 * 1024 * 1024) {
+      this.isScanning.set(false);
+      this.ocrError.set('O arquivo excede o limite de 4 MB para OCR.');
+      return;
+    }
+
+    this.scanStep.set('Enviando documento para leitura segura...');
+    try {
         setTimeout(() => {
-          if (this.isScanning()) this.scanStep.set('Extraindo campos: órgão emissor, datas, CNPJ...');
+          if (this.isScanning()) this.scanStep.set('Extraindo campos: órgão emissor, datas e CNPJ...');
         }, 1500);
         setTimeout(() => {
-          if (this.isScanning()) this.scanStep.set('Validando conformidade regulatória...');
+          if (this.isScanning()) this.scanStep.set('Validando os dados extraídos...');
         }, 4000);
 
         const result = await this.gemini.extractFromFile(file);
@@ -109,17 +97,13 @@ export class DigitalVaultComponent {
           legalRequirementNote: result.legalRequirementNote
         };
 
-        this.usedRealAi.set(true);
-        this.isScanning.set(false);
-        this.scannedSuccess.set(true);
-      } catch (err: any) {
-        this.isScanning.set(false);
-        this.ocrError.set(err?.message || 'Erro ao processar com Gemini. Verifique sua chave API.');
-        this.scannedSuccess.set(false);
-      }
-    } else {
-      // Fallback: simulação (sem chave Gemini)
-      this.simulateOcrUpload('alvara');
+      this.usedRealAi.set(true);
+      this.isScanning.set(false);
+      this.scannedSuccess.set(true);
+    } catch (err: any) {
+      this.isScanning.set(false);
+      this.ocrError.set(err?.message || 'Erro ao processar o documento.');
+      this.scannedSuccess.set(false);
     }
   }
 

@@ -12,6 +12,19 @@
   background-color: var(--color-bg-main);
 }
 
+.public-asset-page { min-height: 100vh; display: grid; place-items: center; padding: 24px; background: #f1f5f9; }
+.public-asset-card { width: min(520px, 100%); padding: 32px; border-radius: 20px; background: #fff; box-shadow: 0 20px 60px rgba(15, 23, 42, .14); color: #14243f; }
+.public-asset-logo { display: block; width: 170px; max-width: 100%; height: auto; margin: 0 auto 28px; }
+.public-asset-badge { display: inline-block; padding: 5px 9px; border-radius: 999px; background: #e8f0fb; color: #1d4f91; font-size: .7rem; font-weight: 800; letter-spacing: .06em; }
+.public-asset-card h1 { margin: 14px 0 8px; font-size: 1.55rem; line-height: 1.2; }
+.public-asset-card p { color: #54637e; line-height: 1.5; }
+.public-asset-tag { font-weight: 700; }
+.public-asset-details { display: grid; gap: 12px; margin: 24px 0; }
+.public-asset-details div { padding: 12px; border-radius: 10px; background: #f8fafc; }
+.public-asset-details dt { color: #64748b; font-size: .72rem; font-weight: 800; text-transform: uppercase; }
+.public-asset-details dd { margin: 4px 0 0; font-weight: 600; }
+.public-asset-card a { color: #1d4f91; font-weight: 700; text-decoration: none; }
+
 /* Sidebar */
 .licenfy-sidebar {
   width: 270px;
@@ -543,4 +556,3 @@
 .icon-sm { font-size: 18px; }
 .text-muted { color: var(--color-text-muted); }
 .text-primary { color: var(--color-primary); }
-

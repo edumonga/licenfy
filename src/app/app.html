@@ -1,4 +1,25 @@
-@if (currentView() === 'landing') {
+@if (publicAssetTag()) {
+  <main class="public-asset-page">
+    <section class="public-asset-card">
+      <img src="logo-auth.png" alt="Licenfy" class="public-asset-logo" />
+      @if (publicAsset(); as asset) {
+        <span class="public-asset-badge">ATIVO IDENTIFICADO</span>
+        <h1>{{ asset.name }}</h1>
+        <p class="public-asset-tag">Patrimônio: {{ asset.assetTag }}</p>
+        <dl class="public-asset-details">
+          <div><dt>Unidade</dt><dd>{{ asset.branchName }}</dd></div>
+          <div><dt>Localização</dt><dd>{{ asset.locationDetails }}</dd></div>
+          <div><dt>Próxima manutenção</dt><dd>{{ asset.nextMaintenanceDate }}</dd></div>
+        </dl>
+      } @else {
+        <span class="public-asset-badge">ATIVO NÃO ENCONTRADO</span>
+        <h1>Este QR Code não corresponde a um ativo disponível.</h1>
+        <p>Confira a etiqueta ou entre em contato com a equipe responsável.</p>
+      }
+      <a href="/">Ir para Licenfy</a>
+    </section>
+  </main>
+} @else if (currentView() === 'landing') {
   <app-landing-page />
 } @else if (currentView() === 'auth') {
   <app-auth />
@@ -60,7 +81,7 @@
           [class.active]="currentTab() === 'notifications'"
           (click)="setTab('notifications')">
           <span class="material-symbols-rounded">forward_to_inbox</span>
-          <span>Alertas de E-mail</span>
+          <span>Alertas Inteligentes</span>
         </button>
 
         <button 
@@ -111,7 +132,7 @@
               @case ('units') { Unidades & Hierarquia }
               @case ('vault') { Cofre Digital & OCR }
               @case ('assets') { Gestão de Ativos & QR }
-              @case ('notifications') { Alertas de E-mail }
+              @case ('notifications') { Alertas Inteligentes }
               @case ('inspection') { Modo Fiscalização }
               @case ('roi') { Relatório de ROI }
             }
@@ -126,7 +147,7 @@
               [ngModel]="selectedBranchId()" 
               (ngModelChange)="onBranchChange($event)"
               class="topbar-branch-select">
-              <option value="all">Todas as Filiais</option>
+              <option value="all">Todas as Unidades</option>
               <option *ngFor="let b of branches()" [value]="b.id">{{ b.name }}</option>
             </select>
           </div>
