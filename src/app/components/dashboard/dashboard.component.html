@@ -2,11 +2,7 @@
   <!-- Top Banner / Boas-vindas e Contexto -->
   <div class="dashboard-header">
     <div>
-      <div class="subtitle-badge">
-        <span class="material-symbols-rounded icon-sm">verified_user</span>
-        Piloto Automático de Compliance Legal e Operacional
-      </div>
-      <h1 class="page-title">Dashboard de Risco e Conformidade</h1>
+      <h1 class="page-title">Dashboard</h1>
       <p class="page-desc">Monitoramento preventivo de alvarás, licenças ambientais, vistorias e garantias de ativos.</p>
     </div>
 
@@ -17,7 +13,7 @@
       </button>
       <button class="btn btn-primary" (click)="goToInspection()">
         <span class="material-symbols-rounded">policy</span>
-        Dossiê Fiscalização (1-Clique)
+        Dossiê Fiscalização
       </button>
     </div>
   </div>
@@ -138,7 +134,7 @@
         </div>
         <div class="stat-number">{{ summary().attention }}</div>
         <div class="stat-label">Prazos em contagem regressiva</div>
-        <p class="stat-desc">Disparos de réguas em andamento (30 a 60 dias).</p>
+        <p class="stat-desc">Disparos de alertas em andamento (30 a 60 dias).</p>
       </div>
 
       <!-- Card Urgente -->
@@ -244,8 +240,8 @@
                 class="btn btn-outline btn-sm action-btn" 
                 (click)="notifyManager(lic)"
                 [disabled]="justNotifiedId === lic.id">
-                <span class="material-symbols-rounded icon-sm text-primary">send_to_mobile</span>
-                {{ justNotifiedId === lic.id ? 'Alerta Enviado!' : 'Alertar WhatsApp' }}
+                <span class="material-symbols-rounded icon-sm text-primary">forward_to_inbox</span>
+                {{ justNotifiedId === lic.id ? 'E-mail Disparado!' : 'Alertar por E-mail' }}
               </button>
             </td>
           </tr>

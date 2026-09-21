@@ -1,13 +1,14 @@
 @if (currentView() === 'landing') {
   <app-landing-page />
+} @else if (currentView() === 'auth') {
+  <app-auth />
 } @else {
   <div class="licenfy-layout">
     <!-- Sidebar de Navegação Corporativa -->
     <aside class="licenfy-sidebar no-print">
       <!-- Logo Oficial Licenfy -->
       <div class="sidebar-logo-block" (click)="setView('landing')" style="cursor: pointer;" title="Voltar para a Página Inicial do Site">
-        <img src="logo.png" alt="Licenfy" class="sidebar-logo" />
-        <span class="version-tag">PRO B2B</span>
+        <img src="logo-auth.png" alt="Licenfy" class="sidebar-logo" />
       </div>
 
       <!-- Navegação Principal -->
@@ -19,7 +20,15 @@
           [class.active]="currentTab() === 'dashboard'"
           (click)="setTab('dashboard')">
           <span class="material-symbols-rounded">dashboard</span>
-          <span>Dashboard de Risco</span>
+          <span>Dashboard</span>
+        </button>
+
+        <button 
+          class="nav-item" 
+          [class.active]="currentTab() === 'units'"
+          (click)="setTab('units')">
+          <span class="material-symbols-rounded">account_tree</span>
+          <span>Unidades & Responsáveis</span>
         </button>
 
         <button 
@@ -42,8 +51,8 @@
           class="nav-item" 
           [class.active]="currentTab() === 'notifications'"
           (click)="setTab('notifications')">
-          <span class="material-symbols-rounded">chat</span>
-          <span>Réguas WhatsApp</span>
+          <span class="material-symbols-rounded">forward_to_inbox</span>
+          <span>Alertas de E-mail</span>
         </button>
 
         <button 
@@ -63,38 +72,16 @@
         </button>
       </nav>
 
-      <!-- Botão para voltar à Landing Page na Sidebar -->
-      <div style="padding: 0 16px 12px;">
-        <button class="nav-item" style="border: 1px dashed var(--color-border); justify-content: center; width: 100%;" (click)="setView('landing')">
-          <span class="material-symbols-rounded text-primary">arrow_back</span>
-          <span>Voltar ao Site</span>
-        </button>
-      </div>
-
-      <!-- Card de Compliance no Rodapé da Sidebar -->
-      <div class="sidebar-compliance-card">
-        <div class="comp-card-top">
-          <span class="material-symbols-rounded icon-sm text-primary">verified</span>
-          <span>Score Consolidado</span>
-        </div>
-        <div class="comp-score-row">
-          <span class="comp-score-val">{{ score() }}%</span>
-          <span class="badge-status" [ngClass]="status()">
-            {{ status() === 'regular' ? 'Conforme' : (status() === 'attention' ? 'Atenção' : 'Risco') }}
-          </span>
-        </div>
-        <div class="comp-bar-bg">
-          <div class="comp-bar-fill" [style.width.%]="score()"></div>
-        </div>
-      </div>
-
       <!-- Perfil da Empresa / Usuário -->
       <div class="sidebar-user-footer">
-        <div class="user-avatar-initials">MS</div>
+        <div class="user-avatar-initials">{{ getUserInitials() }}</div>
         <div class="user-info-text">
-          <div class="user-name">Mariana Silveira</div>
-          <div class="user-org">Grupo Alpha Brasil S.A.</div>
+          <div class="user-name">{{ currentUser()?.name || 'Mariana Silveira' }}</div>
+          <div class="user-org">{{ currentUser()?.email || 'Grupo Alpha Brasil S.A.' }}</div>
         </div>
+        <button class="btn-logout" (click)="logout()" title="Sair da conta">
+          <span class="material-symbols-rounded">logout</span>
+        </button>
       </div>
     </aside>
 
@@ -107,23 +94,18 @@
           <span class="breadcrumb-sep">/</span>
           <span class="breadcrumb-current">
             @switch (currentTab()) {
-              @case ('dashboard') { Dashboard de Risco por Cores }
+              @case ('dashboard') { Dashboard }
+              @case ('units') { Unidades, responsáveis e hierarquia }
               @case ('vault') { Cofre Digital com Leitura OCR }
               @case ('assets') { Gestão de Ativos & Etiquetas QR Code }
-              @case ('notifications') { Notificações WhatsApp & E-mail }
-              @case ('inspection') { Dossiê do Modo Fiscalização (1-Clique) }
+              @case ('notifications') { Notificações Corporativas por E-mail }
+              @case ('inspection') { Dossiê do Modo Fiscalização }
               @case ('roi') { Relatório de Economia Gerada (ROI) }
             }
           </span>
         </div>
 
         <div class="topbar-right">
-          <!-- Botão para voltar à Landing Page -->
-          <button class="btn btn-outline btn-sm" (click)="setView('landing')" title="Ver Landing Page institucional">
-            <span class="material-symbols-rounded icon-sm text-primary">storefront</span>
-            Site Oficial
-          </button>
-
           <!-- Switcher de Unidade / Filial -->
           <div class="topbar-branch-box">
             <span class="material-symbols-rounded icon-sm text-muted">domain</span>
@@ -147,6 +129,12 @@
             <span class="material-symbols-rounded">notifications</span>
             <span class="notif-badge">4</span>
           </button>
+
+          <!-- Botão Sair da Plataforma -->
+          <button class="btn btn-outline btn-sm" (click)="logout()" title="Encerrar sessão">
+            <span class="material-symbols-rounded icon-sm text-danger">logout</span>
+            Sair
+          </button>
         </div>
       </header>
 
@@ -155,6 +143,9 @@
         @switch (currentTab()) {
           @case ('dashboard') {
             <app-dashboard />
+          }
+          @case ('units') {
+            <app-unit-management />
           }
           @case ('vault') {
             <app-digital-vault />

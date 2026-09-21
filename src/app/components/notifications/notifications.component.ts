@@ -17,9 +17,11 @@ export class NotificationsComponent {
   readonly rules = this.service.notificationRules;
   readonly logs = this.service.notificationLogs;
 
-  testPhone = signal<string>('+55 11 98877-6655');
+  testEmail = signal<string>('diretoria.compliance@empresa.com.br');
   isSendingTest = signal<boolean>(false);
   testSentSuccess = signal<boolean>(false);
+  newRuleDays = signal<number>(45);
+  newRuleRecipients = signal<string>('compliance@empresa.com.br, gerencia.risco@empresa.com.br');
 
   toggleRule(ruleId: string) {
     this.service.toggleNotificationRule(ruleId);
@@ -34,13 +36,13 @@ export class NotificationsComponent {
       const newLog: NotificationLog = {
         id: 'test-' + Date.now(),
         timestamp: 'Agora mesmo',
-        channel: 'whatsapp',
-        recipient: this.testPhone(),
+        channel: 'email',
+        recipient: this.testEmail(),
         licenseOrAssetName: 'Alvará de Funcionamento e Localização',
         branchName: 'Matriz São Paulo',
         daysBefore: 30,
-        status: 'Lido',
-        messagePreview: 'Alerta Licenfy (Simulação): Alvará SP vence em 30 dias. Nenhuma ação pendente no momento.'
+        status: 'Entregue',
+        messagePreview: 'Alerta Corporativo Licenfy: Alvará SP vence em 30 dias. Ação preventiva requerida.'
       };
       this.service.notificationLogs.update(prev => [newLog, ...prev]);
 
@@ -48,5 +50,11 @@ export class NotificationsComponent {
         this.testSentSuccess.set(false);
       }, 4000);
     }, 1200);
+  }
+
+  addCustomRule() {
+    const recipients = this.newRuleRecipients().split(',').map(item => item.trim()).filter(Boolean);
+    if (this.newRuleDays() < 1 || !recipients.length) return;
+    this.service.addNotificationRule(this.newRuleDays(), recipients);
   }
 }

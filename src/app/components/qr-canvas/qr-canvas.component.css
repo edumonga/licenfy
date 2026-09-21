@@ -1,0 +1,4 @@
+.qr-canvas-el {
+  display: block;
+  image-rendering: pixelated;
+}

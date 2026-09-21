@@ -1,18 +1,33 @@
 import { Injectable, signal, computed } from '@angular/core';
-import { Branch, LicenseDocument, PhysicalAsset, NotificationRule, NotificationLog, RoiMetric, ComplianceStatus } from '../models/types';
+import { Branch, LicenseDocument, PhysicalAsset, NotificationRule, NotificationLog, RoiMetric, ComplianceStatus, DossierHistoryItem } from '../models/types';
 
 @Injectable({
   providedIn: 'root'
 })
 export class LicenfyService {
   // Estado Reativo com Signals modernos do Angular
-  readonly currentView = signal<'landing' | 'app'>('landing');
+  readonly currentView = signal<'landing' | 'auth' | 'app'>('landing');
+  readonly authMode = signal<'login' | 'signup'>('login');
   readonly selectedBranchId = signal<string>('all');
-  readonly currentTab = signal<'dashboard' | 'vault' | 'assets' | 'notifications' | 'inspection' | 'roi'>('dashboard');
+  readonly currentTab = signal<'dashboard' | 'units' | 'vault' | 'assets' | 'notifications' | 'inspection' | 'roi'>('dashboard');
 
-  setView(view: 'landing' | 'app') {
+  setView(view: 'landing' | 'auth' | 'app') {
     this.currentView.set(view);
     window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  setAuthMode(mode: 'login' | 'signup') {
+    this.authMode.set(mode);
+  }
+
+  openLogin() {
+    this.authMode.set('login');
+    this.setView('auth');
+  }
+
+  openSignup() {
+    this.authMode.set('signup');
+    this.setView('auth');
   }
 
   readonly branches = signal<Branch[]>([
@@ -22,7 +37,13 @@ export class LicenfyService {
       cnpj: '12.345.678/0001-90',
       city: 'São Paulo',
       state: 'SP',
+      companyName: 'Grupo Alpha Brasil S.A.',
+      address: 'Av. Paulista, 1250, Bela Vista, São Paulo - SP, 01310-100',
       responsibleManager: 'Mariana Silveira (Jurídico & Compliance)',
+      responsiblePeople: [
+        { id: 'resp-sp-1', name: 'Mariana Silveira', role: 'Jurídico & Compliance', email: 'mariana@grupoalpha.com.br', phone: '+55 11 98877-6655', primary: true },
+        { id: 'resp-sp-2', name: 'Rafael Moura', role: 'Facilities', email: 'rafael.moura@grupoalpha.com.br', phone: '+55 11 98810-4421' }
+      ],
       complianceScore: 94,
       status: 'regular',
       licensesCount: { total: 12, regular: 10, attention: 2, urgent: 0 },
@@ -34,7 +55,13 @@ export class LicenfyService {
       cnpj: '12.345.678/0002-71',
       city: 'Rio de Janeiro',
       state: 'RJ',
+      companyName: 'Grupo Alpha Brasil S.A.',
+      address: 'Rua do Ouvidor, 86, Centro, Rio de Janeiro - RJ, 20040-030',
       responsibleManager: 'Carlos Eduardo Mendes (Operações RJ)',
+      responsiblePeople: [
+        { id: 'resp-rj-1', name: 'Carlos Eduardo Mendes', role: 'Operações RJ', email: 'carlos.mendes@grupoalpha.com.br', phone: '+55 21 99123-4567', primary: true },
+        { id: 'resp-rj-2', name: 'Ana Ribeiro', role: 'Administrativo local', email: 'ana.ribeiro@grupoalpha.com.br', phone: '+55 21 99222-9120' }
+      ],
       complianceScore: 78,
       status: 'attention',
       licensesCount: { total: 9, regular: 6, attention: 2, urgent: 1 },
@@ -46,7 +73,13 @@ export class LicenfyService {
       cnpj: '12.345.678/0003-52',
       city: 'Curitiba',
       state: 'PR',
+      companyName: 'Grupo Alpha Brasil S.A.',
+      address: 'Rod. BR-116, km 110, Tatuquara, Curitiba - PR, 81950-000',
       responsibleManager: 'Fernanda Becker (Logística & Facilities)',
+      responsiblePeople: [
+        { id: 'resp-pr-1', name: 'Fernanda Becker', role: 'Logística & Facilities', email: 'fernanda.becker@grupoalpha.com.br', phone: '+55 41 98234-5678', primary: true },
+        { id: 'resp-pr-2', name: 'Diego Lopes', role: 'Segurança do Trabalho', email: 'diego.lopes@grupoalpha.com.br', phone: '+55 41 98910-0821' }
+      ],
       complianceScore: 65,
       status: 'urgent',
       licensesCount: { total: 14, regular: 8, attention: 3, urgent: 3 },
@@ -330,24 +363,24 @@ export class LicenfyService {
     {
       id: 'rule-60',
       daysBeforeExpiration: 60,
-      channels: ['email', 'whatsapp'],
-      recipients: ['+55 11 98877-6655', 'gerencia.operacoes@empresa.com.br'],
+      channels: ['email'],
+      recipients: ['gerencia.operacoes@empresa.com.br', 'compliance@empresa.com.br'],
       active: true,
       alertLevel: 'alerta'
     },
     {
       id: 'rule-30',
       daysBeforeExpiration: 30,
-      channels: ['whatsapp', 'email'],
-      recipients: ['+55 11 98877-6655', '+55 11 97766-5544'],
+      channels: ['email'],
+      recipients: ['diretoria.juridica@empresa.com.br', 'gerente.unidade@empresa.com.br'],
       active: true,
       alertLevel: 'critico'
     },
     {
       id: 'rule-7',
       daysBeforeExpiration: 7,
-      channels: ['whatsapp'],
-      recipients: ['+55 11 98877-6655', '+55 21 99123-4567', '+55 41 98234-5678'],
+      channels: ['email'],
+      recipients: ['diretoria.executiva@empresa.com.br', 'compliance.head@empresa.com.br', 'auditoria@empresa.com.br'],
       active: true,
       alertLevel: 'critico'
     }
@@ -357,8 +390,8 @@ export class LicenfyService {
     {
       id: 'log-001',
       timestamp: 'Hoje, 09:15',
-      channel: 'whatsapp',
-      recipient: 'Mariana Silveira (+55 11 98877-6655)',
+      channel: 'email',
+      recipient: 'Mariana Silveira (mariana.silveira@empresa.com.br)',
       licenseOrAssetName: 'AVCB - Auto de Vistoria do Corpo de Bombeiros',
       branchName: 'Matriz São Paulo',
       daysBefore: 25,
@@ -368,8 +401,8 @@ export class LicenfyService {
     {
       id: 'log-002',
       timestamp: 'Hoje, 08:30',
-      channel: 'whatsapp',
-      recipient: 'Fernanda Becker (+55 41 98234-5678)',
+      channel: 'email',
+      recipient: 'Fernanda Becker (fernanda.becker@empresa.com.br)',
       licenseOrAssetName: 'Licença Sanitária (CMVS)',
       branchName: 'CD Curitiba',
       daysBefore: 6,
@@ -385,19 +418,24 @@ export class LicenfyService {
       branchName: 'Filial Rio de Janeiro',
       daysBefore: 20,
       status: 'Entregue',
-      messagePreview: 'Notificação programada: Documento com vencimento próximo cadastrado na régua de 30 dias.'
+      messagePreview: 'Notificação programada: Documento com vencimento próximo cadastrado no alerta de 30 dias.'
     },
     {
       id: 'log-004',
       timestamp: '14/09/2026, 11:00',
-      channel: 'whatsapp',
-      recipient: 'Carlos Eduardo Mendes (+55 21 99123-4567)',
+      channel: 'email',
+      recipient: 'Carlos Eduardo Mendes (carlos.mendes@empresa.com.br)',
       licenseOrAssetName: 'Garantia: Gerador Stemac 180kVA',
       branchName: 'Filial Rio de Janeiro',
       daysBefore: 40,
       status: 'Lido',
       messagePreview: 'Aviso de Garantia: A garantia do Gerador Stemac vence em 40 dias. Agende a revisão sem custo.'
     }
+  ]);
+
+  readonly dossierHistory = signal<DossierHistoryItem[]>([
+    { id: 'dos-001', branchId: 'sp-matriz', branchName: 'Matriz São Paulo', generatedAt: '12/09/2026, 09:20', documentCount: 2, hash: 'LCFY-218A-09C3' },
+    { id: 'dos-002', branchId: 'rj-filial', branchName: 'Filial Rio de Janeiro', generatedAt: '28/08/2026, 16:42', documentCount: 2, hash: 'LCFY-8FD2-771B' }
   ]);
 
   readonly roiData = signal<RoiMetric>({
@@ -510,7 +548,7 @@ export class LicenfyService {
     this.selectedBranchId.set(branchId);
   }
 
-  setTab(tab: 'dashboard' | 'vault' | 'assets' | 'notifications' | 'inspection' | 'roi') {
+  setTab(tab: 'dashboard' | 'units' | 'vault' | 'assets' | 'notifications' | 'inspection' | 'roi') {
     this.currentTab.set(tab);
   }
 
@@ -522,24 +560,48 @@ export class LicenfyService {
     this.assets.update(prev => [asset, ...prev]);
   }
 
+  addBranch(branch: Branch) {
+    this.branches.update(prev => [...prev, branch]);
+  }
+
+  addNotificationRule(daysBeforeExpiration: number, recipients: string[]) {
+    this.notificationRules.update(rules => [{
+      id: 'rule-' + Date.now(),
+      daysBeforeExpiration,
+      channels: ['email'],
+      recipients,
+      active: true,
+      alertLevel: daysBeforeExpiration <= 30 ? 'critico' : 'alerta'
+    }, ...rules]);
+  }
+
+  addDossierHistory(item: DossierHistoryItem) {
+    this.dossierHistory.update(history => [item, ...history]);
+  }
+
   toggleNotificationRule(ruleId: string) {
     this.notificationRules.update(rules =>
       rules.map(r => (r.id === ruleId ? { ...r, active: !r.active } : r))
     );
   }
 
-  sendSimulatedWhatsApp(license: LicenseDocument) {
+  sendSimulatedEmail(license: LicenseDocument) {
     const newLog: NotificationLog = {
       id: 'log-' + Date.now(),
       timestamp: 'Agora mesmo',
-      channel: 'whatsapp',
-      recipient: 'Gestor Responsável (+55 11 98877-6655)',
+      channel: 'email',
+      recipient: 'Gestão de Compliance (compliance@empresa.com.br)',
       licenseOrAssetName: license.title,
       branchName: license.branchName,
       daysBefore: license.daysRemaining,
       status: 'Entregue',
-      messagePreview: `Alerta Licenfy disparado: ${license.title} na unidade ${license.branchName}. Vence em ${license.daysRemaining} dias.`
+      messagePreview: `Alerta Corporativo Licenfy: Vencimento próximo de ${license.title} (${license.branchName}) em ${license.daysRemaining} dias.`
     };
     this.notificationLogs.update(logs => [newLog, ...logs]);
+  }
+
+  // Alias para compatibilidade
+  sendSimulatedWhatsApp(license: LicenseDocument) {
+    this.sendSimulatedEmail(license);
   }
 }

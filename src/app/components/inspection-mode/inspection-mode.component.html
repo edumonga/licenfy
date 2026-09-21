@@ -4,7 +4,7 @@
     <div>
       <div class="subtitle-badge">
         <span class="material-symbols-rounded icon-sm">shield</span>
-        Modo Fiscalização Imediata (1-Clique)
+        Modo Fiscalização Imediata
       </div>
       <h1 class="page-title">Dossiê Unificado de Conformidade Legal</h1>
       <p class="page-desc">Compilação instantânea de todos os alvarás, laudos e licenças vigentes, pronta para auditoria externa e fiscais.</p>
@@ -22,6 +22,13 @@
         <span class="material-symbols-rounded">print</span>
         Imprimir / Exportar PDF do Dossiê
       </button>
+    </div>
+  </div>
+
+  <div class="dossier-selection no-print">
+    <div><strong>Documentos incluídos</strong><span>Selecione o que será consolidado no PDF.</span></div>
+    <div class="document-checks">
+      <label *ngFor="let doc of availableDocuments()"><input type="checkbox" [checked]="selectedDocumentIds().includes(doc.id)" (change)="toggleDocument(doc.id)" /><span>{{ doc.title }}</span></label>
     </div>
   </div>
 
@@ -174,5 +181,10 @@
         Dossiê emitido em ambiente seguro pela plataforma Licenfy. Código de validação pública: <strong>{{ verificationHash() }}</strong>. Documento válido para exibição a auditores e autoridades públicas fiscalizadoras.
       </div>
     </div>
+  </div>
+
+  <div class="dossier-history-card no-print">
+    <div><h3>Histórico de dossiês gerados</h3><p>Rastreabilidade de todas as exportações por unidade.</p></div>
+    <div class="history-items"><span *ngFor="let item of dossierHistory().slice(0, 3)"><strong>{{ item.branchName }}</strong> · {{ item.documentCount }} documentos · {{ item.generatedAt }}</span></div>
   </div>
 </div>

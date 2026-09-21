@@ -7,6 +7,9 @@ export interface Branch {
   city: string;
   state: string;
   responsibleManager: string;
+  address: string;
+  companyName: string;
+  responsiblePeople: UnitResponsible[];
   complianceScore: number; // 0 to 100
   status: ComplianceStatus;
   licensesCount: {
@@ -20,6 +23,25 @@ export interface Branch {
     withActiveWarranty: number;
     maintenancePending: number;
   };
+}
+
+export interface UnitResponsible {
+  id: string;
+  name: string;
+  role: string;
+  email: string;
+  phone: string;
+  primary?: boolean;
+}
+
+export interface DocumentVersion {
+  id: string;
+  label: string;
+  uploadedAt: string;
+  uploadedBy: string;
+  fileName: string;
+  fileSize: string;
+  status: 'current' | 'archived';
 }
 
 export interface LicenseDocument {
@@ -44,6 +66,7 @@ export interface LicenseDocument {
   fileSize?: string;
   ocrExtracted: boolean;
   dossierIncluded: boolean;
+  versions?: DocumentVersion[];
 }
 
 export interface MaintenanceRecord {
@@ -99,6 +122,15 @@ export interface NotificationLog {
   daysBefore: number;
   status: 'Entregue' | 'Lido' | 'Ação Tomada';
   messagePreview: string;
+}
+
+export interface DossierHistoryItem {
+  id: string;
+  branchId: string;
+  branchName: string;
+  generatedAt: string;
+  documentCount: number;
+  hash: string;
 }
 
 export interface RoiMetric {

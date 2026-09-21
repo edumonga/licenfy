@@ -12,7 +12,7 @@
 
 .inspection-control-bar {
   display: flex;
-  justify-content: space-between;url(https://127.0.0.1:63897/static/artifacts/f70d60e0-8967-4e9b-b5ac-aa19090741bd/.user_uploaded/media_1789860687970.png?csrf%3D39c5fee8-b457-45c6-8ce2-20aaecf476a6)
+  justify-content: space-between;
   align-items: center;
   flex-wrap: wrap;
   gap: 16px;
@@ -22,6 +22,13 @@
   padding: 20px 24px;
   box-shadow: var(--shadow-sm);
 }
+
+.dossier-selection { display: flex; align-items: center; justify-content: space-between; gap: 16px; background: var(--color-primary-light); border: 1px solid var(--color-primary-border); border-radius: 12px; padding: 14px 18px; }
+.dossier-selection > div:first-child { display: flex; flex-direction: column; gap: 3px; font-size: .82rem; color: var(--color-slate-dark); }
+.dossier-selection > div:first-child span { font-size: .73rem; color: var(--color-text-muted); }
+.document-checks { display: flex; align-items: center; justify-content: flex-end; flex-wrap: wrap; gap: 8px; }
+.document-checks label { display: inline-flex; align-items: center; gap: 6px; padding: 6px 9px; background: #fff; border: 1px solid var(--color-primary-border); border-radius: 7px; font-size: .74rem; cursor: pointer; }
+.document-checks input { accent-color: var(--color-primary); }
 
 .subtitle-badge {
   display: inline-flex;
@@ -382,6 +389,10 @@
   padding: 10px;
   border-radius: 6px;
 }
+
+.dossier-history-card { max-width: 1020px; width: 100%; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; gap: 20px; padding: 17px 20px; background: #fff; border: 1px solid var(--color-border); border-radius: 12px; box-shadow: var(--shadow-sm); }
+.dossier-history-card h3 { font-size: .95rem; }.dossier-history-card p { font-size: .75rem; color: var(--color-text-muted); margin-top:3px; }.history-items { display: flex; flex-direction: column; align-items: flex-end; gap: 5px; font-size: .73rem; color: var(--color-text-muted); }.history-items strong { color: var(--color-slate-dark); }
+@media (max-width: 850px) { .dossier-selection, .dossier-history-card { align-items: flex-start; flex-direction: column; } .document-checks, .history-items { align-items: flex-start; justify-content: flex-start; } }
 
 /* Print Rules */
 @media print {

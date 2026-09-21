@@ -3,24 +3,24 @@
   <div class="notif-header">
     <div>
       <div class="subtitle-badge">
-        <span class="material-symbols-rounded icon-sm">chat</span>
-        Comunicação Ativa e Direta onde a Decisão Acontece
+        <span class="material-symbols-rounded icon-sm">mark_email_read</span>
+        Comunicação Corporativa & Trilha de Auditoria
       </div>
-      <h1 class="page-title">Notificações Inteligentes via WhatsApp e E-mail</h1>
-      <p class="page-desc">Réguas de alertas programadas (90, 60, 30 e 7 dias) enviadas diretamente aos gestores, eliminando o risco de e-mails ignorados.</p>
+      <h1 class="page-title">Notificações Inteligentes por E-mail Corporativo</h1>
+      <p class="page-desc">Alertas de vencimento programados (90, 60, 30 e 7 dias) enviados com formalidade jurídica e corporativa aos gestores, compliance e diretoria.</p>
     </div>
   </div>
 
-  <!-- Grid Principal: Configuração de Réguas + Preview de WhatsApp -->
+  <!-- Grid Principal: Configuração de Réguas + Preview de E-mail Corporativo -->
   <div class="notif-top-grid">
     <!-- Card de Configuração das Réguas -->
     <div class="rules-card">
       <div class="rules-card-header">
         <div class="card-icon-box">
-          <span class="material-symbols-rounded text-primary">schedule</span>
+          <span class="material-symbols-rounded text-primary">schedule_send</span>
         </div>
         <div>
-          <h2 class="card-title">Réguas de Vencimento Ativas</h2>
+          <h2 class="card-title">Alertas de Disparo Corporativo</h2>
           <p class="card-sub">Gatilhos automáticos configurados antes de qualquer vencimento</p>
         </div>
       </div>
@@ -35,19 +35,16 @@
           <div class="rule-details">
             <div class="rule-title-row">
               <span class="rule-level-tag" [ngClass]="rule.alertLevel">
-                {{ rule.alertLevel === 'informativo' ? 'Informativo' : (rule.alertLevel === 'alerta' ? 'Alerta Amarelo' : 'Urgente / Ação Imediata') }}
+                {{ rule.alertLevel === 'informativo' ? 'Informativo' : (rule.alertLevel === 'alerta' ? 'Alerta Preventivo' : 'Crítico / Ação Imediata') }}
               </span>
               <div class="channel-icons">
-                <span *ngIf="rule.channels.includes('whatsapp')" class="channel-chip wa">
-                  <span class="material-symbols-rounded icon-xs">chat</span> WhatsApp
-                </span>
-                <span *ngIf="rule.channels.includes('email')" class="channel-chip mail">
-                  <span class="material-symbols-rounded icon-xs">mail</span> E-mail
+                <span class="channel-chip mail">
+                  <span class="material-symbols-rounded icon-xs">mail</span> E-mail Corporativo
                 </span>
               </div>
             </div>
             <div class="rule-recipients-list">
-              <span class="material-symbols-rounded icon-xs text-muted">send</span>
+              <span class="material-symbols-rounded icon-xs text-muted">alternate_email</span>
               <span>{{ rule.recipients.join(' • ') }}</span>
             </div>
           </div>
@@ -61,86 +58,43 @@
         </div>
       </div>
 
+      <div class="custom-rule-box">
+        <div><strong>Adicionar Alerta Customizado</strong><span>Defina prazos e destinatários específicos para sua empresa.</span></div>
+        <div class="custom-rule-fields">
+          <label><input type="number" min="1" [(ngModel)]="newRuleDays" /> dias antes</label>
+          <input type="text" [(ngModel)]="newRuleRecipients" placeholder="E-mails corporativos separados por vírgula" />
+          <button class="btn btn-outline btn-sm" (click)="addCustomRule()"><span class="material-symbols-rounded icon-sm">add</span> Adicionar</button>
+        </div>
+      </div>
+
       <!-- Teste de Envio Manual -->
       <div class="test-send-box">
         <div class="test-title-row">
-          <span class="material-symbols-rounded icon-sm text-primary">send_to_mobile</span>
-          <strong>Simular Envio Imediato de Alerta WhatsApp</strong>
+          <span class="material-symbols-rounded icon-sm text-primary">send</span>
+          <strong>Simular Envio Imediato de E-mail de Alerta</strong>
         </div>
         <div class="test-input-row">
-          <input type="text" [(ngModel)]="testPhone" class="form-control" placeholder="+55 11 98877-6655" />
+          <input type="email" [(ngModel)]="testEmail" class="form-control" placeholder="compliance@suaempresa.com.br" />
           <button class="btn btn-primary" (click)="sendManualTest()" [disabled]="isSendingTest()">
-            <span class="material-symbols-rounded icon-sm">send</span>
-            {{ isSendingTest() ? 'Disparando...' : 'Testar Agora' }}
+            <span class="material-symbols-rounded icon-sm">outgoing_mail</span>
+            {{ isSendingTest() ? 'Disparando...' : 'Disparar Teste' }}
           </button>
         </div>
         <div *ngIf="testSentSuccess()" class="test-success-alert">
           <span class="material-symbols-rounded icon-sm">check_circle</span>
-          Mensagem simulada enviada com sucesso! Verifique o log abaixo.
+          E-mail corporativo disparado e registrado no histórico de auditoria!
         </div>
       </div>
     </div>
 
-    <!-- Mockup Visual da Mensagem WhatsApp -->
-    <div class="wa-preview-card">
-      <div class="wa-phone-bar">
-        <div class="wa-contact-info">
-          <div class="wa-avatar">
-            <img src="logo.png" alt="Licenfy Bot" class="wa-logo-icon" />
-          </div>
-          <div>
-            <div class="wa-name">Licenfy Compliance Bot</div>
-            <div class="wa-status-text">Conta Oficial Verificada</div>
-          </div>
-        </div>
-        <div class="wa-header-icons">
-          <span class="material-symbols-rounded icon-sm">more_vert</span>
-        </div>
-      </div>
-
-      <div class="wa-chat-window">
-        <div class="wa-date-divider">
-          <span>HOJE</span>
-        </div>
-
-        <div class="wa-message-bubble">
-          <div class="wa-msg-header">
-            <span class="wa-tag-alert">ALERTA REGULATÓRIO LICENFY</span>
-          </div>
-          <p class="wa-msg-body">
-            Olá, Mariana! Identificamos que o documento <strong>AVCB - Corpo de Bombeiros</strong> da unidade <strong>Matriz São Paulo</strong> está a <strong>25 dias do vencimento</strong>.
-          </p>
-          <div class="wa-asset-notice">
-            <span class="material-symbols-rounded icon-xs">build</span>
-            <strong>Atenção:</strong> Requer validação prévia da recarga de 28 extintores do Bloco A/B.
-          </div>
-          <div class="wa-msg-meta">
-            <span>09:15</span>
-            <span class="material-symbols-rounded icon-xs wa-ticks">done_all</span>
-          </div>
-
-          <!-- Botões de Ação Interativa no WhatsApp -->
-          <div class="wa-action-buttons">
-            <button class="wa-btn">
-              <span class="material-symbols-rounded icon-xs">open_in_new</span>
-              Visualizar Licença no Cofre
-            </button>
-            <button class="wa-btn wa-btn-primary">
-              <span class="material-symbols-rounded icon-xs">done</span>
-              Confirmar Renovação em Andamento
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
   </div>
 
   <!-- Tabela de Logs de Disparos -->
   <div class="logs-card">
     <div class="logs-header">
       <div>
-        <h3 class="logs-title">Histórico de Disparos e Notificações (Auditoria)</h3>
-        <p class="logs-sub">Registro de cada alerta emitido via WhatsApp e E-mail com status de leitura</p>
+        <h3 class="logs-title">Histórico de Disparos de E-mail (Auditoria Corporativa)</h3>
+        <p class="logs-sub">Trilha de auditoria legal com registro de data, hora, destinatário e status de entrega de cada alerta</p>
       </div>
     </div>
 
@@ -155,17 +109,15 @@
             <th>Unidade</th>
             <th>Antecedência</th>
             <th>Status de Entrega</th>
-            <th>Prévia do Alerta</th>
+            <th>Prévia do E-mail</th>
           </tr>
         </thead>
         <tbody>
           <tr *ngFor="let log of logs()">
             <td>
-              <span class="channel-pill" [ngClass]="log.channel">
-                <span class="material-symbols-rounded icon-xs">
-                  {{ log.channel === 'whatsapp' ? 'chat' : 'mail' }}
-                </span>
-                {{ log.channel === 'whatsapp' ? 'WhatsApp' : 'E-mail' }}
+              <span class="channel-pill email">
+                <span class="material-symbols-rounded icon-xs">mail</span>
+                E-mail
               </span>
             </td>
             <td><span class="log-time">{{ log.timestamp }}</span></td>
@@ -176,8 +128,8 @@
               <span class="days-pill">{{ log.daysBefore }} dias</span>
             </td>
             <td>
-              <span class="badge-status" [ngClass]="log.status === 'Lido' || log.status === 'Ação Tomada' ? 'regular' : 'attention'">
-                <span class="status-dot" [ngClass]="log.status === 'Lido' || log.status === 'Ação Tomada' ? 'regular' : 'attention'"></span>
+              <span class="badge-status" [ngClass]="log.status === 'Lido' || log.status === 'Ação Tomada' || log.status === 'Entregue' ? 'regular' : 'attention'">
+                <span class="status-dot" [ngClass]="log.status === 'Lido' || log.status === 'Ação Tomada' || log.status === 'Entregue' ? 'regular' : 'attention'"></span>
                 {{ log.status }}
               </span>
             </td>

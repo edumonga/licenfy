@@ -1,4 +1,4 @@
-import { Component, inject, signal, OnInit, OnDestroy } from '@angular/core';
+import { Component, inject, signal, OnInit, OnDestroy, HostListener } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { LicenfyService } from '../../core/services/licenfy.service';
@@ -29,6 +29,7 @@ export class LandingPageComponent implements OnInit, OnDestroy {
   readonly service = inject(LicenfyService);
 
   readonly isDemoModalOpen = signal<boolean>(false);
+  readonly isHeaderFloating = signal<boolean>(false);
 
   // Carrossel de Imagens dos Recursos Oficiais Licenfy
   readonly slides: ImageSlide[] = [
@@ -56,11 +57,17 @@ export class LandingPageComponent implements OnInit, OnDestroy {
   private carouselTimer: any = null;
 
   ngOnInit() {
+    this.onWindowScroll();
     this.startCarouselAutoPlay();
   }
 
   ngOnDestroy() {
     this.stopCarouselAutoPlay();
+  }
+
+  @HostListener('window:scroll')
+  onWindowScroll() {
+    this.isHeaderFloating.set(window.scrollY > 24);
   }
 
   startCarouselAutoPlay() {
@@ -98,9 +105,16 @@ export class LandingPageComponent implements OnInit, OnDestroy {
     this.isDemoModalOpen.set(false);
   }
 
+  openLogin() {
+    this.service.openLogin();
+  }
+
+  openSignup() {
+    this.service.openSignup();
+  }
+
   goToApp(tab: 'dashboard' | 'vault' | 'assets' | 'notifications' | 'inspection' | 'roi' = 'dashboard') {
     this.service.setTab(tab);
     this.service.setView('app');
   }
 }
-

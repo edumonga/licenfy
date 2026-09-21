@@ -24,24 +24,47 @@
         </div>
       </div>
       <div class="ocr-quick-samples">
-        <span class="sample-label">Simular com modelo:</span>
-        <button class="btn btn-outline btn-xs" (click)="simulateOcrUpload('alvara')">
-          <span class="material-symbols-rounded icon-xs text-primary">description</span>
-          Alvará Prefeitura SP
-        </button>
-        <button class="btn btn-outline btn-xs" (click)="simulateOcrUpload('bombeiros')">
-          <span class="material-symbols-rounded icon-xs text-primary">local_fire_department</span>
-          Laudo AVCB Bombeiros
-        </button>
-        <button class="btn btn-outline btn-xs" (click)="simulateOcrUpload('sanitaria')">
-          <span class="material-symbols-rounded icon-xs text-primary">health_and_safety</span>
-          Licença Sanitária ANVISA
-        </button>
+        @if (!isGeminiConfigured()) {
+          <span class="sample-label">Simular com modelo:</span>
+          <button class="btn btn-outline btn-xs" (click)="simulateOcrUpload('alvara')">
+            <span class="material-symbols-rounded icon-xs text-primary">description</span>
+            Alvará Prefeitura SP
+          </button>
+          <button class="btn btn-outline btn-xs" (click)="simulateOcrUpload('bombeiros')">
+            <span class="material-symbols-rounded icon-xs text-primary">local_fire_department</span>
+            Laudo AVCB Bombeiros
+          </button>
+          <button class="btn btn-outline btn-xs" (click)="simulateOcrUpload('sanitaria')">
+            <span class="material-symbols-rounded icon-xs text-primary">health_and_safety</span>
+            Licença Sanitária ANVISA
+          </button>
+        }
       </div>
     </div>
+    <!-- Banner de status Gemini -->
+    <div class="gemini-status-bar" [class.configured]="isGeminiConfigured()">
+      <span class="material-symbols-rounded icon-sm">auto_awesome</span>
+      @if (isGeminiConfigured()) {
+        <span><strong>Gemini Vision AI ativado</strong> — uploads reais serão processados pelo Gemini Flash AI</span>
+        <button class="btn-gemini-change" (click)="showApiKeyInput.set(!showApiKeyInput())">Trocar chave</button>
+      } @else {
+        <span><strong>Gemini não configurado</strong> — modo simulação ativo. Configure sua chave para OCR real.</span>
+        <button class="btn-gemini-config" (click)="showApiKeyInput.set(!showApiKeyInput())">Configurar chave Gemini</button>
+      }
+    </div>
+
+    @if (showApiKeyInput()) {
+      <div class="gemini-key-form">
+        <span class="material-symbols-rounded icon-sm text-primary">key</span>
+        <input [(ngModel)]="geminiKeyInput" name="geminiKey" type="password" class="gemini-key-input" placeholder="Cole aqui sua chave da API Gemini (aistudio.google.com/apikey)" />
+        <button class="btn btn-primary btn-sm" (click)="saveGeminiKey()" [disabled]="!geminiKeyInput.trim()">
+          <span class="material-symbols-rounded icon-sm">save</span> Salvar
+        </button>
+      </div>
+    }
 
     <!-- Dropzone interativo -->
-    <div class="dropzone" [class.scanning]="isScanning()" (click)="simulateOcrUpload('alvara')">
+    <div class="dropzone" [class.scanning]="isScanning()">
       <!-- Animação do Scanner Laser quando está lendo -->
       <div *ngIf="isScanning()" class="scanner-laser-bar"></div>
 
@@ -51,10 +74,19 @@
         </div>
         <h3 class="drop-main-text">Arraste seu PDF ou imagem aqui</h3>
         <p class="drop-sub-text">Suporta PDF, JPG, PNG e XML de NFe (Até 25MB)</p>
-        <button class="btn btn-primary btn-sm" (click)="$event.stopPropagation(); simulateOcrUpload('alvara')">
+        <label class="btn btn-primary btn-sm file-picker">
           <span class="material-symbols-rounded icon-sm">upload_file</span>
           Selecionar Arquivo do Computador
-        </button>
+          <input type="file" accept=".pdf,.jpg,.jpeg,.png" (change)="onFileSelected($event)" />
+        </label>
+        @if (!isGeminiConfigured()) {
+          <span class="demo-mode-hint">ou simule com um modelo:</span>
+          <div class="demo-btns">
+            <button class="btn btn-outline btn-xs" (click)="simulateOcrUpload('alvara')">Simular Alvará</button>
+            <button class="btn btn-outline btn-xs" (click)="simulateOcrUpload('bombeiros')">Simular AVCB</button>
+            <button class="btn btn-outline btn-xs" (click)="simulateOcrUpload('sanitaria')">Simular VISA</button>
+          </div>
+        }
       </div>
 
       <!-- Estado: Escaneando -->
@@ -72,16 +104,44 @@
         <div class="completed-icon-circle">
           <span class="material-symbols-rounded">check</span>
         </div>
-        <h3 class="completed-title">Leitura OCR Concluída com Alta Precisão!</h3>
-        <p class="completed-sub">Revise os campos preenchidos automaticamente abaixo antes de arquivar no cofre.</p>
+        <h3 class="completed-title">
+          @if (usedRealAi()) {
+            🤖 Extração com IA Real concluída!
+          } @else {
+            Leitura OCR Concluída com Alta Precisão!
+          }
+        </h3>
+        <p class="completed-sub">
+          @if (usedRealAi()) {
+            Dados extraídos via <strong>Gemini Vision AI</strong> do documento real enviado. Revise antes de arquivar.
+          } @else {
+            Revise os campos preenchidos automaticamente abaixo antes de arquivar no cofre.
+          }
+        </p>
       </div>
+
+      <!-- Estado: Erro OCR -->
+      @if (ocrError()) {
+        <div class="ocr-error-bar">
+          <span class="material-symbols-rounded">error</span>
+          <span>{{ ocrError() }}</span>
+          <div style="display: flex; gap: 8px; margin-left: auto;">
+            <button class="btn btn-outline btn-xs" (click)="simulateOcrUpload('alvara')">Usar exemplo simulado</button>
+            <button class="btn btn-outline btn-xs" (click)="ocrError.set('')">Fechar</button>
+          </div>
+        </div>
+      }
     </div>
 
     <!-- Painel de Campos Extraídos pelo OCR -->
     <div *ngIf="scannedSuccess()" class="extracted-form-panel">
       <div class="form-panel-header">
         <span class="material-symbols-rounded text-primary">auto_awesome</span>
-        <h3>Dados Extraídos pelo OCR (Zero Preenchimento Burocrático)</h3>
+        <h3>Confirmação humana dos dados extraídos</h3>
+      </div>
+      <div class="human-review-note">
+        <span class="material-symbols-rounded">person_search</span>
+        <span><strong>Revisão obrigatória antes de salvar.</strong> Confira órgão emissor, datas, valor e unidade. A IA sugere; uma pessoa confirma.</span>
       </div>
 
       <div class="form-grid">
@@ -119,6 +179,11 @@
         </div>
 
         <div class="form-group">
+          <label>Data de emissão</label>
+          <input type="date" [(ngModel)]="extractedData.issueDate" class="form-control" />
+        </div>
+
+        <div class="form-group">
           <label>Data de Vencimento Oficial</label>
           <input type="date" [(ngModel)]="extractedData.expirationDate" class="form-control" />
         </div>
@@ -143,7 +208,7 @@
         <button class="btn btn-outline" (click)="scannedSuccess.set(false)">Cancelar</button>
         <button class="btn btn-primary" (click)="saveExtractedDocument()">
           <span class="material-symbols-rounded">save</span>
-          Confirmar e Arquivar no Cofre Digital
+          Confirmar dados e arquivar
         </button>
       </div>
     </div>
@@ -222,12 +287,18 @@
             <span class="material-symbols-rounded icon-xs">attach_file</span>
             {{ doc.fileSize || '1.5 MB' }}
           </span>
-          <button class="btn btn-outline btn-xs" title="Visualizar Documento">
-            <span class="material-symbols-rounded icon-xs">visibility</span>
-            Ver PDF
-          </button>
+          <div class="doc-actions-right"><button class="btn btn-outline btn-xs" title="Visualizar Documento"><span class="material-symbols-rounded icon-xs">visibility</span> Ver PDF</button><button class="btn btn-ghost btn-xs" (click)="openHistory(doc)"><span class="material-symbols-rounded icon-xs">history</span> Versões {{ doc.versions?.length || 1 }}</button></div>
         </div>
       </div>
+    </div>
+  </div>
+
+  <div *ngIf="selectedHistoryDocument() as doc" class="modal-backdrop" (click)="closeHistory()">
+    <div class="history-modal" (click)="$event.stopPropagation()">
+      <div class="history-modal-head"><div><span class="detail-kicker">HISTÓRICO IMUTÁVEL</span><h3>{{ doc.title }}</h3></div><button class="history-close" (click)="closeHistory()">×</button></div>
+      <p>Renovações anteriores ficam preservadas e nunca substituem a versão arquivada.</p>
+      <div class="version-row current"><span class="material-symbols-rounded">description</span><div><strong>Versão atual · {{ doc.expirationDate | date:'yyyy' }}</strong><small>{{ doc.fileName || 'Documento vigente' }} · confirmado por Mariana Silveira</small></div><span class="current-tag">Vigente</span></div>
+      <div class="version-row archived"><span class="material-symbols-rounded">archive</span><div><strong>Versão anterior · {{ doc.issueDate | date:'yyyy' }}</strong><small>Arquivo preservado para auditoria e rastreabilidade</small></div><span>Arquivada</span></div>
     </div>
   </div>
 </div>

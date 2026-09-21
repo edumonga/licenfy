@@ -28,7 +28,7 @@ export class DashboardComponent {
   }
 
   notifyManager(license: LicenseDocument) {
-    this.service.sendSimulatedWhatsApp(license);
+    this.service.sendSimulatedEmail(license);
     this.justNotifiedId = license.id;
     setTimeout(() => {
       this.justNotifiedId = '';

@@ -1,0 +1,113 @@
+<main class="auth-page">
+  <section class="auth-brand-panel">
+    <button class="back-link" (click)="backToSite()">
+      <span class="material-symbols-rounded">arrow_back</span> Voltar ao site
+    </button>
+    <div class="brand-content">
+      <div class="brand-logo-center">
+        <img src="logo-auth.png" alt="Licenfy" class="auth-brand-logo" />
+      </div>
+      <span class="brand-overline">PLATAFORMA DE COMPLIANCE</span>
+      <h1>Controle operacional, sem perder o ritmo da operação.</h1>
+      <p>Documentos, prazos, ativos e responsáveis em um só lugar.</p>
+      <div class="brand-points">
+        <span><i>✓</i> Acesso seguro para sua equipe</span>
+        <span><i>✓</i> Alertas e histórico auditável</span>
+        <span><i>✓</i> Visão consolidada por unidade</span>
+        <span><i>✓</i> Acesso de teste imediato (sem banco de dados)</span>
+      </div>
+    </div>
+    <span class="brand-footer">© 2026 Licenfy Tecnologia</span>
+  </section>
+
+  <section class="auth-form-panel">
+    <div class="auth-card">
+      <div class="auth-tabs">
+        <button [class.active]="mode() === 'login'" (click)="changeMode('login')">
+          Entrar com conta criada
+        </button>
+        <button [class.active]="mode() === 'signup'" (click)="changeMode('signup')">
+          Testar / Criar conta
+        </button>
+      </div>
+
+      @if (mode() === 'login') {
+        <div class="form-intro">
+          <span class="eyebrow">BEM-VINDO DE VOLTA</span>
+          <h2>Entre na sua conta</h2>
+          <p>Acesse o painel da sua empresa com sua conta já cadastrada.</p>
+        </div>
+
+        <form (submit)="$event.preventDefault(); submitLogin()" class="auth-form">
+          <label>
+            Usuário ou e-mail
+            <input [(ngModel)]="loginData.login" name="login" autocomplete="username" placeholder="Seu usuário ou e-mail" required />
+          </label>
+          <label>
+            Senha
+            <input [(ngModel)]="loginData.password" name="password" type="password" autocomplete="current-password" placeholder="Sua senha" required />
+          </label>
+
+          @if (error()) {
+            <div class="form-error">
+              <span class="material-symbols-rounded">error</span>
+              <span>{{ error() }}</span>
+            </div>
+          }
+
+          <button class="auth-submit" [disabled]="isLoading()">
+            {{ isLoading() ? 'Autenticando...' : 'Entrar na plataforma' }}
+            <span class="material-symbols-rounded">arrow_forward</span>
+          </button>
+        </form>
+
+        <p class="auth-switch">
+          Ainda não tem uma conta?
+          <button type="button" (click)="changeMode('signup')">Crie uma conta de teste</button>
+        </p>
+      } @else {
+        <div class="form-intro">
+          <span class="eyebrow">COMECE AGORA</span>
+          <h2>Crie sua conta de teste</h2>
+          <p>Experimente o Licenfy de imediato — sem necessidade de banco de dados.</p>
+        </div>
+
+        <form (submit)="$event.preventDefault(); submitSignup()" class="auth-form">
+          <label>
+            Nome completo
+            <input [(ngModel)]="signupData.name" name="name" autocomplete="name" placeholder="Ex: Carlos Eduardo" required />
+          </label>
+          <label>
+            E-mail corporativo
+            <input [(ngModel)]="signupData.email" name="email" type="email" autocomplete="email" placeholder="carlos@empresa.com.br" required />
+          </label>
+          <label>
+            Crie uma senha
+            <input [(ngModel)]="signupData.password" name="password" type="password" autocomplete="new-password" placeholder="Mínimo 3 caracteres" required />
+          </label>
+          <label>
+            Confirme sua senha
+            <input [(ngModel)]="signupData.confirmPassword" name="confirmPassword" type="password" autocomplete="new-password" placeholder="Repita a senha criada" required />
+          </label>
+
+          @if (error()) {
+            <div class="form-error">
+              <span class="material-symbols-rounded">error</span>
+              <span>{{ error() }}</span>
+            </div>
+          }
+
+          <button class="auth-submit">
+            Criar conta e acessar plataforma
+            <span class="material-symbols-rounded">arrow_forward</span>
+          </button>
+        </form>
+
+        <p class="auth-switch">
+          Já tem uma conta?
+          <button type="button" (click)="changeMode('login')">Entrar</button>
+        </p>
+      }
+    </div>
+  </section>
+</main>

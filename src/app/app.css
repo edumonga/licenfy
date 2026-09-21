@@ -23,19 +23,31 @@
   padding: 22px 20px;
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: center;
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
   background: #111827;
+  transition: background 0.2s ease;
+}
+
+.sidebar-logo-block:hover {
+  background: #1e293b;
 }
 
 .sidebar-logo {
-  height: 38px;
-  max-width: 170px;
+  height: 50px;
+  width: auto;
+  max-width: 210px;
   object-fit: contain;
-  /* Filter makes the dark logo text contrast nicely on dark background if needed, or white backing */
-  background: #ffffff;
-  padding: 4px 10px;
-  border-radius: 8px;
+  background: transparent !important;
+  padding: 0 !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.35));
+  transition: transform 0.2s ease;
+}
+
+.sidebar-logo:hover {
+  transform: scale(1.03);
 }
 
 .version-tag {
@@ -189,6 +201,29 @@
 .user-org {
   font-size: 0.7rem;
   color: #9ca3af;
+}
+
+.btn-logout {
+  margin-left: auto;
+  background: transparent;
+  border: 0;
+  color: #9ca3af;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 6px;
+  border-radius: 6px;
+  transition: all 0.15s ease;
+}
+
+.btn-logout:hover {
+  background: rgba(239, 68, 68, 0.15);
+  color: #ef4444;
+}
+
+.btn-logout .material-symbols-rounded {
+  font-size: 18px;
 }
 
 /* Main Wrapper */

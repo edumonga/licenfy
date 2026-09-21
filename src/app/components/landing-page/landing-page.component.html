@@ -12,60 +12,58 @@
 </div>
 
 <!-- Header / Barra de Navegação -->
-<header class="main-header">
+<header class="main-header" [class.is-floating]="isHeaderFloating()">
   <div class="header-container">
-    <div class="header-left">
-      <!-- Logo Oficial Licenfy -->
-      <a href="#" (click)="$event.preventDefault()" class="brand-logo" title="Licenfy">
-        <img src="logo.png" alt="Licenfy" class="logo-img" />
-      </a>
+    <a href="#" (click)="$event.preventDefault()" class="brand-logo" title="Licenfy">
+      <img src="logo.png" alt="Licenfy" class="logo-img" />
+    </a>
 
-      <!-- Menu de Navegação -->
-      <nav class="nav-menu">
-        <div class="nav-dropdown">
-          <button class="nav-link">
-            Plataforma
-            <span class="material-symbols-rounded chevron">expand_more</span>
-          </button>
-        </div>
-        <div class="nav-dropdown">
-          <button class="nav-link">
-            Soluções
-            <span class="material-symbols-rounded chevron">expand_more</span>
-          </button>
-        </div>
-        <div class="nav-dropdown">
-          <button class="nav-link">
-            Indústrias
-            <span class="material-symbols-rounded chevron">expand_more</span>
-          </button>
-        </div>
-        <a href="#modulos" class="nav-link">Módulos</a>
-        <div class="nav-dropdown">
-          <button class="nav-link">
-            Recursos
-            <span class="material-symbols-rounded chevron">expand_more</span>
-          </button>
-        </div>
-        <a href="#roi" class="nav-link">Planos</a>
-      </nav>
-    </div>
+    <nav class="nav-menu" aria-label="Navegação principal">
+      <div class="nav-dropdown">
+        <button class="nav-link">
+          Plataforma
+          <span class="material-symbols-rounded chevron">expand_more</span>
+        </button>
+      </div>
+      <div class="nav-dropdown">
+        <button class="nav-link">
+          Soluções
+          <span class="material-symbols-rounded chevron">expand_more</span>
+        </button>
+      </div>
+      <div class="nav-dropdown">
+        <button class="nav-link">
+          Indústrias
+          <span class="material-symbols-rounded chevron">expand_more</span>
+        </button>
+      </div>
+      <a href="#modulos" class="nav-link">Módulos</a>
+      <div class="nav-dropdown">
+        <button class="nav-link">
+          Recursos
+          <span class="material-symbols-rounded chevron">expand_more</span>
+        </button>
+      </div>
+      <a href="#roi" class="nav-link">Planos</a>
+    </nav>
 
     <div class="header-right">
       <button class="lang-selector" title="Português do Brasil">
         <span class="material-symbols-rounded">language</span>
       </button>
 
-      <button class="btn-text" (click)="goToApp('dashboard')">
+      <button class="btn-text" (click)="openLogin()">
         Entrar
       </button>
 
-      <button class="btn-primary-pill" (click)="goToApp('dashboard')">
+      <button class="btn-primary-pill" (click)="openSignup()">
         Teste grátis
       </button>
     </div>
+
   </div>
 </header>
+<div class="header-spacer" [class.is-active]="isHeaderFloating()"></div>
 
 <!-- Hero Section Exatamente no Estilo Pipefy com Animações Fluidas -->
 <section class="hero-section">
@@ -79,7 +77,7 @@
       <h1 class="hero-title">Com workflows, OCR e automação, a blindagem regulatória começa em 5 minutos</h1>
 
       <p class="hero-subtitle">
-        O Licenfy é a forma mais simples e ágil de centralizar suas licenças, alvarás e ativos com o poder do monitoramento contínuo e réguas no WhatsApp.
+        O Licenfy é a forma mais simples e ágil de centralizar suas licenças, alvarás e ativos com o poder do monitoramento contínuo e réguas automáticas por e-mail corporativo.
       </p>
 
       <div class="hero-cta-group">
@@ -88,7 +86,7 @@
           <span class="material-symbols-rounded arrow-icon">north_east</span>
         </button>
 
-        <button class="btn-cta-light" (click)="goToApp('dashboard')">
+        <button class="btn-cta-light" (click)="openSignup()">
           <span>Teste grátis</span>
         </button>
       </div>
@@ -113,6 +111,13 @@
     <!-- Coluna Direita: Carrossel de Imagens dos Recursos e Soluções Licenfy -->
     <div class="hero-carousel-wrapper" (mouseenter)="stopCarouselAutoPlay()" (mouseleave)="startCarouselAutoPlay()">
       <div class="hero-image-carousel-card floating-card">
+        <div class="carousel-card-header">
+          <div class="carousel-live-label">
+            <span class="carousel-live-dot"></span>
+            Plataforma Licenfy
+          </div>
+          <span class="carousel-slide-number">0{{ currentSlideIndex() + 1 }} <span>/ 0{{ slides.length }}</span></span>
+        </div>
         
         <!-- Viewport do Carrossel com as 3 Imagens -->
         <div class="carousel-viewport">
@@ -129,6 +134,11 @@
                 />
               </div>
             }
+          </div>
+
+          <div class="carousel-slide-caption" aria-live="polite">
+            <span>Veja por dentro</span>
+            <strong>{{ slides[currentSlideIndex()].title }}</strong>
           </div>
 
           <!-- Botões de Navegação Direta Sobrepostos -->
@@ -160,16 +170,16 @@
                 class="c-pill-btn" 
                 [class.active]="currentSlideIndex() === i"
                 (click)="setSlide(i)"
-                [title]="slide.title">
-                <span class="pill-dot"></span>
+                [attr.aria-pressed]="currentSlideIndex() === i"
+                [attr.aria-label]="'Ver ' + slide.title">
+                <span class="pill-index">0{{ i + 1 }}</span>
                 <span class="pill-title">{{ slide.title }}</span>
               </button>
             }
           </div>
 
-          <!-- Indicador Numérico -->
-          <div class="carousel-counter-badge">
-            {{ currentSlideIndex() + 1 }} / {{ slides.length }}
+          <div class="carousel-progress" aria-hidden="true">
+            <span [style.transform]="'scaleX(' + ((currentSlideIndex() + 1) / slides.length) + ')' "></span>
           </div>
         </div>
 
@@ -178,35 +188,31 @@
   </div>
 </section>
 
-<!-- Seção: "Escolhido por líderes de mercado" (Social Proof) -->
+<!-- Seção: Empresas atendidas -->
 <section class="social-proof-section">
   <div class="section-container">
-    <h3 class="social-proof-title">Escolhido por líderes com alta complexidade regulatória em todo o Brasil</h3>
+    <h3 class="social-proof-title">Empresas que atendemos</h3>
     
     <div class="logos-grid">
       <div class="logo-box">
         <span class="material-symbols-rounded logo-icon">storefront</span>
-        <span class="logo-text">REDE VAREJO S.A.</span>
+        <span class="logo-text">Varejo multi-loja</span>
+        <span class="logo-detail">Redes de 5 a 50 unidades</span>
       </div>
       <div class="logo-box">
-        <span class="material-symbols-rounded logo-icon">local_shipping</span>
-        <span class="logo-text">LOGÍSTICA BRASIL</span>
+        <span class="material-symbols-rounded logo-icon">restaurant</span>
+        <span class="logo-text">Alimentação</span>
+        <span class="logo-detail">Restaurantes e food service</span>
       </div>
       <div class="logo-box">
         <span class="material-symbols-rounded logo-icon">factory</span>
-        <span class="logo-text">INDÚSTRIA ALFA</span>
+        <span class="logo-text">Indústria leve</span>
+        <span class="logo-detail">Ambiental, ativos e manutenção</span>
       </div>
       <div class="logo-box">
         <span class="material-symbols-rounded logo-icon">local_hospital</span>
-        <span class="logo-text">HEALTH & PHARMA</span>
-      </div>
-      <div class="logo-box">
-        <span class="material-symbols-rounded logo-icon">apartment</span>
-        <span class="logo-text">GRUPO ENGENHARIA</span>
-      </div>
-      <div class="logo-box">
-        <span class="material-symbols-rounded logo-icon">bolt</span>
-        <span class="logo-text">ENERGIA & SANEAMENTO</span>
+        <span class="logo-text">Saúde</span>
+        <span class="logo-detail">Farmácias e clínicas</span>
       </div>
     </div>
   </div>
@@ -270,17 +276,17 @@
         </div>
       </div>
 
-      <!-- Card 4: WhatsApp Réguas -->
+      <!-- Card 4: Alertas de E-mail Corporativo -->
       <div class="feature-card hover-lift" (click)="goToApp('notifications')">
         <div class="feature-icon-wrapper bg-emerald-subtle">
-          <span class="material-symbols-rounded text-emerald">chat</span>
+          <span class="material-symbols-rounded text-emerald">mark_email_read</span>
         </div>
-        <h3 class="feature-title">Réguas Proativas no WhatsApp</h3>
+        <h3 class="feature-title">Alertas de E-mail Corporativo</h3>
         <p class="feature-desc">
-          Dispare notificações no WhatsApp do gerente da unidade e da diretoria com 90, 60 e 30 dias de antecedência. Garanta que a renovação comece a tempo.
+          Dispare notificações automáticas por e-mail para o gerente da unidade, compliance e diretoria com 90, 60 e 30 dias de antecedência. Garanta governança com trilha de auditoria.
         </p>
         <div class="feature-link">
-          <span>Configurar Réguas</span>
+          <span>Configurar Alertas</span>
           <span class="material-symbols-rounded">arrow_forward</span>
         </div>
       </div>
@@ -328,9 +334,26 @@
   </div>
 </section>
 
-<!-- Footer Corporativo Enterprise -->
-<footer class="main-footer">
-  <div class="footer-container">
+<!-- Encerramento e Footer -->
+<section class="footer-showcase">
+  <div class="footer-orb footer-orb-left"></div>
+  <div class="footer-orb footer-orb-right"></div>
+
+  <div class="footer-cta">
+    <p class="footer-cta-kicker">CONFORMIDADE EM MOVIMENTO</p>
+    <h2>Controle total.<br><strong>Comece agora.</strong></h2>
+    <p>Transforme licenças, alvarás e ativos em uma operação segura e previsível.</p>
+    <div class="footer-cta-actions">
+      <button class="footer-cta-primary" (click)="openSignup()">
+        Teste grátis
+        <span class="material-symbols-rounded">arrow_forward</span>
+      </button>
+      <button class="footer-cta-secondary" (click)="openDemoModal()">Fale com um especialista</button>
+    </div>
+  </div>
+
+  <footer class="main-footer">
+    <div class="footer-container">
     <div class="footer-top">
       <div class="footer-col-brand">
         <img src="logo.png" alt="Licenfy" class="footer-logo" />
@@ -342,10 +365,10 @@
             <span class="material-symbols-rounded icon-xs">lock</span>
             Criptografia Bancária
           </span>
-          <span class="sec-badge">
+          <a class="sec-badge" href="https://www.gov.br/governodigital/pt-br/lgpd-pagina-do-cidadao/o-que-e-a-lgpd" target="_blank" rel="noopener noreferrer">
             <span class="material-symbols-rounded icon-xs">verified_user</span>
-            100% LGPD Compliant
-          </span>
+            Lei Geral de Proteção de Dados (LGPD)
+          </a>
         </div>
       </div>
 
@@ -356,18 +379,18 @@
           <li><a href="#" (click)="$event.preventDefault(); goToApp('vault')">Cofre Digital & OCR</a></li>
           <li><a href="#" (click)="$event.preventDefault(); goToApp('assets')">Ativos & QR Code</a></li>
           <li><a href="#" (click)="$event.preventDefault(); goToApp('inspection')">Modo Fiscalização</a></li>
-          <li><a href="#" (click)="$event.preventDefault(); goToApp('notifications')">Réguas WhatsApp</a></li>
+          <li><a href="#" (click)="$event.preventDefault(); goToApp('notifications')">Alertas de E-mail</a></li>
         </ul>
       </div>
 
       <div class="footer-col">
-        <h4 class="footer-col-title">Setores</h4>
+        <h4 class="footer-col-title">Soluções</h4>
         <ul class="footer-links">
-          <li><a href="#" (click)="$event.preventDefault()">Redes de Varejo</a></li>
-          <li><a href="#" (click)="$event.preventDefault()">Centros de Distribuição</a></li>
-          <li><a href="#" (click)="$event.preventDefault()">Indústrias & Manufatura</a></li>
-          <li><a href="#" (click)="$event.preventDefault()">Saúde & Clínicas</a></li>
-          <li><a href="#" (click)="$event.preventDefault()">Construção Civil</a></li>
+          <li><a href="#modulos">Automação de Licenças</a></li>
+          <li><a href="#modulos">Gestão de Ativos</a></li>
+          <li><a href="#roi">Inteligência de Risco</a></li>
+          <li><a href="#" (click)="$event.preventDefault(); openDemoModal()">Para Redes e Franquias</a></li>
+          <li><a href="#" (click)="$event.preventDefault(); openDemoModal()">Para Operações Enterprise</a></li>
         </ul>
       </div>
 
@@ -378,7 +401,7 @@
           <li><a href="tel:+551140001234">+55 11 4000-1234</a></li>
           <li><a href="#" (click)="$event.preventDefault(); openDemoModal()">Agendar com Consultor</a></li>
         </ul>
-        <button class="btn-footer-saas" (click)="goToApp('dashboard')">
+        <button class="btn-footer-saas" (click)="openLogin()">
           <span>Acessar Plataforma SaaS</span>
           <span class="material-symbols-rounded">arrow_forward</span>
         </button>
@@ -386,17 +409,21 @@
     </div>
 
     <div class="footer-bottom">
-      <div class="copy-text">
-        © 2026 Licenfy Tecnologia S.A. Todos os direitos reservados.
-      </div>
       <div class="footer-legal-links">
         <a href="#" (click)="$event.preventDefault()">Termos de Uso</a>
         <a href="#" (click)="$event.preventDefault()">Política de Privacidade</a>
         <a href="#" (click)="$event.preventDefault()">Segurança da Informação</a>
       </div>
+      <div class="footer-socials" aria-label="Redes sociais">
+        <a href="#" (click)="$event.preventDefault()" aria-label="LinkedIn"><span class="material-symbols-rounded">business_center</span></a>
+        <a href="#" (click)="$event.preventDefault()" aria-label="Instagram"><span class="material-symbols-rounded">photo_camera</span></a>
+        <a href="#" (click)="$event.preventDefault()" aria-label="YouTube"><span class="material-symbols-rounded">play_circle</span></a>
+      </div>
+      <div class="copy-text">© 2026 Licenfy Tecnologia S.A. Todos os direitos reservados.</div>
     </div>
-  </div>
-</footer>
+    </div>
+  </footer>
+</section>
 
 <!-- Modal de Demonstração / Contato com Especialista -->
 @if (isDemoModalOpen()) {
@@ -431,7 +458,7 @@
 
           <div class="form-row">
             <div class="form-field">
-              <label>WhatsApp</label>
+              <label>Telefone Corporativo</label>
               <input type="tel" placeholder="(11) 99999-8888" class="form-input" required />
             </div>
             <div class="form-field">
@@ -451,7 +478,7 @@
               <span class="material-symbols-rounded">arrow_forward</span>
             </button>
 
-            <button type="button" class="btn-cta-light w-full mt-2" (click)="closeDemoModal(); goToApp('dashboard')">
+            <button type="button" class="btn-cta-light w-full mt-2" (click)="closeDemoModal(); openLogin()">
               <span>Entrar no Sistema Direto (Sandbox)</span>
             </button>
           </div>
