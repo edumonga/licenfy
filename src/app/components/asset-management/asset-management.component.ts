@@ -1,82 +1,165 @@
 import { Component, inject, signal, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { LicenfyService } from '../../core/services/licenfy.service';
-import { PhysicalAsset } from '../../core/models/types';
-import { QrCanvasComponent } from '../qr-canvas/qr-canvas.component';
+import { ServicoLicenfy } from '../../core/services/licenfy.service';
+import { AtivoFisico, PhysicalAsset } from '../../core/models/types';
+import { QrCanvasComponente } from '../qr-canvas/qr-canvas.component';
 
 @Component({
   selector: 'app-asset-management',
   standalone: true,
-  imports: [CommonModule, FormsModule, QrCanvasComponent],
+  imports: [CommonModule, FormsModule, QrCanvasComponente],
   templateUrl: './asset-management.component.html',
   styleUrls: ['./asset-management.component.css']
 })
-export class AssetManagementComponent {
-  readonly service = inject(LicenfyService);
+export class GestaoAtivosComponente {
+  readonly servico = inject(ServicoLicenfy);
 
-  readonly assets = this.service.filteredAssets;
-  readonly branches = this.service.branches;
+  readonly ativos = this.servico.ativosFiltrados;
+  readonly unidades = this.servico.unidades;
 
-  // QR Canvas reference para download
-  @ViewChild(QrCanvasComponent) qrCanvas?: QrCanvasComponent;
-  readonly selectedAssetForQr = signal<PhysicalAsset | null>(null);
-  readonly selectedAssetForMobile = signal<PhysicalAsset | null>(null);
+  @ViewChild(QrCanvasComponente) referenciaQrCanvas?: QrCanvasComponente;
+  get qrCanvas() { return this.referenciaQrCanvas; }
 
-  // Filtro de Categoria
-  selectedCategory = signal<string>('all');
+  readonly ativoSelecionadoParaQr = signal<AtivoFisico | null>(null);
+  readonly ativoSelecionadoParaMobile = signal<AtivoFisico | null>(null);
+  readonly categoriaSelecionada = signal<string>('all');
 
-  get filteredAssetsList(): PhysicalAsset[] {
-    const cat = this.selectedCategory();
-    if (cat === 'all') return this.assets();
-    return this.assets().filter(a => a.category === cat);
+  readonly incidenteReportado = signal<boolean>(false);
+  readonly exibirFormularioAtivo = signal<boolean>(false);
+
+  novoAtivo = {
+    nome: '',
+    name: '',
+    etiquetaPatrimonio: '',
+    assetTag: '',
+    unidadeId: 'sp-matriz',
+    branchId: 'sp-matriz',
+    numeroNotaFiscal: '',
+    invoiceNumber: '',
+    dataFimGarantia: '',
+    warrantyExpirationDate: ''
+  };
+
+  // Compatibilidade
+  get service() { return this.servico; }
+  get assets() { return this.ativos; }
+  get branches() { return this.unidades; }
+  get selectedAssetForQr() { return this.ativoSelecionadoParaQr; }
+  get selectedAssetForMobile() { return this.ativoSelecionadoParaMobile; }
+  get selectedCategory() { return this.categoriaSelecionada; }
+  get incidentReported() { return this.incidenteReportado; }
+  get showAssetForm() { return this.exibirFormularioAtivo; }
+  get newAsset() { return this.novoAtivo; }
+  set newAsset(v: any) { this.novoAtivo = v; }
+
+  get listaAtivosFiltrados(): AtivoFisico[] {
+    const categoria = this.categoriaSelecionada();
+    if (categoria === 'all') return this.ativos();
+    return this.ativos().filter(a => (a.categoria || a.category) === categoria);
   }
+  get filteredAssetsList(): AtivoFisico[] { return this.listaAtivosFiltrados; }
 
-  readonly incidentReported = signal<boolean>(false);
-  readonly showAssetForm = signal<boolean>(false);
-  newAsset = { name: '', assetTag: '', branchId: 'sp-matriz', invoiceNumber: '', warrantyExpirationDate: '' };
-
-  openQrModal(asset: PhysicalAsset) {
-    this.selectedAssetForQr.set(asset);
+  abrirModalQr(ativo: AtivoFisico) {
+    this.ativoSelecionadoParaQr.set(ativo);
   }
+  openQrModal(a: AtivoFisico) { this.abrirModalQr(a); }
 
-  closeQrModal() {
-    this.selectedAssetForQr.set(null);
+  fecharModalQr() {
+    this.ativoSelecionadoParaQr.set(null);
   }
+  closeQrModal() { this.fecharModalQr(); }
 
-  openMobileSimulator(asset: PhysicalAsset) {
-    this.selectedAssetForMobile.set(asset);
-    this.incidentReported.set(false);
+  abrirSimuladorMobile(ativo: AtivoFisico) {
+    this.ativoSelecionadoParaMobile.set(ativo);
+    this.incidenteReportado.set(false);
   }
+  openMobileSimulator(a: AtivoFisico) { this.abrirSimuladorMobile(a); }
 
-  closeMobileSimulator() {
-    this.selectedAssetForMobile.set(null);
+  fecharSimuladorMobile() {
+    this.ativoSelecionadoParaMobile.set(null);
   }
+  closeMobileSimulator() { this.fecharSimuladorMobile(); }
 
-  onReportIncident() {
-    this.incidentReported.set(true);
+  reportarIncidente() {
+    this.incidenteReportado.set(true);
     setTimeout(() => {
-      this.incidentReported.set(false);
+      this.incidenteReportado.set(false);
     }, 4000);
   }
+  onReportIncident() { this.reportarIncidente(); }
 
-  printTag() {
+  imprimirEtiqueta() {
     window.print();
   }
+  printTag() { this.imprimirEtiqueta(); }
 
-  saveAsset() {
-    if (!this.newAsset.name || !this.newAsset.assetTag || !this.newAsset.invoiceNumber) return;
-    const branch = this.branches().find(item => item.id === this.newAsset.branchId) || this.branches()[0];
-    const warranty = this.newAsset.warrantyExpirationDate || '2027-09-20';
-    const days = Math.max(1, Math.ceil((new Date(warranty).getTime() - new Date('2026-09-20').getTime()) / 86400000));
-    this.service.addAsset({
-      id: 'ast-' + Date.now(), assetTag: this.newAsset.assetTag, qrCodeValue: `https://licenfy.vercel.app/asset/${encodeURIComponent(this.newAsset.assetTag)}`,
-      name: this.newAsset.name, category: 'Segurança', branchId: branch.id, branchName: branch.name,
-      locationDetails: 'Localização a confirmar', brandModel: 'Modelo a confirmar', serialNumber: 'Não informado', invoiceNumber: this.newAsset.invoiceNumber,
-      purchaseDate: '2026-09-20', warrantyExpirationDate: warranty, isWarrantyActive: true, daysUntilWarrantyExpires: days,
-      lastMaintenanceDate: 'Sem registros', nextMaintenanceDate: 'A programar', maintenanceStatus: 'regular', maintenances: []
+  salvarAtivo() {
+    const nome = this.novoAtivo.nome || this.novoAtivo.name;
+    const etiqueta = this.novoAtivo.etiquetaPatrimonio || this.novoAtivo.assetTag;
+    const nota = this.novoAtivo.numeroNotaFiscal || this.novoAtivo.invoiceNumber;
+    const unidadeId = this.novoAtivo.unidadeId || this.novoAtivo.branchId;
+    const garantia = this.novoAtivo.dataFimGarantia || this.novoAtivo.warrantyExpirationDate || '2027-09-20';
+
+    if (!nome || !etiqueta || !nota) return;
+
+    const unidade = this.unidades().find(item => item.id === unidadeId) || this.unidades()[0];
+    const dias = Math.max(1, Math.ceil((new Date(garantia).getTime() - new Date('2026-09-20').getTime()) / 86400000));
+
+    this.servico.adicionarAtivo({
+      id: 'ast-' + Date.now(),
+      etiquetaPatrimonio: etiqueta,
+      assetTag: etiqueta,
+      valorQrCode: `https://licenfy.vercel.app/asset/${encodeURIComponent(etiqueta)}`,
+      qrCodeValue: `https://licenfy.vercel.app/asset/${encodeURIComponent(etiqueta)}`,
+      nome,
+      name: nome,
+      categoria: 'Segurança',
+      category: 'Segurança',
+      unidadeId: unidade.id,
+      branchId: unidade.id,
+      nomeUnidade: unidade.nome || unidade.name || '',
+      branchName: unidade.nome || unidade.name || '',
+      detalhesLocalizacao: 'Localização a confirmar',
+      locationDetails: 'Localização a confirmar',
+      marcaModelo: 'Modelo a confirmar',
+      brandModel: 'Modelo a confirmar',
+      numeroSerie: 'Não informado',
+      serialNumber: 'Não informado',
+      numeroNotaFiscal: nota,
+      invoiceNumber: nota,
+      dataAquisicao: '2026-09-20',
+      purchaseDate: '2026-09-20',
+      dataFimGarantia: garantia,
+      warrantyExpirationDate: garantia,
+      garantiaAtiva: true,
+      isWarrantyActive: true,
+      diasAteFimGarantia: dias,
+      daysUntilWarrantyExpires: dias,
+      dataUltimaManutencao: 'Sem registros',
+      lastMaintenanceDate: 'Sem registros',
+      dataProximaManutencao: 'A programar',
+      nextMaintenanceDate: 'A programar',
+      statusManutencao: 'regular',
+      maintenanceStatus: 'regular',
+      manutencoes: []
     });
-    this.showAssetForm.set(false);
-    this.newAsset = { name: '', assetTag: '', branchId: 'sp-matriz', invoiceNumber: '', warrantyExpirationDate: '' };
+
+    this.exibirFormularioAtivo.set(false);
+    this.novoAtivo = {
+      nome: '',
+      name: '',
+      etiquetaPatrimonio: '',
+      assetTag: '',
+      unidadeId: 'sp-matriz',
+      branchId: 'sp-matriz',
+      numeroNotaFiscal: '',
+      invoiceNumber: '',
+      dataFimGarantia: '',
+      warrantyExpirationDate: ''
+    };
   }
+  saveAsset() { this.salvarAtivo(); }
 }
+
+export const AssetManagementComponent = GestaoAtivosComponente;

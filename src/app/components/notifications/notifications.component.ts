@@ -1,8 +1,8 @@
 import { Component, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { LicenfyService } from '../../core/services/licenfy.service';
-import { NotificationRule, NotificationLog } from '../../core/models/types';
+import { ServicoLicenfy } from '../../core/services/licenfy.service';
+import { RegistroNotificacao, NotificationLog } from '../../core/models/types';
 
 @Component({
   selector: 'app-notifications',
@@ -11,50 +11,72 @@ import { NotificationRule, NotificationLog } from '../../core/models/types';
   templateUrl: './notifications.component.html',
   styleUrls: ['./notifications.component.css']
 })
-export class NotificationsComponent {
-  readonly service = inject(LicenfyService);
+export class NotificacoesComponente {
+  readonly servico = inject(ServicoLicenfy);
 
-  readonly rules = this.service.notificationRules;
-  readonly logs = this.service.notificationLogs;
+  readonly regras = this.servico.regrasNotificacao;
+  readonly registros = this.servico.registrosNotificacao;
 
-  testEmail = signal<string>('diretoria.compliance@empresa.com.br');
-  isSendingTest = signal<boolean>(false);
-  testSentSuccess = signal<boolean>(false);
-  newRuleDays = signal<number>(45);
-  newRuleRecipients = signal<string>('compliance@empresa.com.br, gerencia.risco@empresa.com.br');
+  emailTeste = signal<string>('diretoria.compliance@empresa.com.br');
+  enviandoTeste = signal<boolean>(false);
+  testeEnviadoComSucesso = signal<boolean>(false);
+  diasNovaRegra = signal<number>(45);
+  destinatariosNovaRegra = signal<string>('compliance@empresa.com.br, gerencia.risco@empresa.com.br');
 
-  toggleRule(ruleId: string) {
-    this.service.toggleNotificationRule(ruleId);
+  // Compatibilidade
+  get service() { return this.servico; }
+  get rules() { return this.regras; }
+  get logs() { return this.registros; }
+  get testEmail() { return this.emailTeste; }
+  get isSendingTest() { return this.enviandoTeste; }
+  get testSentSuccess() { return this.testeEnviadoComSucesso; }
+  get newRuleDays() { return this.diasNovaRegra; }
+  get newRuleRecipients() { return this.destinatariosNovaRegra; }
+
+  alternarRegra(regraId: string) {
+    this.servico.alternarRegraNotificacao(regraId);
   }
+  toggleRule(id: string) { this.alternarRegra(id); }
 
-  sendManualTest() {
-    this.isSendingTest.set(true);
+  enviarTesteManual() {
+    this.enviandoTeste.set(true);
     setTimeout(() => {
-      this.isSendingTest.set(false);
-      this.testSentSuccess.set(true);
+      this.enviandoTeste.set(false);
+      this.testeEnviadoComSucesso.set(true);
 
-      const newLog: NotificationLog = {
+      const novoRegistro: RegistroNotificacao = {
         id: 'test-' + Date.now(),
+        horario: 'Agora mesmo',
         timestamp: 'Agora mesmo',
+        canal: 'email',
         channel: 'email',
-        recipient: this.testEmail(),
+        destinatario: this.emailTeste(),
+        recipient: this.emailTeste(),
+        nomeLicencaOuAtivo: 'Alvará de Funcionamento e Localização',
         licenseOrAssetName: 'Alvará de Funcionamento e Localização',
+        nomeUnidade: 'Matriz São Paulo',
         branchName: 'Matriz São Paulo',
+        diasAntes: 30,
         daysBefore: 30,
         status: 'Entregue',
+        previaMensagem: 'Alerta Corporativo Licenfy: Alvará SP vence em 30 dias. Ação preventiva requerida.',
         messagePreview: 'Alerta Corporativo Licenfy: Alvará SP vence em 30 dias. Ação preventiva requerida.'
       };
-      this.service.notificationLogs.update(prev => [newLog, ...prev]);
+      this.servico.registrosNotificacao.update(ant => [novoRegistro, ...ant]);
 
       setTimeout(() => {
-        this.testSentSuccess.set(false);
+        this.testeEnviadoComSucesso.set(false);
       }, 4000);
     }, 1200);
   }
+  sendManualTest() { this.enviarTesteManual(); }
 
-  addCustomRule() {
-    const recipients = this.newRuleRecipients().split(',').map(item => item.trim()).filter(Boolean);
-    if (this.newRuleDays() < 1 || !recipients.length) return;
-    this.service.addNotificationRule(this.newRuleDays(), recipients);
+  adicionarRegraPersonalizada() {
+    const destinatarios = this.destinatariosNovaRegra().split(',').map(item => item.trim()).filter(Boolean);
+    if (this.diasNovaRegra() < 1 || !destinatarios.length) return;
+    this.servico.adicionarRegraNotificacao(this.diasNovaRegra(), destinatarios);
   }
+  addCustomRule() { this.adicionarRegraPersonalizada(); }
 }
+
+export const NotificationsComponent = NotificacoesComponente;

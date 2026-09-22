@@ -1,52 +1,87 @@
-/* Licenfy Design System - Paleta Oficial: #2563eb, #1f2937, #ffffff (Sem emojis) */
+/* Paleta de cores e variáveis globais */
 :root {
-  --color-primary: #2563eb;
-  --color-primary-hover: #1d4ed8;
-  --color-primary-light: #eff6ff;
-  --color-primary-border: #bfdbfe;
+  --cor-primaria: #2563eb;
+  --cor-primaria-hover: #1d4ed8;
+  --cor-primaria-clara: #eff6ff;
+  --cor-primaria-borda: #bfdbfe;
   
-  --color-slate-dark: #1f2937;
-  --color-slate-hover: #111827;
-  --color-slate-border: #374151;
+  --cor-escura: #1f2937;
+  --cor-escura-hover: #111827;
+  --cor-escura-borda: #374151;
   
-  --color-white: #ffffff;
-  --color-bg-main: #f8fafc;
-  --color-bg-card: #ffffff;
-  --color-bg-subtle: #f1f5f9;
+  --cor-branca: #ffffff;
+  --cor-fundo-principal: #f8fafc;
+  --cor-fundo-cartao: #ffffff;
+  --cor-fundo-suave: #f1f5f9;
   
-  --color-text-main: #1f2937;
-  --color-text-muted: #64748b;
-  --color-text-light: #94a3b8;
+  --cor-texto-principal: #1f2937;
+  --cor-texto-mutado: #64748b;
+  --cor-texto-claro: #94a3b8;
   
-  --color-border: #e2e8f0;
-  --color-border-hover: #cbd5e1;
+  --cor-borda: #e2e8f0;
+  --cor-borda-hover: #cbd5e1;
   
-  /* Status Colors (SaaS Compliance) */
-  --status-regular-text: #059669;
-  --status-regular-bg: #ecfdf5;
-  --status-regular-border: #a7f3d0;
+  /* Cores de status de conformidade */
+  --status-regular-texto: #059669;
+  --status-regular-fundo: #ecfdf5;
+  --status-regular-borda: #a7f3d0;
   
-  --status-attention-text: #d97706;
-  --status-attention-bg: #fffbeb;
-  --status-attention-border: #fde68a;
+  --status-atencao-texto: #d97706;
+  --status-atencao-fundo: #fffbeb;
+  --status-atencao-borda: #fde68a;
   
-  --status-urgent-text: #dc2626;
-  --status-urgent-bg: #fef2f2;
-  --status-urgent-border: #fecaca;
+  --status-urgente-texto: #dc2626;
+  --status-urgente-fundo: #fef2f2;
+  --status-urgente-borda: #fecaca;
 
-  /* Typography */
-  --font-heading: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  --font-body: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  /* Aliases para compatibilidade */
+  --color-primary: var(--cor-primaria);
+  --color-primary-hover: var(--cor-primaria-hover);
+  --color-primary-light: var(--cor-primaria-clara);
+  --color-primary-border: var(--cor-primaria-borda);
+  --color-slate-dark: var(--cor-escura);
+  --color-slate-hover: var(--cor-escura-hover);
+  --color-slate-border: var(--cor-escura-borda);
+  --color-white: var(--cor-branca);
+  --color-bg-main: var(--cor-fundo-principal);
+  --color-bg-card: var(--cor-fundo-cartao);
+  --color-bg-subtle: var(--cor-fundo-suave);
+  --color-text-main: var(--cor-texto-principal);
+  --color-text-muted: var(--cor-texto-mutado);
+  --color-text-light: var(--cor-texto-claro);
+  --color-border: var(--cor-borda);
+  --color-border-hover: var(--cor-borda-hover);
+  --status-regular-text: var(--status-regular-texto);
+  --status-regular-bg: var(--status-regular-fundo);
+  --status-regular-border: var(--status-regular-borda);
+  --status-attention-text: var(--status-atencao-texto);
+  --status-attention-bg: var(--status-atencao-fundo);
+  --status-attention-border: var(--status-atencao-borda);
+  --status-urgent-text: var(--status-urgente-texto);
+  --status-urgent-bg: var(--status-urgente-fundo);
+  --status-urgent-border: var(--status-urgente-borda);
 
-  /* Shadows */
-  --shadow-sm: 0 1px 2px 0 rgba(15, 23, 42, 0.05);
-  --shadow-md: 0 4px 6px -1px rgba(15, 23, 42, 0.08), 0 2px 4px -2px rgba(15, 23, 42, 0.05);
-  --shadow-lg: 0 10px 15px -3px rgba(15, 23, 42, 0.08), 0 4px 6px -4px rgba(15, 23, 42, 0.03);
-  --shadow-xl: 0 20px 25px -5px rgba(15, 23, 42, 0.1), 0 8px 10px -6px rgba(15, 23, 42, 0.04);
+  /* Tipografia */
+  --fonte-titulo: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --fonte-corpo: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-heading: var(--fonte-titulo);
+  --font-body: var(--fonte-corpo);
 
-  /* Transitions */
-  --transition-fast: 0.15s ease;
-  --transition-normal: 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  /* Sombras */
+  --sombra-sm: 0 1px 2px 0 rgba(15, 23, 42, 0.05);
+  --sombra-md: 0 4px 6px -1px rgba(15, 23, 42, 0.08), 0 2px 4px -2px rgba(15, 23, 42, 0.05);
+  --sombra-lg: 0 10px 15px -3px rgba(15, 23, 42, 0.08), 0 4px 6px -4px rgba(15, 23, 42, 0.03);
+  --sombra-xl: 0 20px 25px -5px rgba(15, 23, 42, 0.1), 0 8px 10px -6px rgba(15, 23, 42, 0.04);
+  --shadow-sm: var(--sombra-sm);
+  --shadow-md: var(--sombra-md);
+  --shadow-lg: var(--sombra-lg);
+  --shadow-xl: var(--sombra-xl);
+
+  /* Transições */
+  --transicao-rapida: 0.15s ease;
+  --transicao-padrao: 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-fast: var(--transicao-rapida);
+  --transition-normal: var(--transicao-padrao);
 }
 
 *, *::before, *::after {
@@ -58,9 +93,9 @@
 
 html, body {
   height: 100%;
-  font-family: var(--font-body);
-  color: var(--color-text-main);
-  background-color: var(--color-bg-main);
+  font-family: var(--fonte-corpo);
+  color: var(--cor-texto-principal);
+  background-color: var(--cor-fundo-principal);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-size-adjust: 100%;
@@ -68,13 +103,13 @@ html, body {
 }
 
 h1, h2, h3, h4, h5, h6 {
-  font-family: var(--font-heading);
-  color: var(--color-slate-dark);
+  font-family: var(--fonte-titulo);
+  color: var(--cor-escura);
   font-weight: 700;
   letter-spacing: -0.02em;
 }
 
-/* Material Symbols Icon Utility — font-variation-settings OBRIGATÓRIO para fonte variável */
+/* Ícones Material Symbols */
 .material-symbols-rounded {
   font-family: 'Material Symbols Rounded', sans-serif !important;
   font-weight: normal !important;
@@ -97,7 +132,7 @@ h1, h2, h3, h4, h5, h6 {
   flex-shrink: 0;
 }
 
-/* Custom Scrollbar */
+/* Barra de rolagem */
 ::-webkit-scrollbar {
   width: 7px;
   height: 7px;
@@ -113,7 +148,8 @@ h1, h2, h3, h4, h5, h6 {
   background: #94a3b8;
 }
 
-/* Common UI Utilities */
+/* Selos e indicadores de conformidade */
+.selo-status,
 .badge-status {
   display: inline-flex;
   align-items: center;
@@ -127,90 +163,115 @@ h1, h2, h3, h4, h5, h6 {
   letter-spacing: 0.04em;
 }
 
+.selo-status.regular,
 .badge-status.regular {
-  background-color: var(--status-regular-bg);
-  color: var(--status-regular-text);
-  border: 1px solid var(--status-regular-border);
+  background-color: var(--status-regular-fundo);
+  color: var(--status-regular-texto);
+  border: 1px solid var(--status-regular-borda);
 }
 
+.selo-status.atencao,
+.selo-status.attention,
+.badge-status.atencao,
 .badge-status.attention {
-  background-color: var(--status-attention-bg);
-  color: var(--status-attention-text);
-  border: 1px solid var(--status-attention-border);
+  background-color: var(--status-atencao-fundo);
+  color: var(--status-atencao-texto);
+  border: 1px solid var(--status-atencao-borda);
 }
 
+.selo-status.urgente,
+.selo-status.urgent,
+.badge-status.urgente,
 .badge-status.urgent {
-  background-color: var(--status-urgent-bg);
-  color: var(--status-urgent-text);
-  border: 1px solid var(--status-urgent-border);
+  background-color: var(--status-urgente-fundo);
+  color: var(--status-urgente-texto);
+  border: 1px solid var(--status-urgente-borda);
 }
 
-/* Status Indicator Dot */
+/* Ponto de status */
+.ponto-status,
 .status-dot {
   width: 8px;
   height: 8px;
   border-radius: 50%;
   display: inline-block;
 }
-.status-dot.regular { background-color: var(--status-regular-text); box-shadow: 0 0 0 3px rgba(5, 150, 105, 0.2); }
-.status-dot.attention { background-color: var(--status-attention-text); box-shadow: 0 0 0 3px rgba(217, 119, 6, 0.2); }
-.status-dot.urgent { background-color: var(--status-urgent-text); box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.2); }
+.ponto-status.regular,
+.status-dot.regular { background-color: var(--status-regular-texto); box-shadow: 0 0 0 3px rgba(5, 150, 105, 0.2); }
+.ponto-status.atencao,
+.ponto-status.attention,
+.status-dot.atencao,
+.status-dot.attention { background-color: var(--status-atencao-texto); box-shadow: 0 0 0 3px rgba(217, 119, 6, 0.2); }
+.ponto-status.urgente,
+.ponto-status.urgent,
+.status-dot.urgente,
+.status-dot.urgent { background-color: var(--status-urgente-texto); box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.2); }
 
-/* Buttons */
+/* Botões */
+.botao,
 .btn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 8px;
-  font-family: var(--font-heading);
+  font-family: var(--fonte-titulo);
   font-weight: 600;
   font-size: 0.875rem;
   padding: 8px 16px;
   border-radius: 8px;
   border: 1px solid transparent;
   cursor: pointer;
-  transition: all var(--transition-fast);
+  transition: all var(--transicao-rapida);
   text-decoration: none;
 }
 
+.botao-primario,
 .btn-primary {
-  background-color: var(--color-primary);
-  color: var(--color-white);
+  background-color: var(--cor-primaria);
+  color: var(--cor-branca);
   box-shadow: 0 2px 4px rgba(37, 99, 235, 0.2);
 }
+.botao-primario:hover,
 .btn-primary:hover {
-  background-color: var(--color-primary-hover);
+  background-color: var(--cor-primaria-hover);
   box-shadow: 0 4px 8px rgba(37, 99, 235, 0.3);
 }
 
+.botao-escuro,
 .btn-dark {
-  background-color: var(--color-slate-dark);
-  color: var(--color-white);
+  background-color: var(--cor-escura);
+  color: var(--cor-branca);
 }
+.botao-escuro:hover,
 .btn-dark:hover {
-  background-color: var(--color-slate-hover);
+  background-color: var(--cor-escura-hover);
 }
 
+.botao-contorno,
 .btn-outline {
-  background-color: var(--color-white);
-  border-color: var(--color-border);
-  color: var(--color-slate-dark);
+  background-color: var(--cor-branca);
+  border-color: var(--cor-borda);
+  color: var(--cor-escura);
 }
+.botao-contorno:hover,
 .btn-outline:hover {
-  background-color: var(--color-bg-subtle);
-  border-color: var(--color-border-hover);
+  background-color: var(--cor-fundo-suave);
+  border-color: var(--cor-borda-hover);
 }
 
+.botao-fantasma,
 .btn-ghost {
   background: transparent;
-  color: var(--color-text-muted);
+  color: var(--cor-texto-mutado);
 }
+.botao-fantasma:hover,
 .btn-ghost:hover {
-  background-color: var(--color-bg-subtle);
-  color: var(--color-slate-dark);
+  background-color: var(--cor-fundo-suave);
+  color: var(--cor-escura);
 }
 
-/* Responsive Utilities */
+/* Responsividade */
+.tabela-responsiva,
 .table-responsive {
   width: 100%;
   overflow-x: auto;
@@ -218,31 +279,38 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 @media (max-width: 768px) {
+  .ocultar-mobile,
   .hide-mobile {
     display: none !important;
   }
 }
 
 @media (min-width: 769px) {
+  .mostrar-apenas-mobile,
   .show-mobile-only {
     display: none !important;
   }
 }
 
 @media (max-width: 1024px) {
+  .ocultar-tablet,
   .hide-tablet {
     display: none !important;
   }
 }
 
-/* Print utility for Etiquetas e Dossiê */
+/* Impressão */
 @media print {
   body * {
     visibility: hidden;
   }
-  .printable-area, .printable-area * {
+  .area-impressao,
+  .area-impressao *,
+  .printable-area,
+  .printable-area * {
     visibility: visible;
   }
+  .area-impressao,
   .printable-area {
     position: absolute;
     left: 0;
@@ -250,4 +318,3 @@ h1, h2, h3, h4, h5, h6 {
     width: 100%;
   }
 }
-

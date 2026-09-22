@@ -110,7 +110,7 @@
   font-size: 0.925rem;
 }
 
-/* Toolbar */
+/* Barra de ferramentas */
 .assets-toolbar {
   background: var(--color-white);
   padding: 10px 16px;
@@ -153,7 +153,7 @@
   border-color: var(--color-slate-dark);
 }
 
-/* Assets Grid */
+/* Grade de ativos */
 .assets-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
@@ -289,7 +289,7 @@
 
 .flex-1 { flex: 1; }
 
-/* Modals */
+/* Modais */
 .modal-backdrop {
   position: fixed;
   top: 0;
@@ -379,7 +379,7 @@
   gap: 12px;
 }
 
-/* Physical Industrial Label (Etiqueta Física) */
+/* Etiqueta física industrial */
 .physical-tag {
   background: #ffffff;
   border: 3px solid #1f2937;
@@ -526,7 +526,7 @@
   letter-spacing: 0.05em;
 }
 
-/* Mobile Simulator Phone Frame */
+/* Moldura do celular no simulador */
 .mobile-sim-container {
   display: grid;
   grid-template-columns: 340px 1fr;
@@ -775,7 +775,7 @@
   line-height: 1.4;
 }
 
-/* Print specific for physical tag */
+/* Impressão da etiqueta física */
 @media print {
   .no-print {
     display: none !important;

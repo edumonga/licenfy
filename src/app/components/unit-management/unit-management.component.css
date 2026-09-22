@@ -333,7 +333,7 @@
   color: var(--color-text-muted);
 }
 
-/* Modals */
+/* Modais */
 .modal-backdrop {
   position: fixed;
   inset: 0;

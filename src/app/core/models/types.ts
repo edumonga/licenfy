@@ -1,155 +1,281 @@
-export type ComplianceStatus = 'regular' | 'attention' | 'urgent';
+export type StatusConformidade = 'regular' | 'atencao' | 'urgente' | 'attention' | 'urgent';
+export type ComplianceStatus = StatusConformidade;
 
-export interface Branch {
+export interface ResponsavelUnidade {
   id: string;
-  name: string;
+  nome?: string;
+  name?: string;
+  cargo?: string;
+  role?: string;
+  email: string;
+  telefone?: string;
+  phone?: string;
+  principal?: boolean;
+  primary?: boolean;
+}
+export type UnitResponsible = ResponsavelUnidade;
+
+export interface VersaoDocumento {
+  id: string;
+  rotulo?: string;
+  label?: string;
+  dataEnvio?: string;
+  uploadedAt?: string;
+  enviadoPor?: string;
+  uploadedBy?: string;
+  nomeArquivo?: string;
+  fileName?: string;
+  tamanhoArquivo?: string;
+  fileSize?: string;
+  status: 'atual' | 'arquivado' | 'current' | 'archived';
+}
+export type DocumentVersion = VersaoDocumento;
+
+export interface Unidade {
+  id: string;
+  nome?: string;
+  name?: string;
   cnpj: string;
-  city: string;
-  state: string;
-  responsibleManager: string;
-  address: string;
-  companyName: string;
-  responsiblePeople: UnitResponsible[];
-  complianceScore: number; // 0 to 100
-  status: ComplianceStatus;
-  licensesCount: {
+  cidade?: string;
+  city?: string;
+  estado?: string;
+  state?: string;
+  gerenteResponsavel?: string;
+  responsibleManager?: string;
+  endereco?: string;
+  address?: string;
+  razaoSocial?: string;
+  companyName?: string;
+  responsaveis?: ResponsavelUnidade[];
+  responsiblePeople?: ResponsavelUnidade[];
+  pontuacaoConformidade?: number;
+  complianceScore?: number;
+  status: StatusConformidade;
+  contagemLicencas?: {
+    total: number;
+    regular: number;
+    atencao: number;
+    urgente: number;
+    attention?: number;
+    urgent?: number;
+  };
+  licensesCount?: {
     total: number;
     regular: number;
     attention: number;
     urgent: number;
   };
-  assetsCount: {
+  contagemAtivos?: {
+    total: number;
+    comGarantiaAtiva: number;
+    manutencaoPendente: number;
+    withActiveWarranty?: number;
+    maintenancePending?: number;
+  };
+  assetsCount?: {
     total: number;
     withActiveWarranty: number;
     maintenancePending: number;
   };
 }
+export type Branch = Unidade;
 
-export interface UnitResponsible {
+export interface DocumentoLicenca {
   id: string;
-  name: string;
-  role: string;
-  email: string;
-  phone: string;
-  primary?: boolean;
-}
-
-export interface DocumentVersion {
-  id: string;
-  label: string;
-  uploadedAt: string;
-  uploadedBy: string;
-  fileName: string;
-  fileSize: string;
-  status: 'current' | 'archived';
-}
-
-export interface LicenseDocument {
-  id: string;
-  branchId: string;
-  branchName: string;
-  title: string;
-  category: 'Alvará' | 'Bombeiros' | 'Sanitária' | 'Ambiental' | 'Segurança do Trabalho' | 'Outros';
-  issuingBody: string; // ex: Prefeitura Municipal, Corpo de Bombeiros Militar, ANVISA, CETESB
-  documentNumber: string;
-  issueDate: string;
-  expirationDate: string;
-  daysRemaining: number;
-  status: ComplianceStatus;
-  renewalCostEstimate: number;
-  estimatedFineIfExpired: number;
-  linkedAssetId?: string; // Unificação Legal + Operacional
+  unidadeId?: string;
+  branchId?: string;
+  nomeUnidade?: string;
+  branchName?: string;
+  titulo?: string;
+  title?: string;
+  categoria?: 'Alvará' | 'Bombeiros' | 'Sanitária' | 'Ambiental' | 'Segurança do Trabalho' | 'Outros';
+  category?: 'Alvará' | 'Bombeiros' | 'Sanitária' | 'Ambiental' | 'Segurança do Trabalho' | 'Outros';
+  orgaoEmissor?: string;
+  issuingBody?: string;
+  numeroDocumento?: string;
+  documentNumber?: string;
+  dataEmissao?: string;
+  issueDate?: string;
+  dataVencimento?: string;
+  expirationDate?: string;
+  diasRestantes?: number;
+  daysRemaining?: number;
+  status: StatusConformidade;
+  estimativaCustoRenovacao?: number;
+  renewalCostEstimate?: number;
+  estimativaMultaVencida?: number;
+  estimatedFineIfExpired?: number;
+  ativoVinculadoId?: string;
+  linkedAssetId?: string;
+  nomeAtivoVinculado?: string;
   linkedAssetName?: string;
+  notaRequisitoLegal?: string;
   legalRequirementNote?: string;
+  urlArquivo?: string;
   fileUrl?: string;
+  nomeArquivo?: string;
   fileName?: string;
+  tamanhoArquivo?: string;
   fileSize?: string;
-  ocrExtracted: boolean;
-  dossierIncluded: boolean;
-  versions?: DocumentVersion[];
+  extraidoViaOcr?: boolean;
+  ocrExtracted?: boolean;
+  inclusoNoDossie?: boolean;
+  dossierIncluded?: boolean;
+  versoes?: VersaoDocumento[];
+  versions?: VersaoDocumento[];
 }
+export type LicenseDocument = DocumentoLicenca;
 
-export interface MaintenanceRecord {
+export interface RegistroManutencao {
   id: string;
-  date: string;
-  type: 'Preventiva' | 'Corretiva' | 'Recarga' | 'Inspeção';
-  technicianOrCompany: string;
-  notes: string;
-  nextScheduledDate: string;
+  data?: string;
+  date?: string;
+  tipo?: 'Preventiva' | 'Corretiva' | 'Recarga' | 'Inspeção';
+  type?: 'Preventiva' | 'Corretiva' | 'Recarga' | 'Inspeção';
+  tecnicoOuEmpresa?: string;
+  technicianOrCompany?: string;
+  observacoes?: string;
+  notes?: string;
+  proximaData?: string;
+  nextScheduledDate?: string;
+  economiaGarantia?: number;
   costSavedByWarranty?: number;
 }
+export type MaintenanceRecord = RegistroManutencao;
 
-export interface PhysicalAsset {
+export interface AtivoFisico {
   id: string;
-  assetTag: string; // Código de patrimônio ex: EQ-0941
-  qrCodeValue: string;
-  name: string;
-  category: 'Extintores' | 'Geradores' | 'Climatização' | 'Elétrica' | 'Segurança';
-  branchId: string;
-  branchName: string;
-  locationDetails: string; // ex: Bloco B - Térreo - Próximo ao Datacenter
-  brandModel: string;
-  serialNumber: string;
-  invoiceNumber: string; // Nota Fiscal
-  purchaseDate: string;
-  warrantyExpirationDate: string;
-  isWarrantyActive: boolean;
-  daysUntilWarrantyExpires: number;
-  lastMaintenanceDate: string;
-  nextMaintenanceDate: string;
-  maintenanceStatus: 'regular' | 'attention' | 'urgent';
-  linkedLicenseId?: string; // Link to AVCB / Alvará
+  etiquetaPatrimonio?: string;
+  assetTag?: string;
+  valorQrCode?: string;
+  qrCodeValue?: string;
+  nome?: string;
+  name?: string;
+  categoria?: 'Extintores' | 'Geradores' | 'Climatização' | 'Elétrica' | 'Segurança';
+  category?: 'Extintores' | 'Geradores' | 'Climatização' | 'Elétrica' | 'Segurança';
+  unidadeId?: string;
+  branchId?: string;
+  nomeUnidade?: string;
+  branchName?: string;
+  detalhesLocalizacao?: string;
+  locationDetails?: string;
+  marcaModelo?: string;
+  brandModel?: string;
+  numeroSerie?: string;
+  serialNumber?: string;
+  numeroNotaFiscal?: string;
+  invoiceNumber?: string;
+  dataAquisicao?: string;
+  purchaseDate?: string;
+  dataFimGarantia?: string;
+  warrantyExpirationDate?: string;
+  garantiaAtiva?: boolean;
+  isWarrantyActive?: boolean;
+  diasAteFimGarantia?: number;
+  daysUntilWarrantyExpires?: number;
+  dataUltimaManutencao?: string;
+  lastMaintenanceDate?: string;
+  dataProximaManutencao?: string;
+  nextMaintenanceDate?: string;
+  statusManutencao?: StatusConformidade;
+  maintenanceStatus?: StatusConformidade;
+  licencaVinculadaId?: string;
+  linkedLicenseId?: string;
+  licencaVinculadaTitulo?: string;
   linkedLicenseTitle?: string;
-  maintenances: MaintenanceRecord[];
+  manutencoes?: RegistroManutencao[];
+  maintenances?: RegistroManutencao[];
 }
+export type PhysicalAsset = AtivoFisico;
 
-export interface NotificationRule {
+export interface RegraNotificacao {
   id: string;
-  daysBeforeExpiration: number; // 90, 60, 30, 7
-  channels: 'email'[];
-  recipients: string[]; // Telefone celular ou emails
-  active: boolean;
-  alertLevel: 'informativo' | 'alerta' | 'critico';
+  diasAntesVencimento?: number;
+  daysBeforeExpiration?: number;
+  canais?: 'email'[];
+  channels?: 'email'[];
+  destinatarios?: string[];
+  recipients?: string[];
+  ativa?: boolean;
+  active?: boolean;
+  nivelAlerta?: 'informativo' | 'alerta' | 'critico';
+  alertLevel?: 'informativo' | 'alerta' | 'critico';
 }
+export type NotificationRule = RegraNotificacao;
 
-export interface NotificationLog {
+export interface RegistroNotificacao {
   id: string;
-  timestamp: string;
-  channel: 'email';
-  recipient: string;
-  licenseOrAssetName: string;
-  branchName: string;
-  daysBefore: number;
+  horario?: string;
+  timestamp?: string;
+  canal?: 'email';
+  channel?: 'email';
+  destinatario?: string;
+  recipient?: string;
+  nomeLicencaOuAtivo?: string;
+  licenseOrAssetName?: string;
+  nomeUnidade?: string;
+  branchName?: string;
+  diasAntes?: number;
+  daysBefore?: number;
   status: 'Entregue' | 'Lido' | 'Ação Tomada';
-  messagePreview: string;
+  previaMensagem?: string;
+  messagePreview?: string;
 }
+export type NotificationLog = RegistroNotificacao;
 
-export interface DossierHistoryItem {
+export interface ItemHistoricoDossie {
   id: string;
-  branchId: string;
-  branchName: string;
-  generatedAt: string;
-  documentCount: number;
-  hash: string;
+  unidadeId?: string;
+  branchId?: string;
+  nomeUnidade?: string;
+  branchName?: string;
+  geradoEm?: string;
+  generatedAt?: string;
+  quantidadeDocumentos?: number;
+  documentCount?: number;
+  codigoVerificacao?: string;
+  hash?: string;
+}
+export type DossierHistoryItem = ItemHistoricoDossie;
+
+export interface ItemMultaEvitada {
+  tituloLicenca?: string;
+  licenseTitle?: string;
+  nomeUnidade?: string;
+  branchName?: string;
+  multaEstimada?: number;
+  estimatedFine?: number;
+  dataEvitada?: string;
+  preventedDate?: string;
+  orgaoRegulador?: string;
+  regulatoryBody?: string;
 }
 
-export interface RoiMetric {
-  totalFinesAvoided: number; // R$
-  warrantiesTriggeredSavings: number; // R$
-  operationalHoursSaved: number;
-  totalFinancialGain: number; // R$
-  finesAvoidedList: {
-    licenseTitle: string;
-    branchName: string;
-    estimatedFine: number;
-    preventedDate: string;
-    regulatoryBody: string;
-  }[];
-  warrantiesSavedList: {
-    assetName: string;
-    branchName: string;
-    partOrService: string;
-    valueSaved: number;
-    dateClaimed: string;
-  }[];
+export interface ItemGarantiaPoupada {
+  nomeAtivo?: string;
+  assetName?: string;
+  nomeUnidade?: string;
+  branchName?: string;
+  pecaOuServico?: string;
+  partOrService?: string;
+  valorEconomizado?: number;
+  valueSaved?: number;
+  dataReivindicada?: string;
+  dateClaimed?: string;
 }
+
+export interface MetricaRoi {
+  totalMultasEvitadas?: number;
+  totalFinesAvoided?: number;
+  economiaGarantias?: number;
+  warrantiesTriggeredSavings?: number;
+  horasOperacionaisPoupadas?: number;
+  operationalHoursSaved?: number;
+  ganhoFinanceiroTotal?: number;
+  totalFinancialGain?: number;
+  listaMultasEvitadas?: ItemMultaEvitada[];
+  finesAvoidedList?: ItemMultaEvitada[];
+  listaGarantiasPoupadas?: ItemGarantiaPoupada[];
+  warrantiesSavedList?: ItemGarantiaPoupada[];
+}
+export type RoiMetric = MetricaRoi;

@@ -1,63 +1,131 @@
-<div class="units-container">
-  <div class="units-header">
+<div class="painel-unidades units-container">
+  <div class="cabecalho-unidades units-header">
     <div>
-      <div class="subtitle-badge"><span class="material-symbols-rounded icon-sm">account_tree</span> Estrutura da operação</div>
-      <h1 class="page-title">Unidades e responsáveis</h1>
-      <p class="page-desc">Organize a rede em empresa → unidade → documentos e ativos, sem concentrar o conhecimento em uma única pessoa.</p>
+      <div class="selo-subtitulo subtitle-badge">
+        <span class="material-symbols-rounded icon-sm">account_tree</span> Estrutura da operação
+      </div>
+      <h1 class="titulo-pagina page-title">Unidades e responsáveis</h1>
+      <p class="descricao-pagina page-desc">Organize a rede em empresa → unidade → documentos e ativos, sem concentrar o conhecimento em uma única pessoa.</p>
     </div>
-    <button class="btn btn-primary" (click)="showForm.set(true)"><span class="material-symbols-rounded">add_business</span> Nova unidade</button>
+    <button class="botao botao-primario btn btn-primary" (click)="exibirFormulario.set(true)">
+      <span class="material-symbols-rounded">add_business</span> Nova unidade
+    </button>
   </div>
 
-  <div class="hierarchy-bar">
+  <div class="barra-hierarquia hierarchy-bar">
     <span class="material-symbols-rounded text-primary">corporate_fare</span>
-    <strong>Grupo Alpha Brasil S.A.</strong><span class="hierarchy-arrow">→</span><span>{{ branches().length }} unidades ativas</span><span class="hierarchy-arrow">→</span><span>documentos e ativos por unidade</span>
+    <strong>Grupo Alpha Brasil S.A.</strong>
+    <span class="seta-hierarquia hierarchy-arrow">→</span>
+    <span>{{ unidades().length }} unidades ativas</span>
+    <span class="seta-hierarquia hierarchy-arrow">→</span>
+    <span>documentos e ativos por unidade</span>
   </div>
 
-  <div class="units-grid">
-    <section class="unit-list-card">
-      <div class="section-heading-row"><h2>Rede de unidades</h2><span>{{ branches().length }} cadastradas</span></div>
-      <button *ngFor="let unit of branches()" class="unit-row" [class.selected]="unit.id === selectedUnitId()" (click)="selectUnit(unit.id)">
-        <span class="status-dot" [ngClass]="unit.status"></span>
-        <span class="unit-row-copy"><strong>{{ unit.name }}</strong><small>{{ unit.city }} · {{ unit.cnpj }}</small></span>
-        <span class="unit-score">{{ unit.complianceScore }}%</span>
+  <div class="grade-unidades units-grid">
+    <section class="cartao-lista-unidades unit-list-card">
+      <div class="linha-titulo-secao section-heading-row">
+        <h2>Rede de unidades</h2>
+        <span>{{ unidades().length }} cadastradas</span>
+      </div>
+      <button *ngFor="let u of unidades()" class="linha-unidade unit-row" [class.selecionada]="u.id === unidadeSelecionadaId()" [class.selected]="u.id === unidadeSelecionadaId()" (click)="selecionarUnidade(u.id)">
+        <span class="ponto-status status-dot" [ngClass]="u.status"></span>
+        <span class="texto-linha-unidade unit-row-copy">
+          <strong>{{ u.nome || u.name }}</strong>
+          <small>{{ u.cidade || u.city }} · {{ u.cnpj }}</small>
+        </span>
+        <span class="pontuacao-unidade unit-score">{{ u.pontuacaoConformidade ?? u.complianceScore }}%</span>
       </button>
     </section>
 
-    <section class="unit-detail-card">
-      <div class="detail-top">
-        <div><span class="detail-kicker">UNIDADE SELECIONADA</span><h2>{{ selectedUnit.name }}</h2><p>{{ selectedUnit.companyName }} · {{ selectedUnit.cnpj }}</p></div>
-        <span class="badge-status" [ngClass]="selectedUnit.status">{{ selectedUnit.status === 'regular' ? 'Regular' : selectedUnit.status === 'attention' ? 'Atenção' : 'Crítica' }}</span>
+    <section class="cartao-detalhe-unidade unit-detail-card">
+      <div class="topo-detalhe detail-top">
+        <div>
+          <span class="destaque-detalhe detail-kicker">UNIDADE SELECIONADA</span>
+          <h2>{{ unidadeSelecionada.nome || unidadeSelecionada.name }}</h2>
+          <p>{{ unidadeSelecionada.razaoSocial || unidadeSelecionada.companyName }} · {{ unidadeSelecionada.cnpj }}</p>
+        </div>
+        <span class="selo-status badge-status" [ngClass]="unidadeSelecionada.status">
+          {{ unidadeSelecionada.status === 'regular' ? 'Regular' : (unidadeSelecionada.status === 'attention' || unidadeSelecionada.status === 'atencao' ? 'Atenção' : 'Crítica') }}
+        </span>
       </div>
-      <div class="detail-info-grid">
-        <div><span class="material-symbols-rounded">location_on</span><p><strong>Endereço</strong>{{ selectedUnit.address }}</p></div>
-        <div><span class="material-symbols-rounded">description</span><p><strong>Documentos</strong>{{ selectedUnit.licensesCount.total }} documentos sob gestão</p></div>
-        <div><span class="material-symbols-rounded">precision_manufacturing</span><p><strong>Ativos</strong>{{ selectedUnit.assetsCount.total }} ativos vinculados</p></div>
+      <div class="grade-informacoes-detalhe detail-info-grid">
+        <div>
+          <span class="material-symbols-rounded">location_on</span>
+          <p><strong>Endereço</strong>{{ unidadeSelecionada.endereco || unidadeSelecionada.address }}</p>
+        </div>
+        <div>
+          <span class="material-symbols-rounded">description</span>
+          <p><strong>Documentos</strong>{{ (unidadeSelecionada.contagemLicencas?.total ?? unidadeSelecionada.licensesCount?.total) || 0 }} documentos sob gestão</p>
+        </div>
+        <div>
+          <span class="material-symbols-rounded">precision_manufacturing</span>
+          <p><strong>Ativos</strong>{{ (unidadeSelecionada.contagemAtivos?.total ?? unidadeSelecionada.assetsCount?.total) || 0 }} ativos vinculados</p>
+        </div>
       </div>
-      <div class="responsibles-heading"><div><h3>Responsáveis e destinatários</h3><p>Todos recebem alertas automáticos conforme a unidade.</p></div><button class="btn btn-outline btn-sm"><span class="material-symbols-rounded icon-sm">person_add</span> Adicionar responsável</button></div>
-      <div class="responsibles-list">
-        <div *ngFor="let person of selectedUnit.responsiblePeople" class="responsible-row">
-          <div class="avatar">{{ person.name.slice(0, 1) }}</div>
-          <div class="person-copy"><strong>{{ person.name }} <span *ngIf="person.primary" class="primary-tag">Principal</span></strong><span>{{ person.role }}</span></div>
-          <div class="person-contact"><span>{{ person.email }}</span><span>{{ person.phone }}</span></div>
+      <div class="cabecalho-responsaveis responsibles-heading">
+        <div>
+          <h3>Responsáveis e destinatários</h3>
+          <p>Todos recebem alertas automáticos conforme a unidade.</p>
+        </div>
+        <button class="botao botao-contorno botao-sm btn btn-outline btn-sm">
+          <span class="material-symbols-rounded icon-sm">person_add</span> Adicionar responsável
+        </button>
+      </div>
+      <div class="lista-responsaveis responsibles-list">
+        <div *ngFor="let pessoa of (unidadeSelecionada.responsaveis || unidadeSelecionada.responsiblePeople)" class="linha-responsavel responsible-row">
+          <div class="avatar-responsavel avatar">{{ (pessoa.nome || pessoa.name || 'U').slice(0, 1) }}</div>
+          <div class="texto-pessoa person-copy">
+            <strong>{{ pessoa.nome || pessoa.name }} <span *ngIf="pessoa.principal || pessoa.primary" class="etiqueta-principal primary-tag">Principal</span></strong>
+            <span>{{ pessoa.cargo || pessoa.role }}</span>
+          </div>
+          <div class="contato-pessoa person-contact">
+            <span>{{ pessoa.email }}</span>
+            <span>{{ pessoa.telefone || pessoa.phone }}</span>
+          </div>
         </div>
       </div>
     </section>
   </div>
 
-  <div *ngIf="showForm()" class="modal-backdrop" (click)="showForm.set(false)">
-    <form class="unit-modal" (submit)="$event.preventDefault(); saveUnit()" (click)="$event.stopPropagation()">
-      <div class="modal-title"><div><span class="detail-kicker">CADASTRO DE FILIAL</span><h2>Nova unidade</h2></div><button type="button" class="close-button" (click)="showForm.set(false)">×</button></div>
-      <div class="unit-form-grid">
-        <label>Nome da unidade<input [(ngModel)]="newUnit.name" name="name" required placeholder="Ex.: Filial Belo Horizonte" /></label>
-        <label>CNPJ<input [(ngModel)]="newUnit.cnpj" name="cnpj" required placeholder="00.000.000/0001-00" /></label>
-        <label>Cidade<input [(ngModel)]="newUnit.city" name="city" placeholder="Cidade" /></label>
-        <label>UF<input [(ngModel)]="newUnit.state" name="state" maxlength="2" placeholder="MG" /></label>
-        <label class="wide">Endereço<input [(ngModel)]="newUnit.address" name="address" placeholder="Rua, número, bairro e CEP" /></label>
-        <label>Gestor responsável<input [(ngModel)]="newUnit.manager" name="manager" required placeholder="Nome completo" /></label>
-        <label>E-mail do gestor<input [(ngModel)]="newUnit.email" name="email" type="email" placeholder="gestor@empresa.com.br" /></label>
-        <label>Telefone corporativo<input [(ngModel)]="newUnit.phone" name="phone" placeholder="+55 00 00000-0000" /></label>
+  <div *ngIf="exibirFormulario()" class="fundo-modal modal-backdrop" (click)="exibirFormulario.set(false)">
+    <form class="modal-unidade unit-modal" (submit)="$event.preventDefault(); salvarUnidade()" (click)="$event.stopPropagation()">
+      <div class="titulo-modal modal-title">
+        <div>
+          <span class="destaque-detalhe detail-kicker">CADASTRO DE FILIAL</span>
+          <h2>Nova unidade</h2>
+        </div>
+        <button type="button" class="botao-fechar close-button" (click)="exibirFormulario.set(false)">×</button>
       </div>
-      <div class="modal-actions"><button type="button" class="btn btn-outline" (click)="showForm.set(false)">Cancelar</button><button class="btn btn-primary" type="submit">Salvar unidade</button></div>
+      <div class="grade-formulario-unidade unit-form-grid">
+        <label>Nome da unidade
+          <input [(ngModel)]="novaUnidade.nome" name="name" required placeholder="Ex.: Filial Belo Horizonte" />
+        </label>
+        <label>CNPJ
+          <input [(ngModel)]="novaUnidade.cnpj" name="cnpj" required placeholder="00.000.000/0001-00" />
+        </label>
+        <label>Cidade
+          <input [(ngModel)]="novaUnidade.cidade" name="city" placeholder="Cidade" />
+        </label>
+        <label>UF
+          <input [(ngModel)]="novaUnidade.estado" name="state" maxlength="2" placeholder="MG" />
+        </label>
+        <label class="largura-completa wide">Endereço
+          <input [(ngModel)]="novaUnidade.endereco" name="address" placeholder="Rua, número, bairro e CEP" />
+        </label>
+        <label>Gestor responsável
+          <input [(ngModel)]="novaUnidade.gestor" name="manager" required placeholder="Nome completo" />
+        </label>
+        <label>E-mail do gestor
+          <input [(ngModel)]="novaUnidade.email" name="email" type="email" placeholder="gestor@empresa.com.br" />
+        </label>
+        <label>Telefone corporativo
+          <input [(ngModel)]="novaUnidade.telefone" name="phone" placeholder="+55 00 00000-0000" />
+        </label>
+      </div>
+      <div class="acoes-modal modal-actions">
+        <button type="button" class="botao botao-contorno btn btn-outline" (click)="exibirFormulario.set(false)">Cancelar</button>
+        <button class="botao botao-primario btn btn-primary" type="submit">Salvar unidade</button>
+      </div>
     </form>
   </div>
 </div>

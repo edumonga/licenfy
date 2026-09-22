@@ -10,7 +10,7 @@
   to { opacity: 1; transform: translateY(0); }
 }
 
-/* Header */
+/* Cabeçalho */
 .dashboard-header {
   display: flex;
   justify-content: space-between;
@@ -65,7 +65,7 @@
 }
 
 
-/* Branch Selector Bar */
+/* Seletor de Unidades */
 .branch-selector-bar {
   display: flex;
   align-items: center;
@@ -129,7 +129,7 @@
   color: inherit;
 }
 
-/* Metrics Grid */
+/* Grade de Métricas */
 .metrics-grid {
   display: grid;
   grid-template-columns: 380px 1fr;
@@ -142,7 +142,7 @@
   }
 }
 
-/* Score Card */
+/* Cartão de Pontuação */
 .score-card {
   background: var(--color-white);
   border-radius: 14px;
@@ -302,7 +302,7 @@
   color: var(--color-text-muted);
 }
 
-/* Status Cards Column */
+/* Coluna de Cartões de Status */
 .status-cards-col {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -384,7 +384,7 @@
   line-height: 1.4;
 }
 
-/* Unification Banner */
+/* Banner de Unificação Legal e Operacional */
 .unification-banner {
   background: linear-gradient(135deg, #1f2937 0%, #111827 100%);
   color: var(--color-white);
@@ -448,7 +448,7 @@
   line-height: 1.45;
 }
 
-/* Table Card */
+/* Cartão da Tabela */
 .table-card {
   background: var(--color-white);
   border-radius: 14px;

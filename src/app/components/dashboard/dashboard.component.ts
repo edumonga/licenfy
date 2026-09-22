@@ -1,7 +1,7 @@
 import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { LicenfyService } from '../../core/services/licenfy.service';
-import { LicenseDocument } from '../../core/models/types';
+import { ServicoLicenfy } from '../../core/services/licenfy.service';
+import { DocumentoLicenca } from '../../core/models/types';
 
 @Component({
   selector: 'app-dashboard',
@@ -10,40 +10,56 @@ import { LicenseDocument } from '../../core/models/types';
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.css']
 })
-export class DashboardComponent {
-  readonly service = inject(LicenfyService);
+export class PainelComponente {
+  readonly servico = inject(ServicoLicenfy);
 
-  readonly branches = this.service.branches;
-  readonly selectedBranchId = this.service.selectedBranchId;
-  readonly licenses = this.service.filteredLicenses;
-  readonly score = this.service.overallComplianceScore;
-  readonly status = this.service.overallComplianceStatus;
-  readonly summary = this.service.countsSummary;
+  readonly unidades = this.servico.unidades;
+  readonly unidadeSelecionadaId = this.servico.unidadeSelecionadaId;
+  readonly licencas = this.servico.licencasFiltradas;
+  readonly pontuacao = this.servico.pontuacaoGeralConformidade;
+  readonly status = this.servico.statusGeralConformidade;
+  readonly resumo = this.servico.resumoContadores;
 
-  // Feedback visual de disparo de notificação
-  justNotifiedId = '';
+  idRecemNotificado = '';
 
-  selectBranch(id: string) {
-    this.service.setSelectedBranch(id);
+  // Compatibilidade
+  get service() { return this.servico; }
+  get branches() { return this.unidades; }
+  get selectedBranchId() { return this.unidadeSelecionadaId; }
+  get licenses() { return this.licencas; }
+  get score() { return this.pontuacao; }
+  get summary() { return this.resumo; }
+  get justNotifiedId() { return this.idRecemNotificado; }
+  set justNotifiedId(valor: string) { this.idRecemNotificado = valor; }
+
+  selecionarUnidade(id: string) {
+    this.servico.definirUnidadeSelecionada(id);
   }
+  selectBranch(id: string) { this.selecionarUnidade(id); }
 
-  notifyManager(license: LicenseDocument) {
-    this.service.sendSimulatedEmail(license);
-    this.justNotifiedId = license.id;
+  notificarGestor(licenca: DocumentoLicenca) {
+    this.servico.enviarEmailSimulado(licenca);
+    this.idRecemNotificado = licenca.id;
     setTimeout(() => {
-      this.justNotifiedId = '';
+      this.idRecemNotificado = '';
     }, 3000);
   }
+  notifyManager(licenca: DocumentoLicenca) { this.notificarGestor(licenca); }
 
-  goToVault() {
-    this.service.setTab('vault');
+  irParaCofre() {
+    this.servico.definirAba('vault');
   }
+  goToVault() { this.irParaCofre(); }
 
-  goToAssets() {
-    this.service.setTab('assets');
+  irParaAtivos() {
+    this.servico.definirAba('assets');
   }
+  goToAssets() { this.irParaAtivos(); }
 
-  goToInspection() {
-    this.service.setTab('inspection');
+  irParaInspecao() {
+    this.servico.definirAba('inspection');
   }
+  goToInspection() { this.irParaInspecao(); }
 }
+
+export const DashboardComponent = PainelComponente;

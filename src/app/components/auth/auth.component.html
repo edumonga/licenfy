@@ -1,112 +1,112 @@
-<main class="auth-page">
-  <section class="auth-brand-panel">
-    <button class="back-link" (click)="backToSite()">
+<main class="pagina-autenticacao auth-page">
+  <section class="painel-marca auth-brand-panel">
+    <button class="botao-voltar back-link" (click)="voltarAoSite()">
       <span class="material-symbols-rounded">arrow_back</span> Voltar ao site
     </button>
-    <div class="brand-content">
-      <div class="brand-logo-center">
-        <img src="logo-auth.png" alt="Licenfy" class="auth-brand-logo" />
+    <div class="conteudo-marca brand-content">
+      <div class="centro-logo brand-logo-center">
+        <img src="logo-auth.png" alt="Licenfy" class="logo-marca-autenticacao auth-brand-logo" />
       </div>
-      <span class="brand-overline">PLATAFORMA DE COMPLIANCE</span>
+      <span class="destaque-marca brand-overline">PLATAFORMA DE COMPLIANCE</span>
       <h1>Controle total, sem perder o ritmo do dia a dia.</h1>
       <p>Documentos, prazos, ativos e responsáveis em um só lugar.</p>
-      <div class="brand-points">
+      <div class="pontos-marca brand-points">
         <span><i>✓</i> Acesso seguro para sua equipe</span>
         <span><i>✓</i> Alertas e histórico auditável</span>
         <span><i>✓</i> Visão consolidada por unidade</span>
         <span><i>✓</i> Ambiente de teste com dados de exemplo</span>
       </div>
     </div>
-    <span class="brand-footer">© 2026 Licenfy Tecnologia</span>
+    <span class="rodape-marca brand-footer">© 2026 Licenfy Tecnologia</span>
   </section>
 
-  <section class="auth-form-panel">
-    <div class="auth-card">
-      <div class="auth-tabs">
-        <button [class.active]="mode() === 'login'" (click)="changeMode('login')">
+  <section class="painel-formulario auth-form-panel">
+    <div class="cartao-autenticacao auth-card">
+      <div class="abas-autenticacao auth-tabs">
+        <button [class.ativa]="modo() === 'login'" [class.active]="modo() === 'login'" (click)="alterarModo('login')">
           Entrar com conta criada
         </button>
-        <button [class.active]="mode() === 'signup'" (click)="changeMode('signup')">
+        <button [class.ativa]="modo() === 'signup'" [class.active]="modo() === 'signup'" (click)="alterarModo('signup')">
           Testar / Criar conta
         </button>
       </div>
 
-      @if (mode() === 'login') {
-        <div class="form-intro">
-          <span class="eyebrow">BEM-VINDO DE VOLTA</span>
+      @if (modo() === 'login') {
+        <div class="introducao-formulario form-intro">
+          <span class="subtitulo-olho eyebrow">BEM-VINDO DE VOLTA</span>
           <h2>Entre na sua conta</h2>
           <p>Acesse o painel da sua empresa com sua conta já cadastrada.</p>
         </div>
 
-        <form (submit)="$event.preventDefault(); submitLogin()" class="auth-form">
+        <form (submit)="$event.preventDefault(); enviarLogin()" class="formulario-autenticacao auth-form">
           <label>
             E-mail corporativo
-            <input [(ngModel)]="loginData.login" name="login" type="email" autocomplete="email" placeholder="seu@empresa.com.br" required />
+            <input [(ngModel)]="dadosLogin.login" name="login" type="email" autocomplete="email" placeholder="seu@empresa.com.br" required />
           </label>
           <label>
             Senha
-            <input [(ngModel)]="loginData.password" name="password" type="password" autocomplete="current-password" placeholder="Sua senha" required />
+            <input [(ngModel)]="dadosLogin.senha" name="password" type="password" autocomplete="current-password" placeholder="Sua senha" required />
           </label>
 
-          @if (error()) {
-            <div class="form-error">
+          @if (erro()) {
+            <div class="erro-formulario form-error">
               <span class="material-symbols-rounded">error</span>
-              <span>{{ error() }}</span>
+              <span>{{ erro() }}</span>
             </div>
           }
 
-          <button class="auth-submit" [disabled]="isLoading()">
-            {{ isLoading() ? 'Autenticando...' : 'Entrar na plataforma' }}
+          <button class="botao-submeter auth-submit" [disabled]="carregando()">
+            {{ carregando() ? 'Autenticando...' : 'Entrar na plataforma' }}
             <span class="material-symbols-rounded">arrow_forward</span>
           </button>
-          <a class="forgot-password-link" href="mailto:suporte@licenfy.com.br?subject=Recupera%C3%A7%C3%A3o%20de%20senha">Esqueci minha senha</a>
+          <a class="link-esqueci-senha forgot-password-link" href="mailto:suporte@licenfy.com.br?subject=Recupera%C3%A7%C3%A3o%20de%20senha">Esqueci minha senha</a>
         </form>
 
-        <p class="auth-switch">
+        <p class="trocar-modo auth-switch">
           Ainda não tem uma conta?
-          <button type="button" (click)="changeMode('signup')">Crie uma conta de teste</button>
+          <button type="button" (click)="alterarModo('signup')">Crie uma conta de teste</button>
         </p>
       } @else {
-        <div class="form-intro">
-          <span class="eyebrow">COMECE AGORA</span>
+        <div class="introducao-formulario form-intro">
+          <span class="subtitulo-olho eyebrow">COMECE AGORA</span>
           <h2>Crie sua conta de teste</h2>
           <p>Experimente o Licenfy de imediato — sem necessidade de banco de dados.</p>
         </div>
 
-        <form (submit)="$event.preventDefault(); submitSignup()" class="auth-form">
+        <form (submit)="$event.preventDefault(); enviarCadastro()" class="formulario-autenticacao auth-form">
           <label>
             Nome completo
-            <input [(ngModel)]="signupData.name" name="name" autocomplete="name" placeholder="Ex: Carlos Eduardo" required />
+            <input [(ngModel)]="dadosCadastro.nome" name="name" autocomplete="name" placeholder="Ex: Carlos Eduardo" required />
           </label>
           <label>
             E-mail corporativo
-            <input [(ngModel)]="signupData.email" name="email" type="email" autocomplete="email" placeholder="carlos@empresa.com.br" required />
+            <input [(ngModel)]="dadosCadastro.email" name="email" type="email" autocomplete="email" placeholder="carlos@empresa.com.br" required />
           </label>
           <label>
             Crie uma senha
-            <input [(ngModel)]="signupData.password" name="password" type="password" autocomplete="new-password" placeholder="Mínimo 3 caracteres" required />
+            <input [(ngModel)]="dadosCadastro.senha" name="password" type="password" autocomplete="new-password" placeholder="Mínimo 3 caracteres" required />
           </label>
           <label>
             Confirme sua senha
-            <input [(ngModel)]="signupData.confirmPassword" name="confirmPassword" type="password" autocomplete="new-password" placeholder="Repita a senha criada" required />
+            <input [(ngModel)]="dadosCadastro.confirmarSenha" name="confirmPassword" type="password" autocomplete="new-password" placeholder="Repita a senha criada" required />
           </label>
 
-          @if (error()) {
-            <div class="form-error">
+          @if (erro()) {
+            <div class="erro-formulario form-error">
               <span class="material-symbols-rounded">error</span>
-              <span>{{ error() }}</span>
+              <span>{{ erro() }}</span>
             </div>
           }
 
-          <button class="auth-submit">
+          <button class="botao-submeter auth-submit">
             Criar conta e acessar plataforma
             <span class="material-symbols-rounded">arrow_forward</span>
           </button>
         </form>
 
-        <p class="auth-switch">
+        <p class="trocar-modo auth-switch">
           Já tem uma conta?
-          <button type="button" (click)="changeMode('login')">Entrar</button>
+          <button type="button" (click)="alterarModo('login')">Entrar</button>
         </p>
       }
     </div>

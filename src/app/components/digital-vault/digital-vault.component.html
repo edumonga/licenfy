@@ -1,123 +1,105 @@
-<div class="vault-container">
-  <!-- Header -->
-  <div class="vault-header">
+<div class="painel-cofre vault-container">
+  <div class="cabecalho-cofre vault-header">
     <div>
-      <div class="subtitle-badge">
+      <div class="selo-subtitulo subtitle-badge">
         <span class="material-symbols-rounded icon-sm">lock</span>
         Cofre Digital Criptografado & Leitura Automática
       </div>
-      <h1 class="page-title">Cofre Digital com OCR Inteligente</h1>
-      <p class="page-desc">Centralize todos os PDFs, notas fiscais e alvarás. O sistema lê as informações e preenche as datas automaticamente.</p>
+      <h1 class="titulo-pagina page-title">Cofre Digital com OCR Inteligente</h1>
+      <p class="descricao-pagina page-desc">Centralize todos os PDFs, notas fiscais e alvarás. O sistema lê as informações e preenche as datas automaticamente.</p>
     </div>
   </div>
 
-  <!-- Seção de Upload & Leitura OCR (Simulação de IA) -->
-  <div class="ocr-section-card">
-    <div class="ocr-section-header">
-      <div class="ocr-title-wrap">
-        <div class="ocr-icon-bubble">
+  <div class="cartao-secao-ocr ocr-section-card">
+    <div class="cabecalho-secao-ocr ocr-section-header">
+      <div class="bloco-titulo-ocr ocr-title-wrap">
+        <div class="bolha-icone-ocr ocr-icon-bubble">
           <span class="material-symbols-rounded">document_scanner</span>
         </div>
         <div>
-          <h2 class="ocr-title">Área de Upload & Digitalização OCR</h2>
-          <p class="ocr-desc">Arraste documentos PDF ou escolha um exemplo oficial para simular a extração automática de dados.</p>
+          <h2 class="titulo-ocr ocr-title">Área de Upload & Digitalização OCR</h2>
+          <p class="descricao-ocr ocr-desc">Arraste documentos PDF ou escolha um exemplo oficial para simular a extração automática de dados.</p>
         </div>
       </div>
-      <div class="ocr-quick-samples">
-      </div>
     </div>
-    <div class="gemini-status-bar configured">
-      <span class="material-symbols-rounded icon-sm">auto_awesome</span>
-      <span><strong>OCR inteligente protegido</strong> — documentos são processados com segurança pela plataforma.</span>
+    <div class="barra-status-ocr configured gemini-status-bar">
+      <span class="material-symbols-rounded icon-sm">verified_user</span>
+      <span><strong>Leitura de documentos segura</strong> — os dados são extraídos e conferidos no cofre da empresa.</span>
     </div>
 
-    <!-- Dropzone interativo -->
-    <div class="dropzone" [class.scanning]="isScanning()">
-      <!-- Animação do Scanner Laser quando está lendo -->
-      <div *ngIf="isScanning()" class="scanner-laser-bar"></div>
+    <div class="zona-envio dropzone" [class.scanning]="estaDigitalizando()" [class.digitalizando]="estaDigitalizando()">
+      <div *ngIf="estaDigitalizando()" class="barra-laser scanner-laser-bar"></div>
 
-      <div *ngIf="!isScanning() && !scannedSuccess()" class="dropzone-idle">
-        <div class="dropzone-icon-circle">
+      <div *ngIf="!estaDigitalizando() && !digitalizadoComSucesso()" class="zona-envio-ociosa dropzone-idle">
+        <div class="circulo-icone-envio dropzone-icon-circle">
           <span class="material-symbols-rounded drop-icon">cloud_upload</span>
         </div>
-        <h3 class="drop-main-text">Arraste seu PDF ou imagem aqui</h3>
-        <p class="drop-sub-text">Suporta PDF, JPG e PNG (até 4 MB)</p>
-        <label class="btn btn-primary btn-sm file-picker">
+        <h3 class="texto-principal-envio drop-main-text">Arraste seu PDF ou imagem aqui</h3>
+        <p class="texto-secundario-envio drop-sub-text">Suporta PDF, JPG e PNG (até 4 MB)</p>
+        <label class="botao botao-primario botao-sm file-picker btn btn-primary btn-sm">
           <span class="material-symbols-rounded icon-sm">upload_file</span>
           Selecionar Arquivo do Computador
-          <input type="file" accept=".pdf,.jpg,.jpeg,.png" (change)="onFileSelected($event)" />
+          <input type="file" accept=".pdf,.jpg,.jpeg,.png" (change)="aoSelecionarArquivo($event)" />
         </label>
       </div>
 
-      <!-- Estado: Escaneando -->
-      <div *ngIf="isScanning()" class="dropzone-scanning">
-        <div class="spinner-ring"></div>
-        <h3 class="scan-title">Inteligência Artificial Processando Documento...</h3>
-        <p class="scan-step-text">{{ scanStep() }}</p>
-        <div class="scan-progress-bar">
-          <div class="scan-progress-fill"></div>
+      <div *ngIf="estaDigitalizando()" class="zona-envio-processando dropzone-scanning">
+        <div class="anel-progresso spinner-ring"></div>
+        <h3 class="titulo-processamento scan-title">Processando Documento...</h3>
+        <p class="texto-etapa scan-step-text">{{ etapaDigitalizacao() }}</p>
+        <div class="barra-progresso scan-progress-bar">
+          <div class="preenchimento-progresso scan-progress-fill"></div>
         </div>
       </div>
 
-      <!-- Estado: Concluído -->
-      <div *ngIf="!isScanning() && scannedSuccess()" class="dropzone-completed">
-        <div class="completed-icon-circle">
+      <div *ngIf="!estaDigitalizando() && digitalizadoComSucesso()" class="zona-envio-concluida dropzone-completed">
+        <div class="circulo-concluido completed-icon-circle">
           <span class="material-symbols-rounded">check</span>
         </div>
-        <h3 class="completed-title">
-          @if (usedRealAi()) {
-            🤖 Extração com IA Real concluída!
-          } @else {
-            Leitura OCR Concluída com Alta Precisão!
-          }
+        <h3 class="titulo-concluido completed-title">
+          Leitura do Documento Concluída com Sucesso!
         </h3>
-        <p class="completed-sub">
-          @if (usedRealAi()) {
-            Dados extraídos via <strong>Gemini Vision AI</strong> do documento real enviado. Revise antes de arquivar.
-          } @else {
-            Revise os campos preenchidos automaticamente abaixo antes de arquivar no cofre.
-          }
+        <p class="subtitulo-concluido completed-sub">
+          Revise os campos preenchidos automaticamente abaixo antes de arquivar no cofre.
         </p>
       </div>
 
-      <!-- Estado: Erro OCR -->
-      @if (ocrError()) {
-        <div class="ocr-error-bar">
+      @if (erroOcr()) {
+        <div class="barra-erro-ocr ocr-error-bar">
           <span class="material-symbols-rounded">error</span>
-          <span>{{ ocrError() }}</span>
+          <span>{{ erroOcr() }}</span>
           <div style="display: flex; gap: 8px; margin-left: auto;">
-            <button class="btn btn-outline btn-xs" (click)="simulateOcrUpload('alvara')">Usar exemplo simulado</button>
-            <button class="btn btn-outline btn-xs" (click)="ocrError.set('')">Fechar</button>
+            <button class="botao botao-contorno botao-xs btn btn-outline btn-xs" (click)="simularEnvioOcr('alvara')">Usar exemplo simulado</button>
+            <button class="botao botao-contorno botao-xs btn btn-outline btn-xs" (click)="erroOcr.set('')">Fechar</button>
           </div>
         </div>
       }
     </div>
 
-    <!-- Painel de Campos Extraídos pelo OCR -->
-    <div *ngIf="scannedSuccess()" class="extracted-form-panel">
-      <div class="form-panel-header">
-        <span class="material-symbols-rounded text-primary">auto_awesome</span>
-        <h3>Confirmação humana dos dados extraídos</h3>
+    <div *ngIf="digitalizadoComSucesso()" class="painel-formulario-extraido extracted-form-panel">
+      <div class="cabecalho-painel-formulario form-panel-header">
+        <span class="material-symbols-rounded text-primary">fact_check</span>
+        <h3>Confirmação dos dados extraídos</h3>
       </div>
-      <div class="human-review-note">
+      <div class="nota-revisao-humana human-review-note">
         <span class="material-symbols-rounded">person_search</span>
-        <span><strong>Revisão obrigatória antes de salvar.</strong> Confira órgão emissor, datas, valor e unidade. A IA sugere; uma pessoa confirma.</span>
+        <span><strong>Revisão de dados.</strong> Confira órgão emissor, datas, valor e unidade antes de salvar no sistema.</span>
       </div>
 
-      <div class="form-grid">
-        <div class="form-group">
+      <div class="grade-formulario form-grid">
+        <div class="grupo-formulario form-group">
           <label>Título da Obrigação / Licença</label>
-          <input type="text" [(ngModel)]="extractedData.title" class="form-control" />
+          <input type="text" [(ngModel)]="dadosExtraidos.titulo" class="controle-formulario form-control" />
         </div>
 
-        <div class="form-group">
+        <div class="grupo-formulario form-group">
           <label>Órgão Emissor</label>
-          <input type="text" [(ngModel)]="extractedData.issuingBody" class="form-control" />
+          <input type="text" [(ngModel)]="dadosExtraidos.orgaoEmissor" class="controle-formulario form-control" />
         </div>
 
-        <div class="form-group">
+        <div class="grupo-formulario form-group">
           <label>Categoria Jurídica</label>
-          <select [(ngModel)]="extractedData.category" class="form-control">
+          <select [(ngModel)]="dadosExtraidos.categoria" class="controle-formulario form-control">
             <option value="Alvará">Alvará de Funcionamento</option>
             <option value="Bombeiros">Corpo de Bombeiros / AVCB</option>
             <option value="Sanitária">Vigilância Sanitária</option>
@@ -126,47 +108,47 @@
           </select>
         </div>
 
-        <div class="form-group">
+        <div class="grupo-formulario form-group">
           <label>Número do Registro / Protocolo</label>
-          <input type="text" [(ngModel)]="extractedData.documentNumber" class="form-control" />
+          <input type="text" [(ngModel)]="dadosExtraidos.numeroDocumento" class="controle-formulario form-control" />
         </div>
 
-        <div class="form-group">
+        <div class="grupo-formulario form-group">
           <label>Unidade / Filial Pertencente</label>
-          <select [(ngModel)]="extractedData.branchId" class="form-control">
-            <option *ngFor="let b of branches()" [value]="b.id">{{ b.name }} ({{ b.city }}-{{ b.state }})</option>
+          <select [(ngModel)]="dadosExtraidos.unidadeId" class="controle-formulario form-control">
+            <option *ngFor="let u of unidades()" [value]="u.id">{{ u.nome || u.name }} ({{ u.cidade || u.city }}-{{ u.estado || u.state }})</option>
           </select>
         </div>
 
-        <div class="form-group">
+        <div class="grupo-formulario form-group">
           <label>Data de emissão</label>
-          <input type="date" [(ngModel)]="extractedData.issueDate" class="form-control" />
+          <input type="date" [(ngModel)]="dadosExtraidos.dataEmissao" class="controle-formulario form-control" />
         </div>
 
-        <div class="form-group">
+        <div class="grupo-formulario form-group">
           <label>Data de Vencimento Oficial</label>
-          <input type="date" [(ngModel)]="extractedData.expirationDate" class="form-control" />
+          <input type="date" [(ngModel)]="dadosExtraidos.dataVencimento" class="controle-formulario form-control" />
         </div>
 
-        <div class="form-group">
+        <div class="grupo-formulario form-group">
           <label>Estimativa de Multa se Não Renovado (R$)</label>
-          <input type="number" [(ngModel)]="extractedData.estimatedFineIfExpired" class="form-control" />
+          <input type="number" [(ngModel)]="dadosExtraidos.estimativaMultaVencida" class="controle-formulario form-control" />
         </div>
 
-        <div class="form-group">
+        <div class="grupo-formulario form-group">
           <label>Ativo Físico Vinculado (Opcional)</label>
-          <input type="text" [(ngModel)]="extractedData.linkedAssetName" class="form-control" placeholder="Ex: Extintores Bloco B" />
+          <input type="text" [(ngModel)]="dadosExtraidos.nomeAtivoVinculado" class="controle-formulario form-control" placeholder="Ex: Extintores Bloco B" />
         </div>
 
-        <div class="form-group full-width">
+        <div class="grupo-formulario largura-total form-group full-width">
           <label>Notas de Validação OCR</label>
-          <textarea [(ngModel)]="extractedData.legalRequirementNote" class="form-control" rows="2"></textarea>
+          <textarea [(ngModel)]="dadosExtraidos.notaRequisitoLegal" class="controle-formulario form-control" rows="2"></textarea>
         </div>
       </div>
 
-      <div class="form-actions">
-        <button class="btn btn-outline" (click)="scannedSuccess.set(false)">Cancelar</button>
-        <button class="btn btn-primary" (click)="saveExtractedDocument()">
+      <div class="acoes-formulario form-actions">
+        <button class="botao botao-contorno btn btn-outline" (click)="digitalizadoComSucesso.set(false)">Cancelar</button>
+        <button class="botao botao-primario btn btn-primary" (click)="salvarDocumentoExtraido()">
           <span class="material-symbols-rounded">save</span>
           Confirmar dados e arquivar
         </button>
@@ -174,26 +156,25 @@
     </div>
   </div>
 
-  <!-- Repositório de Documentos Arquivados -->
-  <div class="vault-list-card">
-    <div class="vault-list-top">
+  <div class="cartao-lista-cofre vault-list-card">
+    <div class="topo-lista-cofre vault-list-top">
       <div>
-        <h3 class="section-title">Documentos e Licenças no Cofre Digital</h3>
-        <p class="section-sub">Total de {{ filteredList.length }} documentos indexados e protegidos</p>
+        <h3 class="titulo-secao section-title">Documentos e Licenças no Cofre Digital</h3>
+        <p class="subtitulo-secao section-sub">Total de {{ listaFiltrada.length }} documentos indexados e protegidos</p>
       </div>
 
-      <div class="vault-filters">
-        <div class="search-input-box">
+      <div class="filtros-cofre vault-filters">
+        <div class="caixa-busca search-input-box">
           <span class="material-symbols-rounded icon-sm search-icon">search</span>
           <input 
             type="text" 
             placeholder="Buscar por licença, órgão ou número..." 
-            [ngModel]="searchTerm()" 
-            (ngModelChange)="searchTerm.set($event)"
-            class="search-input" />
+            [ngModel]="termoBusca()" 
+            (ngModelChange)="termoBusca.set($event)"
+            class="campo-busca search-input" />
         </div>
 
-        <select [ngModel]="filterCategory()" (ngModelChange)="filterCategory.set($event)" class="category-select">
+        <select [ngModel]="categoriaFiltro()" (ngModelChange)="categoriaFiltro.set($event)" class="seletor-categoria category-select">
           <option value="all">Todas as Categorias</option>
           <option value="Alvará">Alvarás</option>
           <option value="Bombeiros">Bombeiros / AVCB</option>
@@ -204,61 +185,88 @@
       </div>
     </div>
 
-    <div class="docs-grid">
-      <div *ngFor="let doc of filteredList" class="doc-item-card">
-        <div class="doc-card-header">
-          <div class="doc-type-icon">
+    <div class="grade-documentos docs-grid">
+      <div *ngFor="let doc of listaFiltrada" class="cartao-item-documento doc-item-card">
+        <div class="cabecalho-cartao-doc doc-card-header">
+          <div class="icone-tipo-doc doc-type-icon">
             <span class="material-symbols-rounded">picture_as_pdf</span>
           </div>
-          <span class="badge-status" [ngClass]="doc.status">
-            <span class="status-dot" [ngClass]="doc.status"></span>
-            {{ doc.status === 'regular' ? 'Válido' : (doc.status === 'attention' ? 'Renovar em Breve' : 'Vencendo') }}
+          <span class="selo-status badge-status" [ngClass]="doc.status">
+            <span class="ponto-status status-dot" [ngClass]="doc.status"></span>
+            {{ doc.status === 'regular' ? 'Válido' : (doc.status === 'attention' || doc.status === 'atencao' ? 'Renovar em Breve' : 'Vencendo') }}
           </span>
         </div>
 
-        <h4 class="doc-card-title">{{ doc.title }}</h4>
-        <div class="doc-meta-item">
+        <h4 class="titulo-cartao-doc doc-card-title">{{ doc.titulo || doc.title }}</h4>
+        <div class="item-meta-doc doc-meta-item">
           <span class="material-symbols-rounded icon-xs text-muted">account_balance</span>
-          <span>{{ doc.issuingBody }}</span>
+          <span>{{ doc.orgaoEmissor || doc.issuingBody }}</span>
         </div>
-        <div class="doc-meta-item">
+        <div class="item-meta-doc doc-meta-item">
           <span class="material-symbols-rounded icon-xs text-muted">apartment</span>
-          <span>{{ doc.branchName }}</span>
+          <span>{{ doc.nomeUnidade || doc.branchName }}</span>
         </div>
-        <div class="doc-meta-item">
+        <div class="item-meta-doc doc-meta-item">
           <span class="material-symbols-rounded icon-xs text-muted">tag</span>
-          <span class="mono-text">{{ doc.documentNumber }}</span>
+          <span class="texto-mono mono-text">{{ doc.numeroDocumento || doc.documentNumber }}</span>
         </div>
 
-        <div class="doc-card-divider"></div>
+        <div class="divisor-cartao-doc doc-card-divider"></div>
 
-        <div class="doc-validity-row">
+        <div class="linha-validade-doc doc-validity-row">
           <div>
-            <div class="validity-label">Vencimento</div>
-            <div class="validity-date">{{ doc.expirationDate | date:'dd/MM/yyyy' }}</div>
+            <div class="rotulo-validade validity-label">Vencimento</div>
+            <div class="data-validade validity-date">{{ (doc.dataVencimento || doc.expirationDate) | date:'dd/MM/yyyy' }}</div>
           </div>
-          <div class="validity-countdown" [ngClass]="doc.status">
-            {{ doc.daysRemaining }} dias
+          <div class="contagem-validade validity-countdown" [ngClass]="doc.status">
+            {{ doc.diasRestantes ?? doc.daysRemaining }} dias
           </div>
         </div>
 
-        <div class="doc-card-actions">
-          <span class="file-size-tag">
+        <div class="acoes-cartao-doc doc-card-actions">
+          <span class="etiqueta-tamanho-arquivo file-size-tag">
             <span class="material-symbols-rounded icon-xs">attach_file</span>
-            {{ doc.fileSize || '1.5 MB' }}
+            {{ doc.tamanhoArquivo || doc.fileSize || '1.5 MB' }}
           </span>
-          <div class="doc-actions-right"><button class="btn btn-outline btn-xs" title="Visualizar Documento"><span class="material-symbols-rounded icon-xs">visibility</span> Ver PDF</button><button class="btn btn-ghost btn-xs" (click)="openHistory(doc)"><span class="material-symbols-rounded icon-xs">history</span> Versões {{ doc.versions?.length || 1 }}</button></div>
+          <div class="acoes-doc-direita doc-actions-right">
+            <button class="botao botao-contorno botao-xs btn btn-outline btn-xs" title="Visualizar Documento">
+              <span class="material-symbols-rounded icon-xs">visibility</span> Ver PDF
+            </button>
+            <button class="botao botao-fantasma botao-xs btn btn-ghost btn-xs" (click)="abrirHistorico(doc)">
+              <span class="material-symbols-rounded icon-xs">history</span> Versões {{ doc.versoes?.length || doc.versions?.length || 1 }}
+            </button>
+          </div>
         </div>
       </div>
     </div>
   </div>
 
-  <div *ngIf="selectedHistoryDocument() as doc" class="modal-backdrop" (click)="closeHistory()">
-    <div class="history-modal" (click)="$event.stopPropagation()">
-      <div class="history-modal-head"><div><span class="detail-kicker">HISTÓRICO IMUTÁVEL</span><h3>{{ doc.title }}</h3></div><button class="history-close" (click)="closeHistory()">×</button></div>
+  <div *ngIf="documentoHistoricoSelecionado() as doc" class="fundo-modal modal-backdrop" (click)="fecharHistorico()">
+    <div class="modal-historico history-modal" (click)="$event.stopPropagation()">
+      <div class="topo-modal-historico history-modal-head">
+        <div>
+          <span class="destaque-detalhe detail-kicker">HISTÓRICO IMUTÁVEL</span>
+          <h3>{{ doc.titulo || doc.title }}</h3>
+        </div>
+        <button class="fechar-historico history-close" (click)="fecharHistorico()">×</button>
+      </div>
       <p>Renovações anteriores ficam preservadas e nunca substituem a versão arquivada.</p>
-      <div class="version-row current"><span class="material-symbols-rounded">description</span><div><strong>Versão atual · {{ doc.expirationDate | date:'yyyy' }}</strong><small>{{ doc.fileName || 'Documento vigente' }} · confirmado por Mariana Silveira</small></div><span class="current-tag">Vigente</span></div>
-      <div class="version-row archived"><span class="material-symbols-rounded">archive</span><div><strong>Versão anterior · {{ doc.issueDate | date:'yyyy' }}</strong><small>Arquivo preservado para auditoria e rastreabilidade</small></div><span>Arquivada</span></div>
+      <div class="linha-versao atual current version-row">
+        <span class="material-symbols-rounded">description</span>
+        <div>
+          <strong>Versão atual · {{ (doc.dataVencimento || doc.expirationDate) | date:'yyyy' }}</strong>
+          <small>{{ doc.nomeArquivo || doc.fileName || 'Documento vigente' }} · confirmado no cofre</small>
+        </div>
+        <span class="etiqueta-vigente current-tag">Vigente</span>
+      </div>
+      <div class="linha-versao arquivada archived version-row">
+        <span class="material-symbols-rounded">archive</span>
+        <div>
+          <strong>Versão anterior · {{ (doc.dataEmissao || doc.issueDate) | date:'yyyy' }}</strong>
+          <small>Arquivo preservado para auditoria e rastreabilidade</small>
+        </div>
+        <span>Arquivada</span>
+      </div>
     </div>
   </div>
 </div>

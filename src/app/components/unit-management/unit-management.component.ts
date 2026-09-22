@@ -1,8 +1,8 @@
 import { Component, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { LicenfyService } from '../../core/services/licenfy.service';
-import { Branch } from '../../core/models/types';
+import { ServicoLicenfy } from '../../core/services/licenfy.service';
+import { Unidade, Branch } from '../../core/models/types';
 
 @Component({
   selector: 'app-unit-management',
@@ -11,40 +11,116 @@ import { Branch } from '../../core/models/types';
   templateUrl: './unit-management.component.html',
   styleUrls: ['./unit-management.component.css']
 })
-export class UnitManagementComponent {
-  readonly service = inject(LicenfyService);
-  readonly branches = this.service.branches;
-  readonly selectedUnitId = signal('sp-matriz');
-  readonly showForm = signal(false);
+export class GestaoUnidadesComponente {
+  readonly servico = inject(ServicoLicenfy);
+  readonly unidades = this.servico.unidades;
+  readonly unidadeSelecionadaId = signal('sp-matriz');
+  readonly exibirFormulario = signal(false);
 
-  newUnit = { name: '', cnpj: '', city: '', state: '', address: '', manager: '', email: '', phone: '' };
+  novaUnidade = {
+    nome: '',
+    name: '',
+    cnpj: '',
+    cidade: '',
+    city: '',
+    estado: '',
+    state: '',
+    endereco: '',
+    address: '',
+    gestor: '',
+    manager: '',
+    email: '',
+    telefone: '',
+    phone: ''
+  };
 
-  get selectedUnit(): Branch {
-    return this.branches().find(unit => unit.id === this.selectedUnitId()) || this.branches()[0];
+  // Compatibilidade
+  get service() { return this.servico; }
+  get branches() { return this.unidades; }
+  get selectedUnitId() { return this.unidadeSelecionadaId; }
+  get showForm() { return this.exibirFormulario; }
+  get newUnit() { return this.novaUnidade; }
+  set newUnit(v: any) { this.novaUnidade = v; }
+
+  get unidadeSelecionada(): Unidade {
+    return this.unidades().find(u => u.id === this.unidadeSelecionadaId()) || this.unidades()[0];
   }
+  get selectedUnit(): Unidade { return this.unidadeSelecionada; }
 
-  selectUnit(id: string) { this.selectedUnitId.set(id); }
+  selecionarUnidade(id: string) {
+    this.unidadeSelecionadaId.set(id);
+  }
+  selectUnit(id: string) { this.selecionarUnidade(id); }
 
-  saveUnit() {
-    if (!this.newUnit.name || !this.newUnit.cnpj || !this.newUnit.manager) return;
+  salvarUnidade() {
+    const nome = this.novaUnidade.nome || this.novaUnidade.name;
+    const cnpj = this.novaUnidade.cnpj;
+    const gestor = this.novaUnidade.gestor || this.novaUnidade.manager;
+    const cidade = this.novaUnidade.cidade || this.novaUnidade.city || 'Não informado';
+    const estado = this.novaUnidade.estado || this.novaUnidade.state || 'SP';
+    const endereco = this.novaUnidade.endereco || this.novaUnidade.address || 'Endereço a confirmar';
+    const email = this.novaUnidade.email;
+    const telefone = this.novaUnidade.telefone || this.novaUnidade.phone || '';
+
+    if (!nome || !cnpj || !gestor) return;
+
     const id = 'unit-' + Date.now();
-    this.service.addBranch({
+    this.servico.adicionarUnidade({
       id,
-      name: this.newUnit.name,
-      cnpj: this.newUnit.cnpj,
-      city: this.newUnit.city || 'Não informado',
-      state: this.newUnit.state || 'SP',
-      address: this.newUnit.address || 'Endereço a confirmar',
+      nome,
+      name: nome,
+      cnpj,
+      cidade,
+      city: cidade,
+      estado,
+      state: estado,
+      endereco,
+      address: endereco,
+      razaoSocial: 'Grupo Alpha Brasil S.A.',
       companyName: 'Grupo Alpha Brasil S.A.',
-      responsibleManager: `${this.newUnit.manager} (Gestor da unidade)`,
-      responsiblePeople: [{ id: id + '-primary', name: this.newUnit.manager, role: 'Gestor da unidade', email: this.newUnit.email, phone: this.newUnit.phone, primary: true }],
+      gerenteResponsavel: `${gestor} (Gestor da unidade)`,
+      responsibleManager: `${gestor} (Gestor da unidade)`,
+      responsaveis: [{
+        id: id + '-primary',
+        nome: gestor,
+        name: gestor,
+        cargo: 'Gestor da unidade',
+        role: 'Gestor da unidade',
+        email,
+        telefone,
+        phone: telefone,
+        principal: true,
+        primary: true
+      }],
+      pontuacaoConformidade: 100,
       complianceScore: 100,
       status: 'regular',
+      contagemLicencas: { total: 0, regular: 0, atencao: 0, urgente: 0 },
       licensesCount: { total: 0, regular: 0, attention: 0, urgent: 0 },
+      contagemAtivos: { total: 0, comGarantiaAtiva: 0, manutencaoPendente: 0 },
       assetsCount: { total: 0, withActiveWarranty: 0, maintenancePending: 0 }
     });
-    this.selectedUnitId.set(id);
-    this.showForm.set(false);
-    this.newUnit = { name: '', cnpj: '', city: '', state: '', address: '', manager: '', email: '', phone: '' };
+
+    this.unidadeSelecionadaId.set(id);
+    this.exibirFormulario.set(false);
+    this.novaUnidade = {
+      nome: '',
+      name: '',
+      cnpj: '',
+      cidade: '',
+      city: '',
+      estado: '',
+      state: '',
+      endereco: '',
+      address: '',
+      gestor: '',
+      manager: '',
+      email: '',
+      telefone: '',
+      phone: ''
+    };
   }
+  saveUnit() { this.salvarUnidade(); }
 }
+
+export const UnitManagementComponent = GestaoUnidadesComponente;

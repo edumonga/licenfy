@@ -1,131 +1,163 @@
-<div class="assets-container">
-  <!-- Header -->
-  <div class="assets-header">
+<div class="painel-ativos assets-container">
+  <div class="cabecalho-ativos assets-header">
     <div>
-      <div class="subtitle-badge">
+      <div class="selo-subtitulo subtitle-badge">
         <span class="material-symbols-rounded icon-sm">qr_code_2</span>
         Operação na Ponta sem Necessidade de App
       </div>
-      <h1 class="page-title">Gestão de Ativos Físicos e Etiquetas QR Code</h1>
-      <p class="page-desc">Etiquetas físicas aplicadas nos equipamentos. Ao escanear pelo celular, qualquer colaborador acessa garantias, manutenções e NFs.</p>
+      <h1 class="titulo-pagina page-title">Gestão de Ativos Físicos e Etiquetas QR Code</h1>
+      <p class="descricao-pagina page-desc">Etiquetas físicas aplicadas nos equipamentos. Ao escanear pelo celular, qualquer colaborador acessa garantias, manutenções e NFs.</p>
     </div>
-    <button class="btn btn-primary" (click)="showAssetForm.set(true)"><span class="material-symbols-rounded">add</span> Cadastrar ativo</button>
+    <button class="botao botao-primario btn btn-primary" (click)="exibirFormularioAtivo.set(true)">
+      <span class="material-symbols-rounded">add</span> Cadastrar ativo
+    </button>
   </div>
 
-  <div *ngIf="showAssetForm()" class="modal-backdrop" (click)="showAssetForm.set(false)">
-    <form class="modal-content asset-create-modal" (submit)="$event.preventDefault(); saveAsset()" (click)="$event.stopPropagation()">
-      <div class="modal-header"><div class="modal-title-wrap"><span class="material-symbols-rounded text-primary">inventory_2</span><h3>Novo ativo e etiqueta QR</h3></div><button type="button" class="btn-close" (click)="showAssetForm.set(false)"><span class="material-symbols-rounded">close</span></button></div>
-      <div class="asset-create-body"><p>Cadastre o equipamento e vincule a nota fiscal para acompanhar garantia e manutenção.</p><div class="asset-form-grid"><label>Nome do equipamento<input [(ngModel)]="newAsset.name" name="assetName" required placeholder="Ex.: Bomba de incêndio" /></label><label>Etiqueta patrimonial<input [(ngModel)]="newAsset.assetTag" name="tag" required placeholder="EQ-0001" /></label><label>Unidade<select [(ngModel)]="newAsset.branchId" name="branch"><option *ngFor="let branch of branches()" [value]="branch.id">{{ branch.name }}</option></select></label><label>Nota fiscal<input [(ngModel)]="newAsset.invoiceNumber" name="invoice" required placeholder="NF-e 000.000 / Série 1" /></label><label>Garantia até<input [(ngModel)]="newAsset.warrantyExpirationDate" name="warranty" type="date" /></label></div></div>
-      <div class="modal-footer"><button type="button" class="btn btn-outline" (click)="showAssetForm.set(false)">Cancelar</button><button class="btn btn-primary" type="submit">Salvar e gerar QR</button></div>
+  <div *ngIf="exibirFormularioAtivo()" class="fundo-modal modal-backdrop" (click)="exibirFormularioAtivo.set(false)">
+    <form class="conteudo-modal modal-content asset-create-modal" (submit)="$event.preventDefault(); salvarAtivo()" (click)="$event.stopPropagation()">
+      <div class="cabecalho-modal modal-header">
+        <div class="bloco-titulo-modal modal-title-wrap">
+          <span class="material-symbols-rounded text-primary">inventory_2</span>
+          <h3>Novo ativo e etiqueta QR</h3>
+        </div>
+        <button type="button" class="fechar-modal btn-close" (click)="exibirFormularioAtivo.set(false)">
+          <span class="material-symbols-rounded">close</span>
+        </button>
+      </div>
+      <div class="corpo-modal-ativo asset-create-body">
+        <p>Cadastre o equipamento e vincule a nota fiscal para acompanhar garantia e manutenção.</p>
+        <div class="grade-formulario-ativo asset-form-grid">
+          <label>Nome do equipamento
+            <input [(ngModel)]="novoAtivo.nome" name="assetName" required placeholder="Ex.: Bomba de incêndio" />
+          </label>
+          <label>Etiqueta patrimonial
+            <input [(ngModel)]="novoAtivo.etiquetaPatrimonio" name="tag" required placeholder="EQ-0001" />
+          </label>
+          <label>Unidade
+            <select [(ngModel)]="novoAtivo.unidadeId" name="branch">
+              <option *ngFor="let u of unidades()" [value]="u.id">{{ u.nome || u.name }}</option>
+            </select>
+          </label>
+          <label>Nota fiscal
+            <input [(ngModel)]="novoAtivo.numeroNotaFiscal" name="invoice" required placeholder="NF-e 000.000 / Série 1" />
+          </label>
+          <label>Garantia até
+            <input [(ngModel)]="novoAtivo.dataFimGarantia" name="warranty" type="date" />
+          </label>
+        </div>
+      </div>
+      <div class="rodape-modal modal-footer">
+        <button type="button" class="botao botao-contorno btn btn-outline" (click)="exibirFormularioAtivo.set(false)">Cancelar</button>
+        <button class="botao botao-primario btn btn-primary" type="submit">Salvar e gerar QR</button>
+      </div>
     </form>
   </div>
 
-  <!-- Barra de Filtros e Categorias -->
-  <div class="assets-toolbar">
-    <div class="category-tabs">
+  <div class="barra-ferramentas-ativos assets-toolbar">
+    <div class="abas-categoria category-tabs">
       <button 
-        class="cat-tab" 
-        [class.active]="selectedCategory() === 'all'" 
-        (click)="selectedCategory.set('all')">
-        Todos os Ativos ({{ assets().length }})
+        class="aba-cat cat-tab" 
+        [class.ativa]="categoriaSelecionada() === 'all'" 
+        [class.active]="categoriaSelecionada() === 'all'" 
+        (click)="categoriaSelecionada.set('all')">
+        Todos os Ativos ({{ ativos().length }})
       </button>
       <button 
-        class="cat-tab" 
-        [class.active]="selectedCategory() === 'Extintores'" 
-        (click)="selectedCategory.set('Extintores')">
+        class="aba-cat cat-tab" 
+        [class.ativa]="categoriaSelecionada() === 'Extintores'" 
+        [class.active]="categoriaSelecionada() === 'Extintores'" 
+        (click)="categoriaSelecionada.set('Extintores')">
         <span class="material-symbols-rounded icon-xs">local_fire_department</span>
         Extintores & AVCB
       </button>
       <button 
-        class="cat-tab" 
-        [class.active]="selectedCategory() === 'Geradores'" 
-        (click)="selectedCategory.set('Geradores')">
+        class="aba-cat cat-tab" 
+        [class.ativa]="categoriaSelecionada() === 'Geradores'" 
+        [class.active]="categoriaSelecionada() === 'Geradores'" 
+        (click)="categoriaSelecionada.set('Geradores')">
         <span class="material-symbols-rounded icon-xs">bolt</span>
         Geradores
       </button>
       <button 
-        class="cat-tab" 
-        [class.active]="selectedCategory() === 'Climatização'" 
-        (click)="selectedCategory.set('Climatização')">
+        class="aba-cat cat-tab" 
+        [class.ativa]="categoriaSelecionada() === 'Climatização'" 
+        [class.active]="categoriaSelecionada() === 'Climatização'" 
+        (click)="categoriaSelecionada.set('Climatização')">
         <span class="material-symbols-rounded icon-xs">ac_unit</span>
         Climatização & Chillers
       </button>
     </div>
   </div>
 
-  <!-- Grid de Ativos Físicos -->
-  <div class="assets-grid">
-    <div *ngFor="let asset of filteredAssetsList" class="asset-card">
-      <div class="asset-card-top">
-        <div class="asset-tag-badge">
+  <div class="grade-ativos assets-grid">
+    <div *ngFor="let ativo of listaAtivosFiltrados" class="cartao-ativo asset-card">
+      <div class="topo-cartao-ativo asset-card-top">
+        <div class="selo-etiqueta-ativo asset-tag-badge">
           <span class="material-symbols-rounded icon-xs">qr_code</span>
-          {{ asset.assetTag }}
+          {{ ativo.etiquetaPatrimonio || ativo.assetTag }}
         </div>
-        <span class="badge-status" [ngClass]="asset.maintenanceStatus">
-          <span class="status-dot" [ngClass]="asset.maintenanceStatus"></span>
-          {{ asset.maintenanceStatus === 'regular' ? 'Em Dia' : (asset.maintenanceStatus === 'attention' ? 'Revisão Próxima' : 'Urgente') }}
+        <span class="selo-status badge-status" [ngClass]="ativo.statusManutencao || ativo.maintenanceStatus">
+          <span class="ponto-status status-dot" [ngClass]="ativo.statusManutencao || ativo.maintenanceStatus"></span>
+          {{ (ativo.statusManutencao === 'regular' || ativo.maintenanceStatus === 'regular') ? 'Em Dia' : ((ativo.statusManutencao === 'attention' || ativo.statusManutencao === 'atencao' || ativo.maintenanceStatus === 'attention') ? 'Revisão Próxima' : 'Urgente') }}
         </span>
       </div>
 
-      <h3 class="asset-title">{{ asset.name }}</h3>
+      <h3 class="titulo-ativo asset-title">{{ ativo.nome || ativo.name }}</h3>
       
-      <div class="asset-specs-list">
-        <div class="spec-row">
-          <span class="spec-label">
+      <div class="lista-especificacoes spec-specs-list asset-specs-list">
+        <div class="linha-especificacao spec-row">
+          <span class="rotulo-especificacao spec-label">
             <span class="material-symbols-rounded icon-xs text-muted">apartment</span>
             Unidade:
           </span>
-          <span class="spec-val">{{ asset.branchName }}</span>
+          <span class="valor-especificacao spec-val">{{ ativo.nomeUnidade || ativo.branchName }}</span>
         </div>
-        <div class="spec-row">
-          <span class="spec-label">
+        <div class="linha-especificacao spec-row">
+          <span class="rotulo-especificacao spec-label">
             <span class="material-symbols-rounded icon-xs text-muted">pin_drop</span>
             Localização:
           </span>
-          <span class="spec-val">{{ asset.locationDetails }}</span>
+          <span class="valor-especificacao spec-val">{{ ativo.detalhesLocalizacao || ativo.locationDetails }}</span>
         </div>
-        <div class="spec-row">
-          <span class="spec-label">
+        <div class="linha-especificacao spec-row">
+          <span class="rotulo-especificacao spec-label">
             <span class="material-symbols-rounded icon-xs text-muted">receipt_long</span>
             Nota Fiscal:
           </span>
-          <span class="spec-val mono-font">{{ asset.invoiceNumber }}</span>
+          <span class="valor-especificacao texto-mono spec-val mono-font">{{ ativo.numeroNotaFiscal || ativo.invoiceNumber }}</span>
         </div>
-        <div class="spec-row">
-          <span class="spec-label">
+        <div class="linha-especificacao spec-row">
+          <span class="rotulo-especificacao spec-label">
             <span class="material-symbols-rounded icon-xs text-muted">verified</span>
             Garantia do Fabricante:
           </span>
-          <span class="spec-val" [class.text-attention]="asset.daysUntilWarrantyExpires <= 45">
-            {{ asset.warrantyExpirationDate | date:'dd/MM/yyyy' }} ({{ asset.daysUntilWarrantyExpires }}d)
+          <span class="valor-especificacao spec-val" [class.text-attention]="(ativo.diasAteFimGarantia ?? ativo.daysUntilWarrantyExpires ?? 100) <= 45">
+            {{ (ativo.dataFimGarantia || ativo.warrantyExpirationDate) | date:'dd/MM/yyyy' }} ({{ ativo.diasAteFimGarantia ?? ativo.daysUntilWarrantyExpires }}d)
           </span>
         </div>
       </div>
 
-      <!-- Diferencial: Vinculado à Obrigação Legal -->
-      <div *ngIf="asset.linkedLicenseTitle" class="linked-license-box">
-        <div class="linked-license-header">
+      <div *ngIf="ativo.licencaVinculadaTitulo || ativo.linkedLicenseTitle" class="caixa-licenca-vinculada linked-license-box">
+        <div class="cabecalho-licenca-vinculada linked-license-header">
           <span class="material-symbols-rounded icon-xs text-primary">link</span>
           <span>Unificação Legal + Operacional</span>
         </div>
-        <div class="linked-license-name">{{ asset.linkedLicenseTitle }}</div>
+        <div class="nome-licenca-vinculada linked-license-name">{{ ativo.licencaVinculadaTitulo || ativo.linkedLicenseTitle }}</div>
       </div>
 
-      <!-- Histórico resumido de manutenções -->
-      <div class="maintenance-summary-box">
-        <div class="mnt-header">
-          <span>Última Intervenção: {{ asset.lastMaintenanceDate | date:'dd/MM/yyyy' }}</span>
-          <span class="mnt-count">{{ asset.maintenances.length }} manutenções registradas</span>
+      <div class="caixa-resumo-manutencoes maintenance-summary-box">
+        <div class="cabecalho-manutencoes mnt-header">
+          <span>Última Intervenção: {{ (ativo.dataUltimaManutencao || ativo.lastMaintenanceDate) | date:'dd/MM/yyyy' }}</span>
+          <span class="contagem-manutencoes mnt-count">{{ (ativo.manutencoes || ativo.maintenances || []).length }} manutenções registradas</span>
         </div>
       </div>
 
-      <!-- Ações do Ativo -->
-      <div class="asset-card-actions">
-        <button class="btn btn-primary btn-sm flex-1" (click)="openQrModal(asset)">
+      <div class="acoes-cartao-ativo asset-card-actions">
+        <button class="botao botao-primario botao-sm flex-1 btn btn-primary btn-sm" (click)="abrirModalQr(ativo)">
           <span class="material-symbols-rounded icon-sm">print</span>
           Etiqueta QR Code
         </button>
-        <button class="btn btn-outline btn-sm flex-1" (click)="openMobileSimulator(asset)">
+        <button class="botao botao-contorno botao-sm flex-1 btn btn-outline btn-sm" (click)="abrirSimuladorMobile(ativo)">
           <span class="material-symbols-rounded icon-sm">smartphone</span>
           Visão do Operador
         </button>
@@ -133,77 +165,74 @@
     </div>
   </div>
 
-  <!-- Modal 1: Pré-visualização da Etiqueta Física QR Code para Impressão -->
-  <div *ngIf="selectedAssetForQr() as asset" class="modal-backdrop" (click)="closeQrModal()">
-    <div class="modal-content qr-modal-dialog printable-area" (click)="$event.stopPropagation()">
-      <div class="modal-header no-print">
-        <div class="modal-title-wrap">
+  <div *ngIf="ativoSelecionadoParaQr() as ativo" class="fundo-modal modal-backdrop" (click)="fecharModalQr()">
+    <div class="conteudo-modal dialogo-modal-qr area-impressao modal-content qr-modal-dialog printable-area" (click)="$event.stopPropagation()">
+      <div class="cabecalho-modal nao-imprimir modal-header no-print">
+        <div class="bloco-titulo-modal modal-title-wrap">
           <span class="material-symbols-rounded text-primary">label</span>
           <h3>Etiqueta Física com QR Code Patrimonial</h3>
         </div>
-        <button class="btn-close no-print" (click)="closeQrModal()">
+        <button class="fechar-modal nao-imprimir btn-close no-print" (click)="fecharModalQr()">
           <span class="material-symbols-rounded">close</span>
         </button>
       </div>
 
-      <div class="modal-body">
-        <p class="modal-desc no-print">
-          Etiqueta industrial autoadesiva pronta para aplicação direta no equipamento. O QR Code permite consulta instantânea pelo navegador do celular sem instalar aplicativos.
+      <div class="corpo-modal modal-body">
+        <p class="descricao-modal nao-imprimir modal-desc no-print">
+          Etiqueta pronta para aplicação direta no equipamento. O QR Code permite consulta instantânea pelo navegador do celular sem instalar aplicativos.
         </p>
 
-        <!-- Etiqueta Física Realista -->
-        <div class="physical-tag">
-          <div class="tag-brand-row">
-            <img src="logo.png" alt="Licenfy" class="tag-logo-img" />
-            <div class="tag-compliance-stamp">
+        <div class="etiqueta-fisica physical-tag">
+          <div class="linha-marca-etiqueta tag-brand-row">
+            <img src="logo.png" alt="Licenfy" class="imagem-logo-etiqueta tag-logo-img" />
+            <div class="selo-conformidade-etiqueta tag-compliance-stamp">
               <span class="material-symbols-rounded icon-xs">verified</span>
-              COMPLIANCE VERIFIED
+              CONFORMIDADE VERIFICADA
             </div>
           </div>
 
-          <div class="tag-body">
-            <div class="tag-qr-section">
-              <!-- QR Code Real e Scanável -->
-              <div class="qr-real-wrapper">
+          <div class="corpo-etiqueta tag-body">
+            <div class="secao-qr-etiqueta tag-qr-section">
+              <div class="envelope-qr-real qr-real-wrapper">
                 <app-qr-canvas
                   #qrRef
-                  [url]="asset.qrCodeValue"
+                  [url]="ativo.valorQrCode || ativo.qrCodeValue || ''"
                   [size]="140"
                   darkColor="#1f2937"
                   lightColor="#ffffff">
                 </app-qr-canvas>
               </div>
-              <span class="qr-scan-hint">Aponte a câmera</span>
+              <span class="dica-escanear-qr qr-scan-hint">Aponte a câmera</span>
             </div>
 
-            <div class="tag-info-section">
-              <div class="tag-patrimonio">
-                <span class="tag-patrimonio-label">PATRIMÔNIO</span>
-                <span class="tag-patrimonio-val">{{ asset.assetTag }}</span>
+            <div class="secao-info-etiqueta tag-info-section">
+              <div class="patrimonio-etiqueta tag-patrimonio">
+                <span class="rotulo-patrimonio tag-patrimonio-label">PATRIMÔNIO</span>
+                <span class="valor-patrimonio tag-patrimonio-val">{{ ativo.etiquetaPatrimonio || ativo.assetTag }}</span>
               </div>
-              <div class="tag-asset-name">{{ asset.name }}</div>
-              <div class="tag-location">{{ asset.locationDetails }}</div>
-              <div class="tag-branch-name">{{ asset.branchName }}</div>
-              <div class="tag-warranty-note">
-                <strong>Garantia até:</strong> {{ asset.warrantyExpirationDate | date:'dd/MM/yyyy' }}
+              <div class="nome-ativo-etiqueta tag-asset-name">{{ ativo.nome || ativo.name }}</div>
+              <div class="localizacao-etiqueta tag-location">{{ ativo.detalhesLocalizacao || ativo.locationDetails }}</div>
+              <div class="nome-unidade-etiqueta tag-branch-name">{{ ativo.nomeUnidade || ativo.branchName }}</div>
+              <div class="nota-garantia-etiqueta tag-warranty-note">
+                <strong>Garantia até:</strong> {{ (ativo.dataFimGarantia || ativo.warrantyExpirationDate) | date:'dd/MM/yyyy' }}
               </div>
             </div>
           </div>
 
-          <div class="tag-footer">
-            <span>SISTEMA DE GESTÃO E COMPLIANCE LICENFY</span>
-            <span>ID: {{ asset.id }}</span>
+          <div class="rodape-etiqueta tag-footer">
+            <span>SISTEMA DE GESTÃO E CONFORMIDADE LICENFY</span>
+            <span>ID: {{ ativo.id }}</span>
           </div>
         </div>
       </div>
 
-      <div class="modal-footer no-print">
-        <button class="btn btn-outline" (click)="closeQrModal()">Fechar</button>
-        <button class="btn btn-outline" (click)="qrRef.downloadPng(asset.assetTag + '-qr.png')">
+      <div class="rodape-modal nao-imprimir modal-footer no-print">
+        <button class="botao botao-contorno btn btn-outline" (click)="fecharModalQr()">Fechar</button>
+        <button class="botao botao-contorno btn btn-outline" (click)="qrRef.downloadPng((ativo.etiquetaPatrimonio || ativo.assetTag || 'ativo') + '-qr.png')">
           <span class="material-symbols-rounded">download</span>
           Baixar QR como PNG
         </button>
-        <button class="btn btn-primary" (click)="printTag()">
+        <button class="botao botao-primario btn btn-primary" (click)="imprimirEtiqueta()">
           <span class="material-symbols-rounded">print</span>
           Imprimir Etiqueta Adesiva
         </button>
@@ -211,97 +240,91 @@
     </div>
   </div>
 
-  <!-- Modal 2: Simulador da "Visão do Operador no Celular" (Sem necessidade de app) -->
-  <div *ngIf="selectedAssetForMobile() as asset" class="modal-backdrop" (click)="closeMobileSimulator()">
-    <div class="modal-content mobile-sim-dialog" (click)="$event.stopPropagation()">
-      <div class="modal-header">
-        <div class="modal-title-wrap">
+  <div *ngIf="ativoSelecionadoParaMobile() as ativo" class="fundo-modal modal-backdrop" (click)="fecharSimuladorMobile()">
+    <div class="conteudo-modal dialogo-simulador-mobile modal-content mobile-sim-dialog" (click)="$event.stopPropagation()">
+      <div class="cabecalho-modal modal-header">
+        <div class="bloco-titulo-modal modal-title-wrap">
           <span class="material-symbols-rounded text-primary">smartphone</span>
-          <h3>Simulador: Visão do Operador no Chão de Loja / Fábrica</h3>
+          <h3>Simulador: Visão do Operador no Local</h3>
         </div>
-        <button class="btn-close" (click)="closeMobileSimulator()">
+        <button class="fechar-modal btn-close" (click)="fecharSimuladorMobile()">
           <span class="material-symbols-rounded">close</span>
         </button>
       </div>
 
-      <div class="mobile-sim-container">
-        <!-- Chassi do Smartphone -->
-        <div class="phone-frame">
-          <div class="phone-notch">
-            <div class="speaker"></div>
+      <div class="conteiner-simulador-mobile mobile-sim-container">
+        <div class="moldura-celular phone-frame">
+          <div class="entalhe-celular phone-notch">
+            <div class="alto-falante speaker"></div>
             <div class="camera"></div>
           </div>
 
-          <!-- Conteúdo da WebApp Mobile que abre via QR Code -->
-          <div class="phone-screen">
-            <div class="mobile-app-header">
-              <img src="logo.png" alt="Licenfy" class="mobile-logo-img" />
-              <span class="badge-status regular">Conectado</span>
+          <div class="tela-celular phone-screen">
+            <div class="cabecalho-app-mobile mobile-app-header">
+              <img src="logo.png" alt="Licenfy" class="imagem-logo-mobile mobile-logo-img" />
+              <span class="selo-status regular badge-status regular">Conectado</span>
             </div>
 
-            <div class="mobile-app-body">
-              <div class="mobile-asset-title-card">
-                <span class="mobile-tag-code">{{ asset.assetTag }}</span>
-                <h4 class="mobile-name">{{ asset.name }}</h4>
-                <div class="mobile-location">
+            <div class="corpo-app-mobile mobile-app-body">
+              <div class="cartao-titulo-ativo-mobile mobile-asset-title-card">
+                <span class="codigo-etiqueta-mobile mobile-tag-code">{{ ativo.etiquetaPatrimonio || ativo.assetTag }}</span>
+                <h4 class="nome-mobile mobile-name">{{ ativo.nome || ativo.name }}</h4>
+                <div class="localizacao-mobile mobile-location">
                   <span class="material-symbols-rounded icon-xs">pin_drop</span>
-                  {{ asset.locationDetails }} ({{ asset.branchName }})
+                  {{ ativo.detalhesLocalizacao || ativo.locationDetails }} ({{ ativo.nomeUnidade || ativo.branchName }})
                 </div>
               </div>
 
-              <!-- Garantia Status -->
-              <div class="mobile-status-block">
-                <div class="mobile-block-title">
+              <div class="bloco-status-mobile mobile-status-block">
+                <div class="titulo-bloco-mobile mobile-block-title">
                   <span class="material-symbols-rounded icon-xs text-primary">security</span>
                   Garantia Vigente
                 </div>
-                <div class="mobile-warranty-info">
-                  <span>Válida até {{ asset.warrantyExpirationDate | date:'dd/MM/yyyy' }}</span>
-                  <span class="days-badge">{{ asset.daysUntilWarrantyExpires }} dias restantes</span>
+                <div class="info-garantia-mobile mobile-warranty-info">
+                  <span>Válida até {{ (ativo.dataFimGarantia || ativo.warrantyExpirationDate) | date:'dd/MM/yyyy' }}</span>
+                  <span class="selo-dias days-badge">{{ ativo.diasAteFimGarantia ?? ativo.daysUntilWarrantyExpires }} dias restantes</span>
                 </div>
-                <div class="mobile-nf-badge">
-                  NF de Compra: {{ asset.invoiceNumber }}
+                <div class="selo-nf-mobile mobile-nf-badge">
+                  NF de Compra: {{ ativo.numeroNotaFiscal || ativo.invoiceNumber }}
                 </div>
               </div>
 
-              <!-- Histórico de Manutenções do Ativo -->
-              <div class="mobile-history-block">
-                <div class="mobile-block-title">
+              <div class="bloco-historico-mobile mobile-history-block">
+                <div class="titulo-bloco-mobile mobile-block-title">
                   <span class="material-symbols-rounded icon-xs text-primary">history</span>
                   Histórico de Intervenções
                 </div>
-                <div *ngFor="let m of asset.maintenances" class="mobile-history-item">
-                  <div class="history-item-top">
-                    <span class="history-type">{{ m.type }}</span>
-                    <span class="history-date">{{ m.date | date:'dd/MM/yyyy' }}</span>
+                <div *ngFor="let m of (ativo.manutencoes || ativo.maintenances || [])" class="item-historico-mobile mobile-history-item">
+                  <div class="topo-item-historico history-item-top">
+                    <span class="tipo-historico history-type">{{ m.tipo || m.type }}</span>
+                    <span class="data-historico history-date">{{ (m.data || m.date) | date:'dd/MM/yyyy' }}</span>
                   </div>
-                  <p class="history-notes">{{ m.notes }}</p>
-                  <div class="history-tech">Técnico: {{ m.technicianOrCompany }}</div>
+                  <p class="notas-historico history-notes">{{ m.observacoes || m.notes }}</p>
+                  <div class="tecnico-historico history-tech">Técnico: {{ m.tecnicoOuEmpresa || m.technicianOrCompany }}</div>
                 </div>
               </div>
 
-              <!-- Botão de Ação Rápida para o Operador -->
-              <button class="mobile-action-btn" (click)="onReportIncident()" [disabled]="incidentReported()">
+              <button class="botao-acao-mobile mobile-action-btn" (click)="reportarIncidente()" [disabled]="incidenteReportado()">
                 <span class="material-symbols-rounded icon-sm">support_agent</span>
-                {{ incidentReported() ? 'Chamado Registrado com Sucesso!' : 'Reportar Ocorrência / Acionar Garantia' }}
+                {{ incidenteReportado() ? 'Chamado Registrado com Sucesso!' : 'Reportar Ocorrência / Acionar Garantia' }}
               </button>
             </div>
           </div>
         </div>
 
-        <div class="mobile-sim-explanation">
-          <h4 class="explanation-title">Como funciona na prática?</h4>
-          <p class="explanation-desc">
-            O funcionário ou técnico terceirizado aponta a câmera nativa do iPhone ou Android para a etiqueta física colada na máquina.
+        <div class="explicacao-simulador-mobile mobile-sim-explanation">
+          <h4 class="titulo-explicacao explanation-title">Como funciona na prática?</h4>
+          <p class="descricao-explicacao explanation-desc">
+            O técnico aponta a câmera nativa do smartphone para a etiqueta física colada na máquina.
           </p>
-          <ul class="explanation-points">
+          <ul class="pontos-explicacao explanation-points">
             <li>
               <span class="material-symbols-rounded icon-sm text-primary">check_circle</span>
-              <strong>Zero atrito:</strong> Não exige download na App Store ou Play Store.
+              <strong>Acesso direto:</strong> Não exige download de aplicativo em lojas.
             </li>
             <li>
               <span class="material-symbols-rounded icon-sm text-primary">check_circle</span>
-              <strong>Evita despesas desnecessárias:</strong> Consulta na hora se a peça ainda está coberta pela garantia da nota fiscal.
+              <strong>Evita despesas:</strong> Consulta na hora se a peça ainda está coberta pela garantia da nota fiscal.
             </li>
             <li>
               <span class="material-symbols-rounded icon-sm text-primary">check_circle</span>

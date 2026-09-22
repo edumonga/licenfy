@@ -6,32 +6,12 @@
     </a>
 
     <nav class="nav-menu" aria-label="Navegação principal">
-      <div class="nav-dropdown">
-        <button class="nav-link">
-          Plataforma
-          <span class="material-symbols-rounded chevron">expand_more</span>
-        </button>
-      </div>
-      <div class="nav-dropdown">
-        <button class="nav-link">
-          Soluções
-          <span class="material-symbols-rounded chevron">expand_more</span>
-        </button>
-      </div>
-      <div class="nav-dropdown">
-        <button class="nav-link">
-          Indústrias
-          <span class="material-symbols-rounded chevron">expand_more</span>
-        </button>
-      </div>
+      <a href="#plataforma" class="nav-link">Plataforma</a>
+      <a href="#solucoes" class="nav-link">Soluções</a>
+      <a href="#industrias" class="nav-link">Indústrias</a>
       <a href="#modulos" class="nav-link">Módulos</a>
-      <div class="nav-dropdown">
-        <button class="nav-link">
-          Recursos
-          <span class="material-symbols-rounded chevron">expand_more</span>
-        </button>
-      </div>
-      <a href="#roi" class="nav-link">Planos</a>
+      <a href="#recursos" class="nav-link">Recursos</a>
+      <a href="#planos" class="nav-link">Planos</a>
     </nav>
 
     <div class="header-right">
@@ -61,6 +41,7 @@
   <div class="hero-container">
     <!-- Coluna Esquerda: Headline & Chamadas Alinhadas à Esquerda -->
     <div class="hero-content">
+      <span class="section-kicker">REGULARIDADE OPERACIONAL EM TEMPO REAL</span>
       <h1 class="hero-title">Nunca mais seja interditado por um alvará que venceu sem avisar</h1>
 
       <p class="hero-subtitle">
@@ -92,11 +73,59 @@
       </div>
     </div>
 
+    <!-- Coluna direita: visual operacional em desktop + aplicativo mobile -->
+    <div class="hero-product-visual" aria-label="Painel de operação Licenfy em computador e celular">
+      <div class="hero-product-carousel" aria-live="polite">
+        @for (slide of slides; track slide.id; let index = $index) {
+          <figure class="hero-product-slide" [class.is-active]="currentSlideIndex() === index">
+            <img [src]="slide.imagem" [alt]="slide.alt" [class.is-wide]="slide.id === 'visao-completa'" />
+            <figcaption>{{ slide.titulo }}</figcaption>
+          </figure>
+        }
+      </div>
+      <div class="hero-carousel-controls" aria-label="Escolher demonstração do produto">
+        @for (slide of slides; track slide.id; let index = $index) {
+          <button type="button" [class.is-active]="currentSlideIndex() === index" (click)="setSlide(index)" [attr.aria-label]="'Ver ' + slide.titulo"></button>
+        }
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- Seção: Plataforma -->
+<section id="plataforma" class="platform-section">
+  <div class="section-container platform-layout">
+    <div class="platform-copy">
+      <span class="section-kicker">PLATAFORMA LICENFY</span>
+      <h2>Uma única visão para cada prazo, documento e ativo.</h2>
+      <p>Troque arquivos espalhados e planilhas manuais por uma operação conectada, com contexto por unidade e histórico pronto para auditorias.</p>
+    </div>
+    <div class="platform-points">
+      <div><span class="material-symbols-rounded">hub</span><strong>Operação conectada</strong><p>Licenças, pessoas e ativos no mesmo fluxo.</p></div>
+      <div><span class="material-symbols-rounded">visibility</span><strong>Visão por unidade</strong><p>Priorize a ação certa em cada filial.</p></div>
+      <div><span class="material-symbols-rounded">history</span><strong>Histórico auditável</strong><p>Decisões e documentos sempre rastreáveis.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- Seção: Soluções -->
+<section id="solucoes" class="solutions-section">
+  <div class="section-container">
+    <div class="section-badge-header">
+      <span class="section-kicker">SOLUÇÕES PARA A SUA OPERAÇÃO</span>
+      <h2 class="section-headline">Controle que acompanha o ritmo do seu negócio.</h2>
+    </div>
+    <div class="solutions-grid">
+      <article class="solution-card"><span class="material-symbols-rounded">storefront</span><h3>Redes e franquias</h3><p>Padronize a conformidade de cada unidade, sem sobrecarregar o time central.</p></article>
+      <article class="solution-card"><span class="material-symbols-rounded">gavel</span><h3>Jurídico e regularidade</h3><p>Antecipe riscos e mantenha evidências organizadas para fiscalizações.</p></article>
+      <article class="solution-card"><span class="material-symbols-rounded">business_center</span><h3>Facilities e operações</h3><p>Conecte obrigações regulatórias à manutenção dos ativos físicos.</p></article>
+    </div>
   </div>
 </section>
 
 <!-- Seção: Empresas atendidas -->
-<section class="social-proof-section">
+<section id="industrias" class="social-proof-section">
   <div class="section-container">
     <h3 class="social-proof-title">Empresas que atendemos</h3>
     
@@ -129,7 +158,6 @@
 <section id="modulos" class="features-section">
   <div class="section-container">
     <div class="section-badge-header">
-      <span class="badge-pill">BLINDAGEM COMPLETA</span>
       <h2 class="section-headline">Da gaveta ao controle absoluto em 4 pilares</h2>
       <p class="section-subheadline">
         O fim do pesadelo das planilhas esquecidas, multas municipais e surpresas na hora da fiscalização.
@@ -190,7 +218,7 @@
         </div>
         <h3 class="feature-title">Alertas Inteligentes</h3>
         <p class="feature-desc">
-          Dispare notificações automáticas por e-mail para o gerente da unidade, compliance e diretoria com 90, 60 e 30 dias de antecedência. Garanta governança com trilha de auditoria.
+          Dispare notificações automáticas por e-mail para o gerente da unidade, responsáveis e diretoria com 90, 60 e 30 dias de antecedência. Garanta governança com trilha de auditoria.
         </p>
         <div class="feature-link">
           <span>Configurar Alertas</span>
@@ -201,8 +229,24 @@
   </div>
 </section>
 
+<!-- Seção: Recursos -->
+<section id="recursos" class="resources-section">
+  <div class="section-container resources-layout">
+    <div>
+      <span class="section-kicker">RECURSOS</span>
+      <h2>Informação pronta quando a operação precisa agir.</h2>
+      <p>Mais previsibilidade para decisões diárias e respostas rápidas em qualquer cenário.</p>
+    </div>
+    <div class="resources-list">
+      <div><span class="material-symbols-rounded">picture_as_pdf</span><div><strong>Leitura de documentos por OCR</strong><p>Extração automática de campos e datas de validade.</p></div></div>
+      <div><span class="material-symbols-rounded">mail</span><div><strong>Alertas escalonados</strong><p>Notificações por prazo para os responsáveis certos.</p></div></div>
+      <div><span class="material-symbols-rounded">qr_code_2</span><div><strong>QR Code para ativos</strong><p>Consulta imediata da situação no local da operação.</p></div></div>
+    </div>
+  </div>
+</section>
+
 <!-- Seção de ROI e Economia Comprovada -->
-<section id="roi" class="roi-banner-section">
+<section id="planos" class="roi-banner-section">
   <div class="section-container">
     <div class="roi-banner-box">
       <div class="roi-banner-left">
@@ -291,7 +335,7 @@
         <ul class="footer-links">
           <li><a href="#modulos">Automação de Licenças</a></li>
           <li><a href="#modulos">Gestão de Ativos</a></li>
-          <li><a href="#roi">Inteligência de Risco</a></li>
+          <li><a href="#planos">Inteligência de Risco</a></li>
           <li><a href="#" (click)="$event.preventDefault(); openDemoModal()">Para Redes e Franquias</a></li>
           <li><a href="#" (click)="$event.preventDefault(); openDemoModal()">Para Operações Enterprise</a></li>
         </ul>

@@ -43,7 +43,7 @@
   font-size: 0.925rem;
 }
 
-/* ROI Hero Card */
+/* Cartão de destaque do ROI */
 .roi-hero-card {
   background: linear-gradient(135deg, #1f2937 0%, #111827 100%);
   color: #ffffff;
@@ -144,7 +144,7 @@
   }
 }
 
-/* KPI Grid */
+/* Grade de indicadores */
 .roi-kpi-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -229,7 +229,7 @@
   line-height: 1.45;
 }
 
-/* Tables Grid */
+/* Grade de tabelas */
 .roi-tables-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;

@@ -43,7 +43,7 @@
   font-size: 0.925rem;
 }
 
-/* OCR Section Card */
+/* Cartão da seção OCR */
 .ocr-section-card {
   background: var(--color-white);
   border-radius: 14px;
@@ -103,7 +103,7 @@
   color: var(--color-text-muted);
 }
 
-/* Dropzone */
+/* Área de upload */
 .dropzone {
   position: relative;
   border: 2px dashed var(--color-border);
@@ -127,7 +127,7 @@
   cursor: default;
 }
 
-/* Laser Scan Animation */
+/* Animação de leitura */
 .scanner-laser-bar {
   position: absolute;
   top: 0;
@@ -180,7 +180,7 @@
 }
 .file-picker{position:relative;overflow:hidden}.file-picker input{position:absolute;inset:0;opacity:0;cursor:pointer}
 
-/* Scanning State */
+/* Estado de leitura */
 .dropzone-scanning {
   display: flex;
   flex-direction: column;
@@ -236,7 +236,7 @@
   100% { width: 100%; }
 }
 
-/* Completed State */
+/* Estado concluído */
 .dropzone-completed {
   display: flex;
   flex-direction: column;
@@ -266,7 +266,7 @@
   color: var(--color-text-muted);
 }
 
-/* Form Panel */
+/* Painel do formulário */
 .extracted-form-panel {
   margin-top: 24px;
   background: var(--color-bg-subtle);
@@ -360,7 +360,7 @@
 }
 
 
-/* Vault List */
+/* Lista do cofre */
 .vault-list-card {
   background: var(--color-white);
   border-radius: 14px;
@@ -429,7 +429,7 @@
   background: var(--color-white);
 }
 
-/* Docs Grid */
+/* Grade de documentos */
 .docs-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
@@ -550,7 +550,7 @@
 .text-primary { color: var(--color-primary); }
 .modal-backdrop{position:fixed;inset:0;z-index:130;background:rgba(15,23,42,.45);display:grid;place-items:center;padding:20px}.history-modal{width:min(500px,100%);background:#fff;border-radius:14px;box-shadow:var(--shadow-xl);padding:22px}.history-modal-head{display:flex;align-items:flex-start;justify-content:space-between;gap:10px}.history-modal h3{font-size:1.03rem;margin-top:3px}.history-modal>p{font-size:.8rem;color:var(--color-text-muted);line-height:1.4;margin:14px 0}.history-close{border:0;width:30px;height:30px;border-radius:7px;background:var(--color-bg-subtle);font-size:1.3rem;cursor:pointer}.version-row{display:flex;align-items:center;gap:10px;padding:12px 0;border-top:1px solid var(--color-border);color:var(--color-text-muted);font-size:.75rem}.version-row>div{display:flex;flex:1;flex-direction:column;gap:3px}.version-row strong{font-size:.82rem;color:var(--color-slate-dark)}.version-row small{font-size:.72rem}.version-row.current>.material-symbols-rounded{color:var(--color-primary)}.current-tag{background:var(--status-regular-bg);color:var(--status-regular-text);font-weight:700;padding:3px 6px;border-radius:4px}.detail-kicker{font-size:.67rem;font-weight:800;letter-spacing:.08em;color:var(--color-primary)}
 
-/* ===== Gemini Config Styles ===== */
+/* Barra de status de leitura */
 .gemini-status-bar {
   display: flex;
   align-items: center;

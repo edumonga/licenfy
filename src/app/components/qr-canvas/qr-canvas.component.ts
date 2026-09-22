@@ -9,52 +9,65 @@ import QRCode from 'qrcode';
   templateUrl: './qr-canvas.component.html',
   styleUrls: ['./qr-canvas.component.css']
 })
-export class QrCanvasComponent implements OnChanges, AfterViewInit {
+export class QrCanvasComponente implements OnChanges, AfterViewInit {
   @Input() url = '';
-  @Input() size = 140;
-  @Input() darkColor = '#1f2937';
-  @Input() lightColor = '#ffffff';
+  @Input() tamanho = 140;
+  @Input() set size(valor: number) { this.tamanho = valor; }
+  get size(): number { return this.tamanho; }
 
-  @ViewChild('qrCanvas') canvasRef!: ElementRef<HTMLCanvasElement>;
+  @Input() corEscura = '#1f2937';
+  @Input() set darkColor(valor: string) { this.corEscura = valor; }
+  get darkColor(): string { return this.corEscura; }
 
-  private viewReady = false;
+  @Input() corClara = '#ffffff';
+  @Input() set lightColor(valor: string) { this.corClara = valor; }
+  get lightColor(): string { return this.corClara; }
+
+  @ViewChild('qrCanvas') referenciaCanvas!: ElementRef<HTMLCanvasElement>;
+  get canvasRef(): ElementRef<HTMLCanvasElement> { return this.referenciaCanvas; }
+
+  private visualizacaoPronta = false;
 
   ngAfterViewInit() {
-    this.viewReady = true;
-    this.generateQr();
+    this.visualizacaoPronta = true;
+    this.gerarQr();
   }
 
-  ngOnChanges(_changes: SimpleChanges) {
-    if (this.viewReady) {
-      this.generateQr();
+  ngOnChanges(_alteracoes: SimpleChanges) {
+    if (this.visualizacaoPronta) {
+      this.gerarQr();
     }
   }
 
-  private generateQr() {
-    if (!this.canvasRef?.nativeElement || !this.url) return;
+  gerarQr() {
+    if (!this.referenciaCanvas?.nativeElement || !this.url) return;
 
-    QRCode.toCanvas(this.canvasRef.nativeElement, this.url, {
-      width: this.size,
+    QRCode.toCanvas(this.referenciaCanvas.nativeElement, this.url, {
+      width: this.tamanho,
       margin: 1,
       color: {
-        dark: this.darkColor,
-        light: this.lightColor
+        dark: this.corEscura,
+        light: this.corClara
       },
       errorCorrectionLevel: 'M'
-    }, (err: Error | null) => {
-      if (err) console.error('Erro ao gerar QR Code:', err);
+    }, (erro: Error | null) => {
+      if (erro) console.error('Erro ao gerar QR Code:', erro);
     });
   }
 
-  downloadPng(filename = 'qrcode.png') {
-    if (!this.canvasRef?.nativeElement) return;
+  baixarPng(nomeArquivo = 'qrcode.png') {
+    if (!this.referenciaCanvas?.nativeElement) return;
     const link = document.createElement('a');
-    link.download = filename;
-    link.href = this.canvasRef.nativeElement.toDataURL('image/png');
+    link.download = nomeArquivo;
+    link.href = this.referenciaCanvas.nativeElement.toDataURL('image/png');
     link.click();
   }
+  downloadPng(nome = 'qrcode.png') { this.baixarPng(nome); }
 
-  getDataUrl(): string {
-    return this.canvasRef?.nativeElement?.toDataURL('image/png') || '';
+  obterDataUrl(): string {
+    return this.referenciaCanvas?.nativeElement?.toDataURL('image/png') || '';
   }
+  getDataUrl(): string { return this.obterDataUrl(); }
 }
+
+export const QrCanvasComponent = QrCanvasComponente;

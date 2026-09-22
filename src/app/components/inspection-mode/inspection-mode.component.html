@@ -1,107 +1,107 @@
-<div class="inspection-container">
-  <!-- Barra Superior de Controle (Oculta na Impressão) -->
-  <div class="inspection-control-bar no-print">
+<div class="painel-inspecao inspection-container">
+  <div class="barra-controle-inspecao nao-imprimir inspection-control-bar no-print">
     <div>
-      <div class="subtitle-badge">
+      <div class="selo-subtitulo subtitle-badge">
         <span class="material-symbols-rounded icon-sm">shield</span>
         Modo Fiscalização Imediata
       </div>
-      <h1 class="page-title">Dossiê Unificado de Conformidade Legal</h1>
-      <p class="page-desc">Compilação instantânea de todos os alvarás, laudos e licenças vigentes, pronta para auditoria externa e fiscais.</p>
+      <h1 class="titulo-pagina page-title">Dossiê Unificado de Conformidade Legal</h1>
+      <p class="descricao-pagina page-desc">Compilação instantânea de todos os alvarás, laudos e licenças vigentes, pronta para auditoria externa e fiscais.</p>
     </div>
 
-    <div class="control-actions">
-      <div class="branch-select-group">
+    <div class="acoes-controle control-actions">
+      <div class="grupo-selecao-filial branch-select-group">
         <label>Unidade a Fiscalizar:</label>
-        <select [ngModel]="selectedBranchId()" (ngModelChange)="selectBranch($event)" class="branch-select">
-          <option *ngFor="let b of branches()" [value]="b.id">{{ b.name }} ({{ b.city }}/{{ b.state }})</option>
+        <select [ngModel]="unidadeSelecionadaId()" (ngModelChange)="selecionarUnidade($event)" class="seletor-filial branch-select">
+          <option *ngFor="let u of unidades()" [value]="u.id">{{ u.nome || u.name }} ({{ u.cidade || u.city }}/{{ u.estado || u.state }})</option>
         </select>
       </div>
 
-      <button class="btn btn-primary" (click)="printDossier()">
+      <button class="botao botao-primario btn btn-primary" (click)="imprimirDossie()">
         <span class="material-symbols-rounded">print</span>
         Imprimir / Exportar PDF do Dossiê
       </button>
     </div>
   </div>
 
-  <div class="dossier-selection no-print">
-    <div><strong>Documentos incluídos</strong><span>Selecione o que será consolidado no PDF.</span></div>
-    <div class="document-checks">
-      <label *ngFor="let doc of availableDocuments()"><input type="checkbox" [checked]="selectedDocumentIds().includes(doc.id)" (change)="toggleDocument(doc.id)" /><span>{{ doc.title }}</span></label>
+  <div class="selecao-dossie nao-imprimir dossier-selection no-print">
+    <div>
+      <strong>Documentos incluídos</strong>
+      <span>Selecione o que será consolidado no PDF.</span>
+    </div>
+    <div class="seletores-documentos document-checks">
+      <label *ngFor="let doc of documentosDisponiveis()">
+        <input type="checkbox" [checked]="idsDocumentosSelecionados().includes(doc.id)" (change)="alternarDocumento(doc.id)" />
+        <span>{{ doc.titulo || doc.title }}</span>
+      </label>
     </div>
   </div>
 
-  <!-- Documento Oficial do Dossiê (Área Imprimível) -->
-  <div class="dossier-paper printable-area">
-    <!-- Cabeçalho Oficial -->
-    <div class="dossier-header">
-      <div class="brand-block">
-        <img src="logo.png" alt="Licenfy" class="dossier-logo" />
-        <div class="system-caption">PLATAFORMA INTEGRADA DE COMPLIANCE E REGULARIDADE OPERACIONAL</div>
+  <div class="folha-dossie area-impressao dossier-paper printable-area">
+    <div class="cabecalho-dossie dossier-header">
+      <div class="bloco-marca brand-block">
+        <img src="logo.png" alt="Licenfy" class="logo-dossie dossier-logo" />
+        <div class="legenda-sistema system-caption">PLATAFORMA INTEGRADA DE COMPLIANCE E REGULARIDADE OPERACIONAL</div>
       </div>
 
-      <div class="auth-stamp">
-        <div class="stamp-title">
+      <div class="carimbo-autenticacao auth-stamp">
+        <div class="titulo-carimbo stamp-title">
           <span class="material-symbols-rounded icon-xs text-primary">verified</span>
           CERTIFICADO DIGITAL DE CONFORMIDADE
         </div>
-        <div class="stamp-row"><strong>Emissão:</strong> {{ generatedTimestamp() }}</div>
-        <div class="stamp-row"><strong>Autenticação:</strong> <span class="hash-code">{{ verificationHash() }}</span></div>
-        <div class="stamp-row"><strong>Status Geral:</strong> <span class="status-badge-text">REGULAR E AUDITADO</span></div>
+        <div class="linha-carimbo stamp-row"><strong>Emissão:</strong> {{ dataHoraGeracao() }}</div>
+        <div class="linha-carimbo stamp-row"><strong>Autenticação:</strong> <span class="codigo-hash hash-code">{{ hashVerificacao() }}</span></div>
+        <div class="linha-carimbo stamp-row"><strong>Status Geral:</strong> <span class="texto-selo-status status-badge-text">REGULAR E AUDITADO</span></div>
       </div>
     </div>
 
-    <!-- Dados da Unidade Fiscalizada -->
-    <div class="company-card">
-      <div class="company-grid">
-        <div class="company-item">
-          <span class="c-label">Razão Social / Filial</span>
-          <span class="c-val">{{ currentBranch().name }}</span>
+    <div class="cartao-empresa company-card">
+      <div class="grade-empresa company-grid">
+        <div class="item-empresa company-item">
+          <span class="rotulo-c c-label">Razão Social / Filial</span>
+          <span class="valor-c c-val">{{ unidadeAtual().nome || unidadeAtual().name }}</span>
         </div>
-        <div class="company-item">
-          <span class="c-label">CNPJ Oficial</span>
-          <span class="c-val mono-font">{{ currentBranch().cnpj }}</span>
+        <div class="item-empresa company-item">
+          <span class="rotulo-c c-label">CNPJ Oficial</span>
+          <span class="valor-c texto-mono c-val mono-font">{{ unidadeAtual().cnpj }}</span>
         </div>
-        <div class="company-item">
-          <span class="c-label">Município / UF</span>
-          <span class="c-val">{{ currentBranch().city }} - {{ currentBranch().state }}</span>
+        <div class="item-empresa company-item">
+          <span class="rotulo-c c-label">Município / UF</span>
+          <span class="valor-c c-val">{{ unidadeAtual().cidade || unidadeAtual().city }} - {{ unidadeAtual().estado || unidadeAtual().state }}</span>
         </div>
-        <div class="company-item">
-          <span class="c-label">Responsável Legal / Jurídico</span>
-          <span class="c-val">{{ currentBranch().responsibleManager }}</span>
+        <div class="item-empresa company-item">
+          <span class="rotulo-c c-label">Responsável Legal / Jurídico</span>
+          <span class="valor-c c-val">{{ unidadeAtual().gerenteResponsavel || unidadeAtual().responsibleManager }}</span>
         </div>
       </div>
     </div>
 
-    <!-- Resumo Executivo para o Fiscal -->
-    <div class="exec-summary">
-      <div class="summary-metric-box">
-        <span class="metric-num">{{ currentBranch().complianceScore }}%</span>
-        <span class="metric-label">Score de Regularidade</span>
+    <div class="resumo-executivo exec-summary">
+      <div class="caixa-metrica-resumo summary-metric-box">
+        <span class="numero-metrica metric-num">{{ unidadeAtual().pontuacaoConformidade ?? unidadeAtual().complianceScore }}%</span>
+        <span class="rotulo-metrica metric-label">Score de Regularidade</span>
       </div>
-      <div class="summary-metric-box">
-        <span class="metric-num">{{ branchLicenses().length }}</span>
-        <span class="metric-label">Licenças Válidas Anexadas</span>
+      <div class="caixa-metrica-resumo summary-metric-box">
+        <span class="numero-metrica metric-num">{{ licencasDaUnidade().length }}</span>
+        <span class="rotulo-metrica metric-label">Licenças Válidas Anexadas</span>
       </div>
-      <div class="summary-metric-box">
-        <span class="metric-num">{{ currentBranch().assetsCount.total }}</span>
-        <span class="metric-label">Ativos Físicos Inspecionados</span>
+      <div class="caixa-metrica-resumo summary-metric-box">
+        <span class="numero-metrica metric-num">{{ (unidadeAtual().contagemAtivos?.total ?? unidadeAtual().assetsCount?.total) || 0 }}</span>
+        <span class="rotulo-metrica metric-label">Ativos Físicos Inspecionados</span>
       </div>
-      <div class="summary-metric-box">
-        <span class="metric-num text-regular">ZERO</span>
-        <span class="metric-label">Autuações Pendentes</span>
+      <div class="caixa-metrica-resumo summary-metric-box">
+        <span class="numero-metrica text-regular metric-num">ZERO</span>
+        <span class="rotulo-metrica metric-label">Autuações Pendentes</span>
       </div>
     </div>
 
-    <!-- Relação de Licenças e Laudos Válidos -->
-    <div class="dossier-section">
-      <h3 class="section-heading">
+    <div class="secao-dossie dossier-section">
+      <h3 class="titulo-secao section-heading">
         <span class="material-symbols-rounded icon-sm text-primary">fact_check</span>
         1. Relação Oficial de Alvarás, Licenças e Laudos Técnicos
       </h3>
 
-      <table class="dossier-table">
+      <table class="tabela-dossie dossier-table">
         <thead>
           <tr>
             <th>Documento / Obrigação</th>
@@ -113,20 +113,20 @@
           </tr>
         </thead>
         <tbody>
-          <tr *ngFor="let lic of branchLicenses()">
+          <tr *ngFor="let lic of licencasDaUnidade()">
             <td>
-              <strong>{{ lic.title }}</strong>
-              <div *ngIf="lic.legalRequirementNote" class="doc-legal-note">{{ lic.legalRequirementNote }}</div>
+              <strong>{{ lic.titulo || lic.title }}</strong>
+              <div *ngIf="lic.notaRequisitoLegal || lic.legalRequirementNote" class="nota-legal-doc doc-legal-note">{{ lic.notaRequisitoLegal || lic.legalRequirementNote }}</div>
             </td>
-            <td>{{ lic.issuingBody }}</td>
-            <td class="mono-font">{{ lic.documentNumber }}</td>
-            <td>{{ lic.issueDate | date:'dd/MM/yyyy' }}</td>
+            <td>{{ lic.orgaoEmissor || lic.issuingBody }}</td>
+            <td class="texto-mono mono-font">{{ lic.numeroDocumento || lic.documentNumber }}</td>
+            <td>{{ (lic.dataEmissao || lic.issueDate) | date:'dd/MM/yyyy' }}</td>
             <td>
-              <strong>{{ lic.expirationDate | date:'dd/MM/yyyy' }}</strong>
+              <strong>{{ (lic.dataVencimento || lic.expirationDate) | date:'dd/MM/yyyy' }}</strong>
             </td>
             <td>
-              <span class="badge-status" [ngClass]="lic.status">
-                <span class="status-dot" [ngClass]="lic.status"></span>
+              <span class="selo-status badge-status" [ngClass]="lic.status">
+                <span class="ponto-status status-dot" [ngClass]="lic.status"></span>
                 {{ lic.status === 'regular' ? 'Vigente' : 'Em Renovação' }}
               </span>
             </td>
@@ -135,56 +135,61 @@
       </table>
     </div>
 
-    <!-- Interdependência Operacional (Extintores, Geradores, Manutenções) -->
-    <div class="dossier-section">
-      <h3 class="section-heading">
+    <div class="secao-dossie dossier-section">
+      <h3 class="titulo-secao section-heading">
         <span class="material-symbols-rounded icon-sm text-primary">precision_manufacturing</span>
         2. Certificação de Manutenção Preventiva dos Ativos de Segurança
       </h3>
 
-      <div class="operational-box">
-        <p class="op-desc">
+      <div class="caixa-operacional operational-box">
+        <p class="descricao-operacional op-desc">
           Todos os equipamentos críticos vinculados às licenças municipais e estaduais possuem plano de manutenção preventiva contínuo e etiquetas patrimoniais com QR Code registradas na plataforma:
         </p>
-        <div class="op-grid">
-          <div class="op-card">
-            <div class="op-card-title">Sistemas de Prevenção e Combate a Incêndio</div>
-            <div class="op-card-item"><strong>Recarga de Extintores:</strong> Teste hidrostático e anéis de identificação atualizados.</div>
-            <div class="op-card-item"><strong>Pressurização dos Hidrantes:</strong> Válvulas e mangueiras com laudo de teste estanque.</div>
+        <div class="grade-operacional op-grid">
+          <div class="cartao-operacional op-card">
+            <div class="titulo-cartao-operacional op-card-title">Sistemas de Prevenção e Combate a Incêndio</div>
+            <div class="item-cartao-operacional op-card-item"><strong>Recarga de Extintores:</strong> Teste hidrostático e anéis de identificação atualizados.</div>
+            <div class="item-cartao-operacional op-card-item"><strong>Pressurização dos Hidrantes:</strong> Válvulas e mangueiras com laudo de teste estanque.</div>
           </div>
-          <div class="op-card">
-            <div class="op-card-title">Instalações Elétricas & SPDA (Para-raios)</div>
-            <div class="op-card-item"><strong>Laudo NR-10:</strong> Termografia de painéis e aterramento conformes à norma regulamentadora.</div>
-            <div class="op-card-item"><strong>Geradores de Emergência:</strong> Bateria de testes de partida quinzenais registrada.</div>
+          <div class="cartao-operacional op-card">
+            <div class="titulo-cartao-operacional op-card-title">Instalações Elétricas & SPDA (Para-raios)</div>
+            <div class="item-cartao-operacional op-card-item"><strong>Laudo NR-10:</strong> Termografia de painéis e aterramento conformes à norma regulamentadora.</div>
+            <div class="item-cartao-operacional op-card-item"><strong>Geradores de Emergência:</strong> Bateria de testes de partida quinzenais registrada.</div>
           </div>
         </div>
       </div>
     </div>
 
-    <!-- Rodapé do Dossiê com Carimbo Jurídico -->
-    <div class="dossier-footer">
-      <div class="footer-signatures">
-        <div class="signature-col">
-          <div class="sig-line"></div>
-          <div class="sig-name">{{ currentBranch().responsibleManager }}</div>
-          <div class="sig-title">Gestor Responsável de Compliance & Operações</div>
+    <div class="rodape-dossie dossier-footer">
+      <div class="assinaturas-rodape footer-signatures">
+        <div class="coluna-assinatura signature-col">
+          <div class="linha-assinatura sig-line"></div>
+          <div class="nome-assinatura sig-name">{{ unidadeAtual().gerenteResponsavel || unidadeAtual().responsibleManager }}</div>
+          <div class="cargo-assinatura sig-title">Gestor Responsável de Compliance & Operações</div>
         </div>
 
-        <div class="signature-col">
-          <div class="sig-line"></div>
-          <div class="sig-name">Licenfy Automated Compliance Engine</div>
-          <div class="sig-title">Assinatura Digital ICP-Brasil Padrão PAdES</div>
+        <div class="coluna-assinatura signature-col">
+          <div class="linha-assinatura sig-line"></div>
+          <div class="nome-assinatura sig-name">Licenfy Automated Compliance Engine</div>
+          <div class="cargo-assinatura sig-title">Assinatura Digital ICP-Brasil Padrão PAdES</div>
         </div>
       </div>
 
-      <div class="dossier-hash-footer">
-        Dossiê emitido em ambiente seguro pela plataforma Licenfy. Código de validação pública: <strong>{{ verificationHash() }}</strong>. Documento válido para exibição a auditores e autoridades públicas fiscalizadoras.
+      <div class="rodape-hash-dossie dossier-hash-footer">
+        Dossiê emitido em ambiente seguro pela plataforma Licenfy. Código de validação pública: <strong>{{ hashVerificacao() }}</strong>. Documento válido para exibição a auditores e autoridades públicas fiscalizadoras.
       </div>
     </div>
   </div>
 
-  <div class="dossier-history-card no-print">
-    <div><h3>Histórico de dossiês gerados</h3><p>Rastreabilidade de todas as exportações por unidade.</p></div>
-    <div class="history-items"><span *ngFor="let item of dossierHistory().slice(0, 3)"><strong>{{ item.branchName }}</strong> · {{ item.documentCount }} documentos · {{ item.generatedAt }}</span></div>
+  <div class="cartao-historico-dossie nao-imprimir dossier-history-card no-print">
+    <div>
+      <h3>Histórico de dossiês gerados</h3>
+      <p>Rastreabilidade de todas as exportações por unidade.</p>
+    </div>
+    <div class="itens-historico history-items">
+      <span *ngFor="let item of historicoDossie().slice(0, 3)">
+        <strong>{{ item.nomeUnidade || item.branchName }}</strong> · {{ item.quantidadeDocumentos ?? item.documentCount }} documentos · {{ item.geradoEm || item.generatedAt }}
+      </span>
+    </div>
   </div>
 </div>

@@ -2,106 +2,150 @@ import { Injectable, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { firstValueFrom, timeout } from 'rxjs';
 
-export interface AuthUser {
+export interface UsuarioAutenticado {
   id: string;
-  name: string;
+  nome: string;
+  name?: string;
   email: string;
+  teste?: boolean;
   trial?: boolean;
 }
+export type AuthUser = UsuarioAutenticado;
 
-interface StoredAccount extends AuthUser {
-  password: string;
+interface ContaArmazenada extends UsuarioAutenticado {
+  senha: string;
+  password?: string;
 }
 
-interface ApiLoginResponse {
+interface RespostaLoginApi {
   id: number;
   nome: string;
   email: string;
 }
 
 @Injectable({ providedIn: 'root' })
-export class AuthService {
-  private readonly accountsKey = 'licenfy-trial-accounts';
-  private readonly sessionKey = 'licenfy-session';
-  private readonly apiBaseUrl = 'http://localhost:3001';
+export class ServicoAutenticacao {
+  private readonly chaveContas = 'licenfy-contas-teste';
+  private readonly chaveSessao = 'licenfy-sessao';
+  private readonly urlBaseApi = 'http://localhost:3001';
 
-  readonly user = signal<AuthUser | null>(this.loadSession());
+  readonly usuario = signal<UsuarioAutenticado | null>(this.carregarSessao());
+  readonly user = this.usuario;
 
   constructor(private readonly http: HttpClient) {}
 
-  async login(login: string, password: string): Promise<{ success: boolean; message?: string }> {
-    const normalizedLogin = login.trim().toLowerCase();
-    const localAccount = this.getAccounts().find(account =>
-      account.email.toLowerCase() === normalizedLogin || account.name.toLowerCase() === normalizedLogin
+  async entrar(login: string, senha: string): Promise<{ sucesso: boolean; mensagem?: string; success?: boolean; message?: string }> {
+    const loginNormalizado = login.trim().toLowerCase();
+    const contaLocal = this.obterContas().find(conta =>
+      conta.email.toLowerCase() === loginNormalizado || conta.nome.toLowerCase() === loginNormalizado
     );
 
-    if (localAccount) {
-      if (localAccount.password !== password) {
-        return { success: false, message: 'Senha incorreta. Tente novamente.' };
+    if (contaLocal) {
+      if (contaLocal.senha !== senha && contaLocal.password !== senha) {
+        return { sucesso: false, mensagem: 'Senha incorreta. Tente novamente.', success: false, message: 'Senha incorreta. Tente novamente.' };
       }
-      this.startSession(localAccount);
-      return { success: true };
+      this.iniciarSessao(contaLocal);
+      return { sucesso: true, success: true };
     }
 
-    // Acesso demonstrativo oficial solicitado (sem banco de dados)
-    if (normalizedLogin === 'teste' && password === '123') {
-      this.startSession({ id: 'demo-teste', name: 'Conta de Teste', email: 'teste@licenfy.com.br', trial: true });
-      return { success: true };
+    // Credenciais de teste local
+    if (loginNormalizado === 'teste' && senha === '123') {
+      this.iniciarSessao({ id: 'demo-teste', nome: 'Conta de Teste', name: 'Conta de Teste', email: 'teste@licenfy.com.br', teste: true, trial: true });
+      return { sucesso: true, success: true };
     }
 
-    // Suporte direto às credenciais padrão da API Sprint 7
-    if (normalizedLogin === 'admin' && password === '123456') {
-      this.startSession({ id: 'demo-admin', name: 'Administrador', email: 'admin@email.com' });
-      return { success: true };
+    // Credenciais de administrador local
+    if (loginNormalizado === 'admin' && senha === '123456') {
+      this.iniciarSessao({ id: 'demo-admin', nome: 'Administrador', name: 'Administrador', email: 'admin@email.com' });
+      return { sucesso: true, success: true };
     }
 
-    // Tentar chamada na API externa se estiver rodando localmente
+    // Integração com API local caso disponível
     try {
-      const response = await firstValueFrom(this.http.post<ApiLoginResponse>(`${this.apiBaseUrl}/login`, {
+      const resposta = await firstValueFrom(this.http.post<RespostaLoginApi>(`${this.urlBaseApi}/login`, {
         nome: login,
-        senha: password
+        senha
       }).pipe(timeout(1500)));
-      this.startSession({ id: String(response.id), name: response.nome, email: response.email });
-      return { success: true };
+      this.iniciarSessao({ id: String(resposta.id), nome: resposta.nome, name: resposta.nome, email: resposta.email });
+      return { sucesso: true, success: true };
     } catch {
       return {
+        sucesso: false,
         success: false,
-        message: 'Usuário ou senha inválidos. Para teste rápido use login: teste e senha: 123, ou crie uma conta.'
+        mensagem: 'Usuário ou senha inválidos. Para teste rápido utilize login: teste e senha: 123, ou crie uma conta.',
+        message: 'Usuário ou senha inválidos. Para teste rápido utilize login: teste e senha: 123, ou crie uma conta.'
       };
     }
   }
 
-  register(name: string, email: string, password: string): { success: boolean; message?: string } {
-    const cleanName = name.trim();
-    const normalizedEmail = email.trim().toLowerCase();
-    if (this.getAccounts().some(account => account.email.toLowerCase() === normalizedEmail)) {
-      return { success: false, message: 'Já existe uma conta com este e-mail. Se já tiver conta, clique em Entrar.' };
+  // Alias para manter compatibilidade
+  login(login: string, pass: string) {
+    return this.entrar(login, pass);
+  }
+
+  cadastrar(nome: string, email: string, senha: string): { sucesso: boolean; mensagem?: string; success?: boolean; message?: string } {
+    const nomeLimpo = nome.trim();
+    const emailNormalizado = email.trim().toLowerCase();
+    if (this.obterContas().some(conta => conta.email.toLowerCase() === emailNormalizado)) {
+      return { sucesso: false, success: false, mensagem: 'Já existe uma conta com este e-mail.', message: 'Já existe uma conta com este e-mail.' };
     }
-    const account: StoredAccount = { id: 'trial-' + Date.now(), name: cleanName, email: normalizedEmail, password, trial: true };
-    this.saveAccounts([...this.getAccounts(), account]);
-    this.startSession(account);
-    return { success: true };
+    const novaConta: ContaArmazenada = {
+      id: 'teste-' + Date.now(),
+      nome: nomeLimpo,
+      name: nomeLimpo,
+      email: emailNormalizado,
+      senha,
+      password: senha,
+      teste: true,
+      trial: true
+    };
+    this.salvarContas([...this.obterContas(), novaConta]);
+    this.iniciarSessao(novaConta);
+    return { sucesso: true, success: true };
   }
 
+  // Alias para manter compatibilidade
+  register(name: string, email: string, pass: string) {
+    return this.cadastrar(name, email, pass);
+  }
+
+  sair() {
+    localStorage.removeItem(this.chaveSessao);
+    localStorage.removeItem('licenfy-session');
+    this.usuario.set(null);
+  }
+
+  // Alias para manter compatibilidade
   logout() {
-    localStorage.removeItem(this.sessionKey);
-    this.user.set(null);
+    this.sair();
   }
 
-  private startSession(user: AuthUser) {
-    localStorage.setItem(this.sessionKey, JSON.stringify(user));
-    this.user.set(user);
+  private iniciarSessao(usuario: UsuarioAutenticado) {
+    localStorage.setItem(this.chaveSessao, JSON.stringify(usuario));
+    this.usuario.set(usuario);
   }
 
-  private getAccounts(): StoredAccount[] {
-    try { return JSON.parse(localStorage.getItem(this.accountsKey) || '[]'); } catch { return []; }
+  private obterContas(): ContaArmazenada[] {
+    try {
+      const salvas = localStorage.getItem(this.chaveContas) || localStorage.getItem('licenfy-trial-accounts') || '[]';
+      return JSON.parse(salvas);
+    } catch {
+      return [];
+    }
   }
 
-  private saveAccounts(accounts: StoredAccount[]) {
-    localStorage.setItem(this.accountsKey, JSON.stringify(accounts));
+  private salvarContas(contas: ContaArmazenada[]) {
+    localStorage.setItem(this.chaveContas, JSON.stringify(contas));
   }
 
-  private loadSession(): AuthUser | null {
-    try { return JSON.parse(localStorage.getItem(this.sessionKey) || 'null'); } catch { return null; }
+  private carregarSessao(): UsuarioAutenticado | null {
+    try {
+      const sessao = localStorage.getItem(this.chaveSessao) || localStorage.getItem('licenfy-session') || 'null';
+      return JSON.parse(sessao);
+    } catch {
+      return null;
+    }
   }
 }
+
+export const AuthService = ServicoAutenticacao;

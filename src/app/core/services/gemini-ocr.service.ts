@@ -2,49 +2,105 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { firstValueFrom, timeout } from 'rxjs';
 
-export interface OcrResult {
-  title: string;
-  category: 'Alvará' | 'Bombeiros' | 'Sanitária' | 'Ambiental' | 'Segurança do Trabalho' | 'Outros';
-  issuingBody: string;
-  documentNumber: string;
-  issueDate: string;
-  expirationDate: string;
-  renewalCostEstimate: number;
-  estimatedFineIfExpired: number;
-  linkedAssetName: string;
-  legalRequirementNote: string;
-  fromAi: boolean;
+export interface ResultadoOcr {
+  titulo: string;
+  title?: string;
+  categoria: 'Alvará' | 'Bombeiros' | 'Sanitária' | 'Ambiental' | 'Segurança do Trabalho' | 'Outros';
+  category?: 'Alvará' | 'Bombeiros' | 'Sanitária' | 'Ambiental' | 'Segurança do Trabalho' | 'Outros';
+  orgaoEmissor: string;
+  issuingBody?: string;
+  numeroDocumento: string;
+  documentNumber?: string;
+  dataEmissao: string;
+  issueDate?: string;
+  dataVencimento: string;
+  expirationDate?: string;
+  estimativaCustoRenovacao: number;
+  renewalCostEstimate?: number;
+  estimativaMultaVencida: number;
+  estimatedFineIfExpired?: number;
+  nomeAtivoVinculado: string;
+  linkedAssetName?: string;
+  notaRequisitoLegal: string;
+  legalRequirementNote?: string;
+  origemIa: boolean;
+  fromAi?: boolean;
 }
 
+export type OcrResult = ResultadoOcr;
+
 @Injectable({ providedIn: 'root' })
-export class GeminiOcrService {
+export class ServicoGeminiOcr {
   constructor(private readonly http: HttpClient) {}
 
-  async extractFromFile(file: File): Promise<OcrResult> {
-    const data = await this.fileToBase64(file);
-    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+  async extrairDeArquivo(arquivo: File): Promise<ResultadoOcr> {
+    const dadosBase64 = await this.arquivoParaBase64(arquivo);
+    const cabecalhos = new HttpHeaders({ 'Content-Type': 'application/json' });
     try {
-      return await firstValueFrom(this.http.post<OcrResult>('/api/ocr', {
-        fileName: file.name, mimeType: this.getMimeType(file), data
-      }, { headers }).pipe(timeout(60000)));
-    } catch (err: any) {
-      if (err?.name === 'TimeoutError') throw new Error('Tempo limite excedido. Tente novamente com um arquivo menor.');
-      throw new Error(err?.error?.message || 'Não foi possível processar o documento. Tente novamente.');
+      const respostaApi = await firstValueFrom(
+        this.http.post<any>('/api/ocr', {
+          fileName: arquivo.name,
+          mimeType: this.obterTipoMime(arquivo),
+          data: dadosBase64
+        }, { headers: cabecalhos }).pipe(timeout(60000))
+      );
+
+      return {
+        titulo: respostaApi.title || respostaApi.titulo || 'Documento Lido',
+        title: respostaApi.title || respostaApi.titulo || 'Documento Lido',
+        categoria: respostaApi.category || respostaApi.categoria || 'Alvará',
+        category: respostaApi.category || respostaApi.categoria || 'Alvará',
+        orgaoEmissor: respostaApi.issuingBody || respostaApi.orgaoEmissor || 'Órgão Emissor',
+        issuingBody: respostaApi.issuingBody || respostaApi.orgaoEmissor || 'Órgão Emissor',
+        numeroDocumento: respostaApi.documentNumber || respostaApi.numeroDocumento || '',
+        documentNumber: respostaApi.documentNumber || respostaApi.numeroDocumento || '',
+        dataEmissao: respostaApi.issueDate || respostaApi.dataEmissao || '',
+        issueDate: respostaApi.issueDate || respostaApi.dataEmissao || '',
+        dataVencimento: respostaApi.expirationDate || respostaApi.dataVencimento || '',
+        expirationDate: respostaApi.expirationDate || respostaApi.dataVencimento || '',
+        estimativaCustoRenovacao: Number(respostaApi.renewalCostEstimate || respostaApi.estimativaCustoRenovacao || 0),
+        renewalCostEstimate: Number(respostaApi.renewalCostEstimate || respostaApi.estimativaCustoRenovacao || 0),
+        estimativaMultaVencida: Number(respostaApi.estimatedFineIfExpired || respostaApi.estimativaMultaVencida || 0),
+        estimatedFineIfExpired: Number(respostaApi.estimatedFineIfExpired || respostaApi.estimativaMultaVencida || 0),
+        nomeAtivoVinculado: respostaApi.linkedAssetName || respostaApi.nomeAtivoVinculado || '',
+        linkedAssetName: respostaApi.linkedAssetName || respostaApi.nomeAtivoVinculado || '',
+        notaRequisitoLegal: respostaApi.legalRequirementNote || respostaApi.notaRequisitoLegal || '',
+        legalRequirementNote: respostaApi.legalRequirementNote || respostaApi.notaRequisitoLegal || '',
+        origemIa: Boolean(respostaApi.fromAi ?? true),
+        fromAi: Boolean(respostaApi.fromAi ?? true)
+      };
+    } catch (erro: any) {
+      if (erro?.name === 'TimeoutError') {
+        throw new Error('Tempo limite excedido. Tente novamente com um arquivo menor.');
+      }
+      throw new Error(erro?.error?.message || 'Não foi possível processar o documento. Tente novamente.');
     }
   }
 
-  private fileToBase64(file: File): Promise<string> {
+  // Método de compatibilidade
+  async extractFromFile(file: File): Promise<ResultadoOcr> {
+    return this.extrairDeArquivo(file);
+  }
+
+  private arquivoParaBase64(arquivo: File): Promise<string> {
     return new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.onload = () => resolve((reader.result as string).split(',')[1]);
-      reader.onerror = reject;
-      reader.readAsDataURL(file);
+      const leitor = new FileReader();
+      leitor.onload = () => resolve((leitor.result as string).split(',')[1]);
+      leitor.onerror = reject;
+      leitor.readAsDataURL(arquivo);
     });
   }
 
-  private getMimeType(file: File): string {
-    const ext = file.name.toLowerCase().split('.').pop();
-    const map: Record<string, string> = { pdf: 'application/pdf', jpg: 'image/jpeg', jpeg: 'image/jpeg', png: 'image/png' };
-    return map[ext || ''] || file.type || 'application/pdf';
+  private obterTipoMime(arquivo: File): string {
+    const extensao = arquivo.name.toLowerCase().split('.').pop();
+    const mapaMime: Record<string, string> = {
+      pdf: 'application/pdf',
+      jpg: 'image/jpeg',
+      jpeg: 'image/jpeg',
+      png: 'image/png'
+    };
+    return mapaMime[extensao || ''] || arquivo.type || 'application/pdf';
   }
 }
+
+export const GeminiOcrService = ServicoGeminiOcr;
