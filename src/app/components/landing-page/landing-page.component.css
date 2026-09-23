@@ -690,19 +690,6 @@
   max-height: 85%;
 }
 
-.hero-product-slide figcaption {
-  position: absolute;
-  bottom: 2px;
-  left: 50%;
-  padding: 6px 10px;
-  color: #4b6385;
-  background: rgba(255, 255, 255, .88);
-  border: 1px solid rgba(213, 226, 244, .9);
-  border-radius: 999px;
-  font-size: .66rem;
-  font-weight: 750;
-  transform: translateX(-50%);
-}
 
 .hero-carousel-controls {
   position: absolute;

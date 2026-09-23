@@ -25,12 +25,10 @@
   <app-auth />
 } @else {
   <div class="licenfy-layout">
-    <!-- Backdrop para fechar menu no mobile -->
     <div class="mobile-sidebar-backdrop" [class.open]="isMobileMenuOpen()" (click)="closeMobileMenu()"></div>
 
-    <!-- Sidebar de Navegação Corporativa -->
-    <aside class="licenfy-sidebar no-print" [class.mobile-open]="isMobileMenuOpen()">
-      <!-- Logo Oficial Licenfy e Botão de Fechar Mobile -->
+    <!-- Menu -->
+    <aside id="menu-principal" class="licenfy-sidebar no-print" [class.mobile-open]="isMobileMenuOpen()" [class.desktop-open]="isDesktopSidebarOpen()">
       <div class="sidebar-logo-block">
         <div class="sidebar-brand-click" (click)="setView('landing')" style="cursor: pointer;" title="Voltar para a Página Inicial do Site">
           <img src="logo-auth.png" alt="Licenfy" class="sidebar-logo" />
@@ -40,7 +38,6 @@
         </button>
       </div>
 
-      <!-- Navegação Principal -->
       <nav class="sidebar-nav">
         <div class="nav-group-title">Módulos do Sistema</div>
 
@@ -101,7 +98,7 @@
         </button>
       </nav>
 
-      <!-- Perfil da Empresa / Usuário -->
+      <!-- Usuário -->
       <div class="sidebar-user-footer">
         <div class="user-avatar-initials">{{ getUserInitials() }}</div>
         <div class="user-info-text">
@@ -114,17 +111,25 @@
       </div>
     </aside>
 
-    <!-- Área Principal -->
     <div class="licenfy-main-wrapper">
-      <!-- Topbar Superior -->
+      <!-- Topbar -->
       <header class="licenfy-topbar no-print">
         <div class="topbar-left">
-          <!-- Botão Hambúrguer Mobile -->
+          <button
+            class="btn-desktop-menu hide-mobile"
+            type="button"
+            (click)="toggleDesktopSidebar()"
+            [attr.aria-expanded]="isDesktopSidebarOpen()"
+            aria-controls="menu-principal"
+            title="Abrir ou fechar menu de módulos">
+            <span class="material-symbols-rounded">menu</span>
+          </button>
+
           <button class="btn-mobile-menu show-mobile-only" (click)="toggleMobileMenu()" title="Abrir menu de módulos">
             <span class="material-symbols-rounded">menu</span>
           </button>
           
-          <span class="breadcrumb-app hide-mobile">Licenfy Compliance</span>
+          <span class="breadcrumb-app hide-mobile">Licenfy Operacional</span>
           <span class="breadcrumb-sep hide-mobile">/</span>
           <span class="breadcrumb-current">
             @switch (currentTab()) {
@@ -140,7 +145,6 @@
         </div>
 
         <div class="topbar-right">
-          <!-- Switcher de Unidade / Filial -->
           <div class="topbar-branch-box">
             <span class="material-symbols-rounded icon-sm text-muted">domain</span>
             <select 
@@ -152,19 +156,16 @@
             </select>
           </div>
 
-          <!-- Botão de Ação Rápida: Modo Fiscalização -->
           <button class="btn btn-outline btn-sm topbar-action-btn" (click)="setTab('inspection')" title="Abrir Modo Fiscalização">
             <span class="material-symbols-rounded icon-sm text-primary">policy</span>
             <span class="btn-label-text hide-mobile">Fiscalização</span>
           </button>
 
-          <!-- Indicador de Notificação -->
           <button class="topbar-icon-btn" (click)="setTab('notifications')" title="Notificações Recentes">
             <span class="material-symbols-rounded">notifications</span>
             <span class="notif-badge">4</span>
           </button>
 
-          <!-- Botão Sair da Plataforma -->
           <button class="btn btn-outline btn-sm topbar-action-btn" (click)="logout()" title="Encerrar sessão">
             <span class="material-symbols-rounded icon-sm text-danger">logout</span>
             <span class="btn-label-text hide-mobile">Sair</span>
@@ -172,7 +173,7 @@
         </div>
       </header>
 
-      <!-- Conteúdo Dinâmico das Abas -->
+      <!-- Conteúdo -->
       <main class="licenfy-content-body">
         @switch (currentTab()) {
           @case ('dashboard') {

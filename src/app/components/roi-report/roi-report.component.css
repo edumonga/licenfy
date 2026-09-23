@@ -73,6 +73,7 @@
 
 .roi-hero-main {
   max-width: 580px;
+  min-width: 0;
 }
 
 .hero-label {
@@ -96,12 +97,14 @@
   font-size: 0.9rem;
   color: #cbd5e1;
   line-height: 1.5;
+  overflow-wrap: anywhere;
 }
 
 .roi-hero-stats {
   display: flex;
   gap: 16px;
   flex-wrap: wrap;
+  min-width: 0;
 }
 
 .hero-stat-pill {
@@ -112,6 +115,7 @@
   display: flex;
   flex-direction: column;
   gap: 4px;
+  min-width: 0;
 }
 
 .stat-pill-label {
@@ -119,6 +123,7 @@
   color: #94a3b8;
   text-transform: uppercase;
   font-weight: 600;
+  overflow-wrap: anywhere;
 }
 
 .stat-pill-val {
@@ -174,6 +179,7 @@
   display: flex;
   flex-direction: column;
   gap: 8px;
+  min-width: 0;
   transition: all var(--transition-fast);
 }
 
@@ -227,6 +233,7 @@
   font-size: 0.8rem;
   color: var(--color-text-muted);
   line-height: 1.45;
+  overflow-wrap: anywhere;
 }
 
 /* Grade de tabelas */
@@ -251,12 +258,14 @@
   display: flex;
   flex-direction: column;
   gap: 16px;
+  min-width: 0;
 }
 
 .sub-card-header {
   display: flex;
   align-items: center;
   gap: 12px;
+  min-width: 0;
 }
 
 .sub-card-title {
@@ -267,6 +276,7 @@
 .sub-card-desc {
   font-size: 0.8rem;
   color: var(--color-text-muted);
+  overflow-wrap: anywhere;
 }
 
 .roi-table {
@@ -292,6 +302,31 @@
   padding: 12px;
   border-bottom: 1px solid var(--color-border);
   vertical-align: middle;
+}
+
+@media (max-width: 600px) {
+  .roi-header .subtitle-badge,
+  .hero-label {
+    letter-spacing: 0.045em;
+  }
+
+  .roi-kpi-card,
+  .roi-sub-card {
+    padding: 16px;
+  }
+
+  .roi-sub-card {
+    gap: 12px;
+  }
+
+  .sub-card-header {
+    align-items: flex-start;
+  }
+
+  .kpi-value {
+    font-size: 1.7rem;
+    overflow-wrap: anywhere;
+  }
 }
 
 .text-right { text-align: right; }

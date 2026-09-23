@@ -62,6 +62,10 @@
     width: 100%;
     justify-content: center;
   }
+
+  .notification-alert {
+    align-self: flex-end;
+  }
 }
 
 
@@ -230,7 +234,15 @@
   stroke: #f59e0b;
 }
 
+.gauge-progress.atencao {
+  stroke: #f59e0b;
+}
+
 .gauge-progress.urgent {
+  stroke: #ef4444;
+}
+
+.gauge-progress.urgente {
   stroke: #ef4444;
 }
 
@@ -384,68 +396,123 @@
   line-height: 1.4;
 }
 
-/* Banner de Unificação Legal e Operacional */
-.unification-banner {
-  background: linear-gradient(135deg, #1f2937 0%, #111827 100%);
+/* Notificação de manutenção vinculada */
+.notification-alert {
+  position: relative;
+}
+
+.notification-trigger {
+  position: relative;
+  display: inline-grid;
+  width: 40px;
+  height: 40px;
+  place-items: center;
+  color: var(--color-primary);
+  background: var(--color-white);
+  border: 1px solid var(--color-primary-border);
+  border-radius: 10px;
+  cursor: pointer;
+  transition: transform var(--transition-fast), background var(--transition-fast), box-shadow var(--transition-fast);
+}
+
+.notification-trigger:hover,
+.notification-trigger[aria-expanded='true'] {
+  background: var(--color-primary-light);
+  box-shadow: 0 6px 16px rgba(37, 99, 235, 0.14);
+  transform: translateY(-1px);
+}
+
+.notification-trigger:focus-visible,
+.notification-action:focus-visible {
+  outline: 3px solid rgba(37, 99, 235, 0.3);
+  outline-offset: 2px;
+}
+
+.notification-count {
+  position: absolute;
+  top: -6px;
+  right: -6px;
+  display: grid;
+  width: 18px;
+  height: 18px;
+  place-items: center;
   color: var(--color-white);
+  background: #dc2626;
+  border: 2px solid var(--color-white);
+  border-radius: 999px;
+  font-size: 0.65rem;
+  font-weight: 800;
+}
+
+.notification-popover {
+  position: absolute;
+  z-index: 20;
+  top: calc(100% + 10px);
+  right: 0;
+  width: min(350px, calc(100vw - 40px));
+  padding: 16px;
+  color: var(--color-slate-dark);
+  background: var(--color-white);
+  border: 1px solid var(--color-border);
   border-radius: 14px;
-  padding: 20px 24px;
+  box-shadow: 0 18px 40px rgba(15, 23, 42, 0.16);
+  animation: notification-enter 180ms ease-out both;
+}
+
+@keyframes notification-enter {
+  from { opacity: 0; transform: translateY(-6px) scale(0.98); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.notification-popover-header {
   display: flex;
-  align-items: center;
-  gap: 20px;
-  box-shadow: var(--shadow-md);
+  align-items: flex-start;
+  gap: 10px;
 }
 
-@media (max-width: 768px) {
-  .unification-banner {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 14px;
-    padding: 16px;
-  }
-  .unification-banner .btn {
-    width: 100%;
-    justify-content: center;
-  }
+.notification-popover-header > .material-symbols-rounded {
+  padding: 7px;
+  color: #b45309;
+  background: #fff7ed;
+  border-radius: 9px;
 }
 
-.unification-icon {
-  width: 52px;
-  height: 52px;
-  border-radius: 12px;
-  background: rgba(37, 99, 235, 0.25);
-  border: 1px solid rgba(37, 99, 235, 0.5);
-  color: #60a5fa;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-}
-
-.unification-content {
-  flex: 1;
-}
-
-.unification-badge {
-  font-size: 0.7rem;
+.notification-popover-header p {
+  margin: 0 0 2px;
+  color: var(--color-text-muted);
+  font-size: 0.75rem;
   font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  color: #93c5fd;
-  margin-bottom: 4px;
 }
 
-.unification-title {
-  font-size: 1.05rem;
-  font-weight: 700;
-  color: var(--color-white);
-  margin-bottom: 4px;
+.notification-popover-header strong {
+  font-size: 0.9rem;
 }
 
-.unification-text {
-  font-size: 0.875rem;
-  color: #cbd5e1;
+.notification-popover-text {
+  margin: 12px 0;
+  color: var(--color-text-muted);
+  font-size: 0.8rem;
   line-height: 1.45;
+}
+
+.notification-action {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  justify-content: space-between;
+  padding: 9px 10px;
+  color: var(--color-primary);
+  background: var(--color-primary-light);
+  border: 0;
+  border-radius: 8px;
+  cursor: pointer;
+  font: inherit;
+  font-size: 0.8rem;
+  font-weight: 750;
+}
+
+.notification-action:hover {
+  background: #dbeafe;
 }
 
 /* Cartão da Tabela */
@@ -464,6 +531,20 @@
   align-items: center;
   border-bottom: 1px solid var(--color-border);
   background: #ffffff;
+}
+
+@media (max-width: 600px) {
+  .table-header {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 12px;
+    padding: 16px;
+  }
+
+  .table-header .btn {
+    width: 100%;
+    justify-content: center;
+  }
 }
 
 .table-title {

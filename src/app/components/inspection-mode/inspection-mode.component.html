@@ -101,38 +101,40 @@
         1. Relação Oficial de Alvarás, Licenças e Laudos Técnicos
       </h3>
 
-      <table class="tabela-dossie dossier-table">
-        <thead>
-          <tr>
-            <th>Documento / Obrigação</th>
-            <th>Órgão Expedidor</th>
-            <th>Nº Registro / Protocolo</th>
-            <th>Data de Emissão</th>
-            <th>Validade Oficial</th>
-            <th>Status Legal</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let lic of licencasDaUnidade()">
-            <td>
-              <strong>{{ lic.titulo || lic.title }}</strong>
-              <div *ngIf="lic.notaRequisitoLegal || lic.legalRequirementNote" class="nota-legal-doc doc-legal-note">{{ lic.notaRequisitoLegal || lic.legalRequirementNote }}</div>
-            </td>
-            <td>{{ lic.orgaoEmissor || lic.issuingBody }}</td>
-            <td class="texto-mono mono-font">{{ lic.numeroDocumento || lic.documentNumber }}</td>
-            <td>{{ (lic.dataEmissao || lic.issueDate) | date:'dd/MM/yyyy' }}</td>
-            <td>
-              <strong>{{ (lic.dataVencimento || lic.expirationDate) | date:'dd/MM/yyyy' }}</strong>
-            </td>
-            <td>
-              <span class="selo-status badge-status" [ngClass]="lic.status">
-                <span class="ponto-status status-dot" [ngClass]="lic.status"></span>
-                {{ lic.status === 'regular' ? 'Vigente' : 'Em Renovação' }}
-              </span>
-            </td>
-          </tr>
-        </tbody>
-      </table>
+      <div class="tabela-dossie-responsiva dossier-table-wrap">
+        <table class="tabela-dossie dossier-table">
+          <thead>
+            <tr>
+              <th>Documento / Obrigação</th>
+              <th>Órgão Expedidor</th>
+              <th>Nº Registro / Protocolo</th>
+              <th>Data de Emissão</th>
+              <th>Validade Oficial</th>
+              <th>Status Legal</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let lic of licencasDaUnidade()">
+              <td>
+                <strong>{{ lic.titulo || lic.title }}</strong>
+                <div *ngIf="lic.notaRequisitoLegal || lic.legalRequirementNote" class="nota-legal-doc doc-legal-note">{{ lic.notaRequisitoLegal || lic.legalRequirementNote }}</div>
+              </td>
+              <td>{{ lic.orgaoEmissor || lic.issuingBody }}</td>
+              <td class="texto-mono mono-font">{{ lic.numeroDocumento || lic.documentNumber }}</td>
+              <td>{{ (lic.dataEmissao || lic.issueDate) | date:'dd/MM/yyyy' }}</td>
+              <td>
+                <strong>{{ (lic.dataVencimento || lic.expirationDate) | date:'dd/MM/yyyy' }}</strong>
+              </td>
+              <td>
+                <span class="selo-status badge-status" [ngClass]="lic.status">
+                  <span class="ponto-status status-dot" [ngClass]="lic.status"></span>
+                  {{ lic.status === 'regular' ? 'Vigente' : 'Em Renovação' }}
+                </span>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
     </div>
 
     <div class="secao-dossie dossier-section">

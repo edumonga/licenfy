@@ -1,4 +1,4 @@
-<!-- Header / Barra de Navegação -->
+<!-- Header -->
 <header class="main-header" [class.is-floating]="isHeaderFloating()">
   <div class="header-container">
     <a href="#" (click)="$event.preventDefault()" class="brand-logo" title="Licenfy">
@@ -32,14 +32,12 @@
 </header>
 <div class="header-spacer" [class.is-active]="isHeaderFloating()"></div>
 
-<!-- Hero Section Exatamente no Estilo Pipefy com Animações Fluidas -->
+<!-- Hero -->
 <section class="hero-section">
-  <!-- Formas Orgânicas Azuis Animadas (Pipefy Signature Shapes) -->
   <div class="hero-bg-shape-right floating-shape"></div>
   <div class="hero-bg-shape-left floating-shape-slow"></div>
 
   <div class="hero-container">
-    <!-- Coluna Esquerda: Headline & Chamadas Alinhadas à Esquerda -->
     <div class="hero-content">
       <span class="section-kicker">REGULARIDADE OPERACIONAL EM TEMPO REAL</span>
       <h1 class="hero-title">Nunca mais seja interditado por um alvará que venceu sem avisar</h1>
@@ -56,7 +54,6 @@
 
       </div>
 
-      <!-- Quick Trust Indicators -->
       <div class="hero-trust-badges">
         <div class="trust-item">
           <span class="material-symbols-rounded text-neutral">check_circle</span>
@@ -73,13 +70,11 @@
       </div>
     </div>
 
-    <!-- Coluna direita: visual operacional em desktop + aplicativo mobile -->
     <div class="hero-product-visual" aria-label="Painel de operação Licenfy em computador e celular">
       <div class="hero-product-carousel" aria-live="polite">
         @for (slide of slides; track slide.id; let index = $index) {
           <figure class="hero-product-slide" [class.is-active]="currentSlideIndex() === index">
             <img [src]="slide.imagem" [alt]="slide.alt" [class.is-wide]="slide.id === 'visao-completa'" />
-            <figcaption>{{ slide.titulo }}</figcaption>
           </figure>
         }
       </div>
@@ -93,7 +88,7 @@
   </div>
 </section>
 
-<!-- Seção: Plataforma -->
+<!-- Plataforma -->
 <section id="plataforma" class="platform-section">
   <div class="section-container platform-layout">
     <div class="platform-copy">
@@ -109,7 +104,7 @@
   </div>
 </section>
 
-<!-- Seção: Soluções -->
+<!-- Soluções -->
 <section id="solucoes" class="solutions-section">
   <div class="section-container">
     <div class="section-badge-header">
@@ -124,10 +119,10 @@
   </div>
 </section>
 
-<!-- Seção: Empresas atendidas -->
+<!-- Empresas -->
 <section id="industrias" class="social-proof-section">
   <div class="section-container">
-    <h3 class="social-proof-title">Empresas que atendemos</h3>
+    <h3 class="social-proof-title">O Licenfy atende diversos setores</h3>
     
     <div class="logos-grid">
       <div class="logo-box">
@@ -154,7 +149,7 @@
   </div>
 </section>
 
-<!-- Seção de Recursos Principais (Módulos do Licenfy) -->
+<!-- Recursos -->
 <section id="modulos" class="features-section">
   <div class="section-container">
     <div class="section-badge-header">
@@ -165,7 +160,6 @@
     </div>
 
     <div class="features-grid">
-      <!-- Card 1: OCR Automatizado -->
       <div class="feature-card hover-lift" (click)="goToApp('vault')">
         <div class="feature-icon-wrapper bg-blue-subtle">
           <span class="material-symbols-rounded text-primary">document_scanner</span>
@@ -180,7 +174,6 @@
         </div>
       </div>
 
-      <!-- Card 2: Dossiê Fiscalização -->
       <div class="feature-card highlighted hover-lift" (click)="goToApp('inspection')">
         <div class="feature-tag">1-CLIQUE</div>
         <div class="feature-icon-wrapper bg-primary">
@@ -196,7 +189,6 @@
         </div>
       </div>
 
-      <!-- Card 3: Gestão de Ativos Físicos & QR Code -->
       <div class="feature-card hover-lift" (click)="goToApp('assets')">
         <div class="feature-icon-wrapper bg-navy-subtle">
           <span class="material-symbols-rounded text-navy-muted">qr_code_2</span>
@@ -211,7 +203,6 @@
         </div>
       </div>
 
-      <!-- Card 4: Alertas Inteligentes -->
       <div class="feature-card hover-lift" (click)="goToApp('notifications')">
         <div class="feature-icon-wrapper bg-navy-subtle">
           <span class="material-symbols-rounded text-navy-muted">mark_email_read</span>
@@ -229,7 +220,6 @@
   </div>
 </section>
 
-<!-- Seção: Recursos -->
 <section id="recursos" class="resources-section">
   <div class="section-container resources-layout">
     <div>
@@ -245,7 +235,7 @@
   </div>
 </section>
 
-<!-- Seção de ROI e Economia Comprovada -->
+<!-- ROI -->
 <section id="planos" class="roi-banner-section">
   <div class="section-container">
     <div class="roi-banner-box">
@@ -282,7 +272,7 @@
   </div>
 </section>
 
-<!-- Encerramento e Footer -->
+<!-- Footer -->
 <section class="footer-showcase">
   <div class="footer-orb footer-orb-left"></div>
   <div class="footer-orb footer-orb-right"></div>
@@ -368,7 +358,7 @@
   </footer>
 </section>
 
-<!-- Modal de Demonstração / Contato com Especialista -->
+<!-- Modal -->
 @if (isDemoModalOpen()) {
   <div class="demo-modal-overlay" (click)="closeDemoModal()">
     <div class="demo-modal-box" (click)="$event.stopPropagation()">

@@ -45,6 +45,7 @@ export class App {
   readonly status = this.service.overallComplianceStatus;
 
   readonly isMobileMenuOpen = signal(false);
+  readonly isDesktopSidebarOpen = signal(false);
   readonly publicAssetTag = signal(this.getPublicAssetTag());
   readonly publicAsset = computed(() => {
     const assetTag = this.publicAssetTag();
@@ -58,6 +59,10 @@ export class App {
 
   toggleMobileMenu() {
     this.isMobileMenuOpen.update(v => !v);
+  }
+
+  toggleDesktopSidebar() {
+    this.isDesktopSidebarOpen.update(v => !v);
   }
 
   closeMobileMenu() {

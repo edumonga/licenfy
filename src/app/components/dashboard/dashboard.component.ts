@@ -21,8 +21,8 @@ export class PainelComponente {
   readonly resumo = this.servico.resumoContadores;
 
   idRecemNotificado = '';
+  alertaVinculoAberto = false;
 
-  // Compatibilidade
   get service() { return this.servico; }
   get branches() { return this.unidades; }
   get selectedBranchId() { return this.unidadeSelecionadaId; }
@@ -46,12 +46,17 @@ export class PainelComponente {
   }
   notifyManager(licenca: DocumentoLicenca) { this.notificarGestor(licenca); }
 
+  alternarAlertaVinculo() {
+    this.alertaVinculoAberto = !this.alertaVinculoAberto;
+  }
+
   irParaCofre() {
     this.servico.definirAba('vault');
   }
   goToVault() { this.irParaCofre(); }
 
   irParaAtivos() {
+    this.alertaVinculoAberto = false;
     this.servico.definirAba('assets');
   }
   goToAssets() { this.irParaAtivos(); }

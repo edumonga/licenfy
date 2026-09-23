@@ -77,7 +77,6 @@ export class ServicoGeminiOcr {
     }
   }
 
-  // Método de compatibilidade
   async extractFromFile(file: File): Promise<ResultadoOcr> {
     return this.extrairDeArquivo(file);
   }

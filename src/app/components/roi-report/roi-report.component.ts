@@ -25,7 +25,6 @@ export class RelatorioRoiComponente {
     return (ganho / this.custoAnualSoftware).toFixed(1) + 'x';
   }
 
-  // Compatibilidade
   get service() { return this.servico; }
   get annualSoftwareCost() { return this.custoAnualSoftware; }
   get netRoi(): number { return this.roiLiquido; }

@@ -41,7 +41,6 @@ export class ModoInspecaoComponente {
   readonly dataHoraGeracao = signal<string>('15/09/2026 às 14:32:10');
   readonly hashVerificacao = signal<string>('LCFY-8819-7261-F992-B831');
 
-  // Compatibilidade
   get service() { return this.servico; }
   get branches() { return this.unidades; }
   get selectedBranchId() { return this.unidadeSelecionadaId; }

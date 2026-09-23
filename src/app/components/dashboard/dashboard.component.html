@@ -6,6 +6,33 @@
     </div>
 
     <div class="acoes-cabecalho header-actions">
+      <div class="alerta-vinculo notification-alert">
+        <button
+          class="botao-alerta notification-trigger"
+          type="button"
+          (click)="alternarAlertaVinculo()"
+          [attr.aria-expanded]="alertaVinculoAberto"
+          aria-controls="detalhes-alerta-vinculo"
+          aria-label="1 alerta de manutenção vinculado">
+          <span class="material-symbols-rounded">notifications</span>
+          <span class="contador-alerta notification-count" aria-hidden="true">1</span>
+        </button>
+
+        <section *ngIf="alertaVinculoAberto" id="detalhes-alerta-vinculo" class="cartao-alerta notification-popover" role="status">
+          <div class="cabecalho-alerta notification-popover-header">
+            <span class="material-symbols-rounded">link</span>
+            <div>
+              <p>Manutenção vinculada</p>
+              <strong>AVCB vence em 25 dias</strong>
+            </div>
+          </div>
+          <p class="texto-alerta notification-popover-text">A renovação depende da recarga e vistoria da Bateria de Extintores (EQ-0199).</p>
+          <button class="acao-alerta notification-action" type="button" (click)="irParaAtivos()">
+            Ver ativo vinculado
+            <span class="material-symbols-rounded">arrow_forward</span>
+          </button>
+        </section>
+      </div>
       <button class="botao botao-contorno btn btn-outline" (click)="irParaCofre()">
         <span class="material-symbols-rounded">cloud_upload</span>
         Upload de Licença
@@ -143,24 +170,6 @@
         <p class="descricao-estatistica stat-desc">Ação emergencial recomendada para evitar auto de infração.</p>
       </div>
     </div>
-  </div>
-
-  <div class="banner-unificacao unification-banner">
-    <div class="icone-unificacao unification-icon">
-      <span class="material-symbols-rounded">link</span>
-    </div>
-    <div class="conteudo-unificacao unification-content">
-      <div class="selo-unificacao unification-badge">Diferencial Licenfy: Unificação Legal + Operacional</div>
-      <h3 class="titulo-unificacao unification-title">Conexão de Obrigação Jurídica ao Ativo Físico de Manutenção</h3>
-      <p class="texto-unificacao unification-text">
-        O sistema detectou que a renovação do <strong>AVCB da Matriz SP (Vence em 25 dias)</strong> depende diretamente 
-        da recarga periódica e vistoria hidrostática da <strong>Bateria de Extintores (EQ-0199)</strong>. A ordem de serviço já pode ser gerada antes do pedido no Corpo de Bombeiros.
-      </p>
-    </div>
-    <button class="botao botao-contorno btn btn-outline" (click)="irParaAtivos()">
-      <span class="material-symbols-rounded">inventory_2</span>
-      Ver Ativo Vinculado
-    </button>
   </div>
 
   <div class="cartao-tabela table-card">

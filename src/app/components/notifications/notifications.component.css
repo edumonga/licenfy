@@ -202,6 +202,12 @@
   gap: 6px;
   font-size: 0.78rem;
   color: var(--color-text-muted);
+  min-width: 0;
+}
+
+.rule-recipients-list > span:last-child {
+  min-width: 0;
+  overflow-wrap: anywhere;
 }
 
 .custom-rule-box { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 14px 16px; border: 1px dashed var(--color-primary-border); border-radius: 10px; background: var(--color-primary-light); }
@@ -387,6 +393,7 @@ input:checked + .slider:before {
   display: flex;
   align-items: center;
   gap: 8px;
+  min-width: 0;
 }
 
 .meta-label {
@@ -401,6 +408,8 @@ input:checked + .slider:before {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+  flex: 1;
+  min-width: 0;
 }
 
 .subject-row {
@@ -416,6 +425,7 @@ input:checked + .slider:before {
   align-items: center;
   gap: 6px;
   flex: 1;
+  min-width: 0;
 }
 
 .badge-critical-subject {
@@ -545,6 +555,7 @@ input:checked + .slider:before {
   font-size: 0.78rem;
   font-weight: 600;
   color: #0f172a;
+  overflow-wrap: anywhere;
 }
 
 .data-item.highlight-red .item-val {
@@ -687,6 +698,63 @@ input:checked + .slider:before {
   text-overflow: ellipsis;
   overflow: hidden;
   white-space: nowrap;
+}
+
+@media (max-width: 600px) {
+  .rules-card,
+  .logs-header {
+    padding: 16px;
+  }
+
+  .rules-card-header,
+  .email-brand-banner,
+  .email-meta-row.subject-row {
+    align-items: flex-start;
+  }
+
+  .email-brand-banner {
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .email-meta-row {
+    align-items: flex-start;
+  }
+
+  .meta-value {
+    overflow: visible;
+    text-overflow: clip;
+    white-space: normal;
+    overflow-wrap: anywhere;
+  }
+
+  .subject-row {
+    flex-wrap: wrap;
+  }
+
+  .meta-date {
+    margin-left: 0;
+  }
+
+  .data-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .email-body-scroll {
+    padding: 12px;
+  }
+
+  .email-body-content {
+    padding: 14px;
+  }
+
+  .email-action-bar {
+    flex-direction: column;
+  }
+
+  .email-btn {
+    width: 100%;
+  }
 }
 
 .icon-xs { font-size: 14px; }

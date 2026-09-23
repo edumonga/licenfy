@@ -23,7 +23,6 @@ export class NotificacoesComponente {
   diasNovaRegra = signal<number>(45);
   destinatariosNovaRegra = signal<string>('compliance@empresa.com.br, gerencia.risco@empresa.com.br');
 
-  // Compatibilidade
   get service() { return this.servico; }
   get rules() { return this.regras; }
   get logs() { return this.registros; }

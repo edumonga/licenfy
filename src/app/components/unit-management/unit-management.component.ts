@@ -34,7 +34,6 @@ export class GestaoUnidadesComponente {
     phone: ''
   };
 
-  // Compatibilidade
   get service() { return this.servico; }
   get branches() { return this.unidades; }
   get selectedUnitId() { return this.unidadeSelecionadaId; }

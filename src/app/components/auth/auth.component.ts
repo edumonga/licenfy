@@ -23,7 +23,6 @@ export class AutenticacaoComponente {
   readonly dadosLogin = { login: '', senha: '', password: '' };
   readonly dadosCadastro = { nome: '', email: '', senha: '', confirmarSenha: '', name: '', password: '', confirmPassword: '' };
 
-  // Compatibilidade
   get app() { return this.servico; }
   get auth() { return this.autenticacao; }
   get mode() { return this.modo; }

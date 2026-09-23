@@ -41,7 +41,6 @@ export class GestaoAtivosComponente {
     warrantyExpirationDate: ''
   };
 
-  // Compatibilidade
   get service() { return this.servico; }
   get assets() { return this.ativos; }
   get branches() { return this.unidades; }

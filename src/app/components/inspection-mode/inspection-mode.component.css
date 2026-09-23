@@ -178,6 +178,7 @@
   display: flex;
   flex-direction: column;
   gap: 28px;
+  min-width: 0;
 }
 
 @media (max-width: 768px) {
@@ -219,6 +220,7 @@
   font-weight: 800;
   color: var(--color-text-muted);
   letter-spacing: 0.08em;
+  overflow-wrap: anywhere;
 }
 
 .auth-stamp {
@@ -231,6 +233,8 @@
   flex-direction: column;
   gap: 4px;
   font-size: 0.75rem;
+  max-width: 100%;
+  overflow-wrap: anywhere;
 }
 
 .stamp-title {
@@ -287,6 +291,7 @@
   display: flex;
   flex-direction: column;
   gap: 2px;
+  min-width: 0;
 }
 
 .c-label {
@@ -300,6 +305,7 @@
   font-size: 0.85rem;
   font-weight: 700;
   color: var(--color-slate-dark);
+  overflow-wrap: anywhere;
 }
 
 .mono-font { font-family: monospace; }
@@ -371,6 +377,7 @@
 /* Tabela do dossiê */
 .dossier-table {
   width: 100%;
+  min-width: 760px;
   border-collapse: collapse;
   font-size: 0.825rem;
 }
@@ -390,6 +397,12 @@
   padding: 12px 14px;
   border: 1px solid #e2e8f0;
   vertical-align: top;
+}
+
+.dossier-table-wrap {
+  width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
 }
 
 .doc-legal-note {
@@ -494,11 +507,40 @@
   background: #f8fafc;
   padding: 10px;
   border-radius: 6px;
+  overflow-wrap: anywhere;
 }
 
 .dossier-history-card { max-width: 1020px; width: 100%; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; gap: 20px; padding: 17px 20px; background: #fff; border: 1px solid var(--color-border); border-radius: 12px; box-shadow: var(--shadow-sm); }
 .dossier-history-card h3 { font-size: .95rem; }.dossier-history-card p { font-size: .75rem; color: var(--color-text-muted); margin-top:3px; }.history-items { display: flex; flex-direction: column; align-items: flex-end; gap: 5px; font-size: .73rem; color: var(--color-text-muted); }.history-items strong { color: var(--color-slate-dark); }
 @media (max-width: 850px) { .dossier-selection, .dossier-history-card { align-items: flex-start; flex-direction: column; } .document-checks, .history-items { align-items: flex-start; justify-content: flex-start; } }
+
+@media (max-width: 600px) {
+  .dossier-paper {
+    gap: 20px;
+    padding: 16px 12px;
+  }
+
+  .company-card,
+  .operational-box {
+    padding: 14px;
+  }
+
+  .section-heading {
+    align-items: flex-start;
+    font-size: 0.92rem;
+    line-height: 1.35;
+  }
+
+  .footer-signatures {
+    align-items: stretch;
+    flex-direction: column;
+    gap: 24px;
+  }
+
+  .signature-col {
+    max-width: none;
+  }
+}
 
 /* Regras de impressão */
 @media print {

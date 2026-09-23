@@ -381,10 +381,13 @@
 
 /* Etiqueta física industrial */
 .physical-tag {
+  width: 100%;
+  max-width: 540px;
+  margin: 0 auto;
   background: #ffffff;
   border: 3px solid #1f2937;
   border-radius: 10px;
-  padding: 20px;
+  padding: 20px 20px 16px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   display: flex;
   flex-direction: column;
@@ -407,6 +410,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+  gap: 12px;
   border-bottom: 2px solid #e2e8f0;
   padding-bottom: 10px;
 }
@@ -416,7 +420,7 @@
   object-fit: contain;
 }
 
-.tag-compliance-stamp {
+.tag-status-stamp {
   display: inline-flex;
   align-items: center;
   gap: 4px;
@@ -427,10 +431,12 @@
   font-size: 0.65rem;
   font-weight: 800;
   letter-spacing: 0.05em;
+  white-space: nowrap;
 }
 
 .tag-body {
-  display: flex;
+  display: grid;
+  grid-template-columns: 156px minmax(0, 1fr);
   align-items: center;
   gap: 20px;
 }
@@ -444,6 +450,12 @@
   background: #f8fafc;
   border: 1px solid #e2e8f0;
   border-radius: 8px;
+}
+
+.tag-qr-section app-qr-canvas {
+  display: block;
+  width: 140px;
+  max-width: 100%;
 }
 
 .qr-svg {
@@ -463,12 +475,14 @@
   flex-direction: column;
   gap: 4px;
   flex: 1;
+  min-width: 0;
 }
 
 .tag-patrimonio {
   display: inline-flex;
   align-items: center;
   gap: 8px;
+  flex-wrap: wrap;
 }
 
 .tag-patrimonio-label {
@@ -485,6 +499,7 @@
   background: #f1f5f9;
   padding: 2px 6px;
   border-radius: 4px;
+  overflow-wrap: anywhere;
 }
 
 .tag-asset-name {
@@ -492,11 +507,13 @@
   font-weight: 800;
   color: var(--color-slate-dark);
   line-height: 1.2;
+  overflow-wrap: anywhere;
 }
 
 .tag-location {
   font-size: 0.8rem;
   color: var(--color-text-muted);
+  overflow-wrap: anywhere;
 }
 
 .tag-branch-name {
@@ -524,6 +541,67 @@
   font-weight: 700;
   color: var(--color-text-light);
   letter-spacing: 0.05em;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+@media (max-width: 600px) {
+  .qr-modal-dialog {
+    max-height: calc(100vh - 24px);
+  }
+
+  .qr-modal-dialog .modal-header,
+  .qr-modal-dialog .modal-body,
+  .qr-modal-dialog .modal-footer {
+    padding-right: 16px;
+    padding-left: 16px;
+  }
+
+  .qr-modal-dialog .modal-title-wrap h3 {
+    font-size: 0.95rem;
+  }
+
+  .physical-tag {
+    padding: 16px 14px 14px;
+  }
+
+  .tag-brand-row {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .tag-logo-img {
+    height: 32px;
+  }
+
+  .tag-body {
+    grid-template-columns: 1fr;
+    gap: 14px;
+  }
+
+  .tag-qr-section {
+    justify-self: center;
+  }
+
+  .tag-info-section {
+    gap: 6px;
+  }
+
+  .tag-footer {
+    align-items: flex-start;
+    flex-direction: column;
+    letter-spacing: 0.035em;
+  }
+
+  .qr-modal-dialog .modal-footer {
+    align-items: stretch;
+    flex-direction: column-reverse;
+  }
+
+  .qr-modal-dialog .modal-footer .btn {
+    width: 100%;
+    justify-content: center;
+  }
 }
 
 /* Moldura do celular no simulador */
@@ -777,6 +855,28 @@
 
 /* Impressão da etiqueta física */
 @media print {
+  @page {
+    margin: 8mm;
+  }
+
+  body * {
+    visibility: hidden;
+  }
+
+  .printable-area,
+  .printable-area * {
+    visibility: visible;
+  }
+
+  .printable-area {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    max-width: none;
+    max-height: none;
+    overflow: visible;
+  }
+
   .no-print {
     display: none !important;
   }
@@ -784,6 +884,11 @@
     box-shadow: none !important;
     border: none !important;
     padding: 0 !important;
+  }
+
+  .physical-tag {
+    max-width: none;
+    box-shadow: none;
   }
 }
 
@@ -806,4 +911,3 @@
 .qr-real-wrapper canvas {
   border-radius: 4px;
 }
-

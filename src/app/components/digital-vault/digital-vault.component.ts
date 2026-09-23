@@ -27,7 +27,6 @@ export class CofreDigitalComponente {
   readonly erroOcr = signal<string>('');
   readonly usouIaReal = signal<boolean>(false);
 
-  // Compatibilidade
   get service() { return this.servico; }
   get licenses() { return this.licencas; }
   get branches() { return this.unidades; }

@@ -48,19 +48,16 @@ export class ServicoAutenticacao {
       return { sucesso: true, success: true };
     }
 
-    // Credenciais de teste local
     if (loginNormalizado === 'teste' && senha === '123') {
       this.iniciarSessao({ id: 'demo-teste', nome: 'Conta de Teste', name: 'Conta de Teste', email: 'teste@licenfy.com.br', teste: true, trial: true });
       return { sucesso: true, success: true };
     }
 
-    // Credenciais de administrador local
     if (loginNormalizado === 'admin' && senha === '123456') {
       this.iniciarSessao({ id: 'demo-admin', nome: 'Administrador', name: 'Administrador', email: 'admin@email.com' });
       return { sucesso: true, success: true };
     }
 
-    // Integração com API local caso disponível
     try {
       const resposta = await firstValueFrom(this.http.post<RespostaLoginApi>(`${this.urlBaseApi}/login`, {
         nome: login,
@@ -78,7 +75,6 @@ export class ServicoAutenticacao {
     }
   }
 
-  // Alias para manter compatibilidade
   login(login: string, pass: string) {
     return this.entrar(login, pass);
   }
@@ -104,7 +100,6 @@ export class ServicoAutenticacao {
     return { sucesso: true, success: true };
   }
 
-  // Alias para manter compatibilidade
   register(name: string, email: string, pass: string) {
     return this.cadastrar(name, email, pass);
   }
@@ -115,7 +110,6 @@ export class ServicoAutenticacao {
     this.usuario.set(null);
   }
 
-  // Alias para manter compatibilidade
   logout() {
     this.sair();
   }

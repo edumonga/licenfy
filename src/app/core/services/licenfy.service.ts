@@ -848,7 +848,6 @@ export class ServicoLicenfy {
   });
   readonly roiData = this.dadosRoi;
 
-  // Métricas calculadas
   readonly licencasFiltradas = computed(() => {
     const id = this.unidadeSelecionadaId();
     if (id === 'all') return this.licencas();
@@ -900,7 +899,6 @@ export class ServicoLicenfy {
   });
   readonly countsSummary = this.resumoContadores;
 
-  // Ações do sistema
   definirUnidadeSelecionada(unidadeId: string) {
     this.unidadeSelecionadaId.set(unidadeId);
   }

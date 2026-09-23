@@ -32,15 +32,14 @@ export class PaginaInicialComponente implements OnInit, OnDestroy {
     return `R$ ${totalEmMilhares.toLocaleString('pt-BR', { minimumFractionDigits: 1, maximumFractionDigits: 1 })}k+`;
   });
 
-  // Demonstrações do produto no hero: desktop + mobile sempre abre a sequência.
   readonly slides: SlideImagem[] = [
     {
       id: 'visao-completa',
       titulo: 'Visão completa',
       title: 'Visão completa',
       alt: 'Painel Licenfy em computador e celular',
-      imagem: 'hero-slide-dashboard-desktop-mobile.png',
-      image: 'hero-slide-dashboard-desktop-mobile.png'
+      imagem: 'hero-slide-dashboard-desktop-mobile-transparent.png',
+      image: 'hero-slide-dashboard-desktop-mobile-transparent.png'
     },
     {
       id: 'painel-mobile',
@@ -55,15 +54,14 @@ export class PaginaInicialComponente implements OnInit, OnDestroy {
       titulo: 'Cofre digital',
       title: 'Cofre digital',
       alt: 'Cofre Digital com OCR no celular',
-      imagem: 'hero-slide-digital-vault.png',
-      image: 'hero-slide-digital-vault.png'
+      imagem: 'hero-slide-digital-vault-transparent.png',
+      image: 'hero-slide-digital-vault-transparent.png'
     }
   ];
 
   readonly indiceSlideAtual = signal<number>(0);
   private temporizadorCarrossel: any = null;
 
-  // Compatibilidade
   get service() { return this.servico; }
   get isDemoModalOpen() { return this.modalDemonstracaoAberto; }
   get isHeaderFloating() { return this.cabecalhoFlutuante; }
