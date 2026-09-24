@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ServicoLicenfy } from '../../core/services/licenfy.service';
 import { PreferenciasService } from '../../core/services/preferencias.service';
-import { Unidade, Branch } from '../../core/models/types';
+import { Unidade, Branch, ResponsavelUnidade } from '../../core/models/types';
 
 @Component({
   selector: 'app-unit-management',
@@ -18,6 +18,7 @@ export class GestaoUnidadesComponente {
   readonly unidades = this.servico.unidades;
   readonly unidadeSelecionadaId = signal('sp-matriz');
   readonly exibirFormulario = signal(false);
+  readonly exibirFormularioResponsavel = signal(false);
 
   novaUnidade = {
     nome: '',
@@ -36,10 +37,18 @@ export class GestaoUnidadesComponente {
     phone: ''
   };
 
+  novoResponsavel = {
+    nome: '',
+    cargo: '',
+    email: '',
+    telefone: ''
+  };
+
   get service() { return this.servico; }
   get branches() { return this.unidades; }
   get selectedUnitId() { return this.unidadeSelecionadaId; }
   get showForm() { return this.exibirFormulario; }
+  get showResponsibleForm() { return this.exibirFormularioResponsavel; }
   get newUnit() { return this.novaUnidade; }
   set newUnit(v: any) { this.novaUnidade = v; }
 
@@ -52,6 +61,34 @@ export class GestaoUnidadesComponente {
     this.unidadeSelecionadaId.set(id);
   }
   selectUnit(id: string) { this.selecionarUnidade(id); }
+
+  abrirFormularioResponsavel() {
+    this.novoResponsavel = { nome: '', cargo: '', email: '', telefone: '' };
+    this.exibirFormularioResponsavel.set(true);
+  }
+
+  salvarResponsavel() {
+    const nome = this.novoResponsavel.nome.trim();
+    const cargo = this.novoResponsavel.cargo.trim();
+    const email = this.novoResponsavel.email.trim();
+    const telefone = this.novoResponsavel.telefone.trim();
+    if (!nome || !cargo || !email) return;
+
+    const responsavel: ResponsavelUnidade = {
+      id: `responsible-${Date.now()}`,
+      nome,
+      name: nome,
+      cargo,
+      role: cargo,
+      email,
+      telefone,
+      phone: telefone,
+      principal: false,
+      primary: false
+    };
+    this.servico.adicionarResponsavelUnidade(this.unidadeSelecionadaId(), responsavel);
+    this.exibirFormularioResponsavel.set(false);
+  }
 
   salvarUnidade() {
     const nome = this.novaUnidade.nome || this.novaUnidade.name;

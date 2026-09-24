@@ -61,6 +61,13 @@ export class GestaoAtivosComponente {
   }
   get filteredAssetsList(): AtivoFisico[] { return this.listaAtivosFiltrados; }
 
+  statusGarantia(dias: number | undefined): 'regular' | 'attention' | 'urgent' {
+    const prazo = dias ?? 999;
+    if (prazo <= 30) return 'urgent';
+    if (prazo <= 60) return 'attention';
+    return 'regular';
+  }
+
   abrirModalQr(ativo: AtivoFisico) {
     this.ativoSelecionadoParaQr.set(ativo);
   }

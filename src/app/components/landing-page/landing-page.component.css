@@ -339,6 +339,10 @@
   cursor: pointer;
   padding: 8px 15px;
   transition: all 0.15s;
+  white-space: nowrap;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .btn-text:hover {
@@ -362,6 +366,14 @@
   box-shadow: 0 2px 4px rgba(0, 82, 204, 0.2);
 }
 
+.btn-pill-text-desktop {
+  display: inline;
+}
+
+.btn-pill-text-mobile {
+  display: none;
+}
+
 .btn-primary-pill:hover {
   background-color: #0043a8;
   box-shadow: 0 4px 12px rgba(0, 82, 204, 0.35);
@@ -381,11 +393,11 @@
 /* Formas orgânicas azuis animadas (Pipefy Organic Vector Curves) */
 .hero-bg-shape-right {
   position: absolute;
-  right: -130px;
+  right: -190px;
   top: 50%;
   transform: translateY(-50%);
-  width: 380px;
-  height: 520px;
+  width: 300px;
+  height: 430px;
   background-color: #0052cc;
   border-top-left-radius: 260px;
   border-bottom-left-radius: 260px;
@@ -592,7 +604,76 @@
 }
 
 .platform-section {
-  background: #f7faff;
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(135deg, #003a92 0%, #0052cc 53%, #0b66d4 100%);
+}
+
+.platform-section::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(circle at 50% 45%, rgba(255, 255, 255, .08), transparent 42%);
+}
+
+.platform-layout {
+  position: relative;
+  z-index: 1;
+}
+
+.platform-orb {
+  position: absolute;
+  width: 640px;
+  height: 530px;
+  border: 76px solid rgba(255, 255, 255, .09);
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+.platform-orb-left {
+  top: -360px;
+  left: -180px;
+  transform: rotate(-28deg);
+}
+
+.platform-orb-right {
+  right: -275px;
+  bottom: -390px;
+  border-color: rgba(96, 165, 250, .22);
+  transform: rotate(28deg);
+}
+
+.platform-section .section-kicker {
+  color: #b9dcff;
+}
+
+.platform-section .platform-copy h2 {
+  color: #ffffff;
+}
+
+.platform-section .platform-copy > p {
+  color: #d6e6fb;
+}
+
+.platform-section .platform-points > div {
+  background: rgba(255, 255, 255, .12);
+  border-color: rgba(196, 220, 255, .24);
+  box-shadow: none;
+  backdrop-filter: blur(10px);
+}
+
+.platform-section .platform-points .material-symbols-rounded {
+  color: #d7ebff;
+  background: rgba(70, 145, 255, .28);
+}
+
+.platform-section .platform-points strong {
+  color: #ffffff;
+}
+
+.platform-section .platform-points p {
+  color: #d6e6fb;
 }
 
 .platform-layout,
@@ -723,7 +804,44 @@
 }
 
 .resources-section {
-  background: #102f65;
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(135deg, #003a92 0%, #0052cc 53%, #0b66d4 100%);
+}
+
+.resources-section::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(circle at 58% 45%, rgba(255, 255, 255, .08), transparent 38%);
+}
+
+.resources-layout {
+  position: relative;
+  z-index: 1;
+}
+
+.resources-orb {
+  position: absolute;
+  width: 580px;
+  height: 480px;
+  border: 70px solid rgba(255, 255, 255, .09);
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+.resources-orb-left {
+  top: -325px;
+  left: -180px;
+  transform: rotate(-24deg);
+}
+
+.resources-orb-right {
+  right: -260px;
+  bottom: -370px;
+  border-color: rgba(96, 165, 250, .22);
+  transform: rotate(28deg);
 }
 
 .resources-layout h2,
@@ -766,6 +884,7 @@
 /* Hero product composition: a desktop overview with the field app in front. */
 .hero-product-visual {
   position: relative;
+  z-index: 2;
   min-height: 520px;
   isolation: isolate;
 }
@@ -2323,25 +2442,45 @@
 
 /* 5. Social Proof Section */
 .social-proof-section {
-  padding: 68px 0;
-  background: #ffffff;
-  border-block: 1px solid #e8eff8;
+  position: relative;
+  overflow: hidden;
+  padding: 76px 0;
+  background: linear-gradient(110deg, #003a92 0%, #0052cc 55%, #0b66d4 100%);
+}
+
+.social-proof-section::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: .4;
+  background-image:
+    linear-gradient(135deg, transparent 0 47%, rgba(255, 255, 255, .07) 47% 48%, transparent 48% 100%),
+    radial-gradient(circle at 12% 110%, rgba(255, 255, 255, .16) 0 5%, transparent 5.2%),
+    radial-gradient(circle at 90% -30%, rgba(96, 165, 250, .35) 0 18%, transparent 18.2%);
+}
+
+.social-proof-section .section-container {
+  position: relative;
+  z-index: 1;
 }
 
 .social-proof-title {
-  text-align: center;
-  font-size: 0.88rem;
-  font-weight: 600;
-  color: #475569;
-  letter-spacing: 0.09em;
+  max-width: 1340px;
+  margin: 0 auto 30px;
+  padding: 0 24px;
+  text-align: left;
+  font-size: .72rem;
+  font-weight: 800;
+  color: #d7ebff;
+  letter-spacing: .12em;
   text-transform: uppercase;
-  margin-bottom: 28px;
 }
 
 .logos-grid {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 32px;
+  gap: 24px;
 }
 
 .logo-box {
@@ -2349,20 +2488,25 @@
   align-items: center;
   flex-wrap: wrap;
   gap: 0 9px;
-  min-height: 52px;
-  padding: 4px 0;
-  color: #334155;
+  min-height: 64px;
+  padding: 8px 0;
+  color: #ffffff;
+  border: 0;
+  background: transparent;
   transition: all 0.22s ease;
 }
 
 .logo-box:hover {
-  color: #0052cc;
-  transform: translateY(-1px);
+  color: #ffffff;
+  transform: translateY(-3px);
 }
 
 .logo-icon {
-  color: #0052cc;
+  color: #d7ebff;
   font-size: 22px;
+  padding: 8px;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, .12);
 }
 
 .logo-text {
@@ -2374,9 +2518,9 @@
 
 .logo-detail {
   flex-basis: 100%;
-  padding-left: 31px;
+  padding-left: 47px;
   margin-top: 4px;
-  color: #94a3b8;
+  color: #d6e6fb;
   font-size: 0.73rem;
   line-height: 1.35;
 }
@@ -3229,8 +3373,8 @@
     padding: 0 12px;
   }
   .brand-logo {
-    width: 125px;
-    height: 38px;
+    width: 96px;
+    height: 30px;
     flex-shrink: 0;
   }
   .nav-menu {
@@ -3257,10 +3401,17 @@
     padding: 6px 8px;
     font-size: 0.8rem;
   }
-  .btn-primary-pill {
-    padding: 6px 12px;
-    font-size: 0.78rem;
+  .btn-primary-pill,
+  .header-demo-btn {
+    min-width: 0;
+    min-height: 30px;
+    padding: 4px 9px;
+    font-size: 0.72rem;
     white-space: nowrap;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
   }
 
   .hero-section {
@@ -3343,19 +3494,53 @@
   }
 }
 
+@media (max-width: 600px) {
+  .header-demo-btn .btn-pill-text-desktop {
+    display: none !important;
+  }
+
+  .header-demo-btn .btn-pill-text-mobile {
+    display: inline !important;
+  }
+}
+
 @media (max-width: 480px) {
   .brand-logo {
-    width: 108px;
-    height: 32px;
+    width: 88px;
+    height: 28px;
+    flex-shrink: 0;
   }
+
+  .header-right {
+    gap: 4px;
+    flex-shrink: 0;
+  }
+
+  .header-right .btn-text,
   .btn-text {
-    padding: 4px 6px;
-    font-size: 0.75rem;
-  }
-  .btn-primary-pill {
-    padding: 5px 9px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 4px 7px;
     font-size: 0.72rem;
+    white-space: nowrap;
+    min-height: 28px;
+    flex-shrink: 0;
   }
+
+  .btn-primary-pill,
+  .header-demo-btn {
+    min-width: 0;
+    min-height: 28px;
+    padding: 4px 8px;
+    font-size: 0.72rem;
+    white-space: nowrap;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+
   .hero-section {
     padding: 20px 12px 30px;
   }
@@ -3431,8 +3616,9 @@
   /* logo.png has generous transparent padding; cover uses the useful artwork
      without increasing the header or competing with the action buttons. */
   .brand-logo {
-    width: 116px;
-    height: 36px;
+    width: 96px;
+    height: 30px;
+    flex-shrink: 0;
   }
 
   .brand-logo .logo-img {
@@ -3450,11 +3636,17 @@
     font-size: 0.78rem;
   }
 
-  .btn-primary-pill {
+  .btn-primary-pill,
+  .header-demo-btn {
     min-width: 0;
-    min-height: 36px;
-    padding: 7px 11px;
-    font-size: 0.76rem;
+    min-height: 30px;
+    padding: 4px 9px;
+    font-size: 0.72rem;
+    white-space: nowrap;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
   }
 
   .hero-section {
@@ -3746,6 +3938,11 @@
 }
 
 @media (max-width: 360px) {
+  /* Reserve the smallest widths for branding and the primary CTA. */
+  .header-right app-preferences-toolbar {
+    display: none;
+  }
+
   .hero-section {
     padding-inline: 16px;
   }
@@ -3755,8 +3952,9 @@
   }
 
   .brand-logo {
-    width: 104px;
-    height: 34px;
+    width: 80px;
+    height: 26px;
+    flex-shrink: 0;
   }
 
   .header-right {

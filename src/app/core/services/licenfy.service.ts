@@ -1,6 +1,7 @@
 import { Injectable, signal, computed } from '@angular/core';
 import {
   Unidade,
+  ResponsavelUnidade,
   DocumentoLicenca,
   AtivoFisico,
   RegraNotificacao,
@@ -21,8 +22,9 @@ import {
   providedIn: 'root'
 })
 export class ServicoLicenfy {
-  readonly visaoAtual = signal<'landing' | 'auth' | 'app'>('landing');
+  readonly visaoAtual = signal<'landing' | 'auth' | 'app' | 'checkout'>('landing');
   readonly currentView = this.visaoAtual;
+  readonly planoCheckout = signal<'monthly' | 'annual'>('annual');
 
   readonly modoAutenticacao = signal<'login' | 'signup'>('login');
   readonly authMode = this.modoAutenticacao;
@@ -30,14 +32,19 @@ export class ServicoLicenfy {
   readonly unidadeSelecionadaId = signal<string>('all');
   readonly selectedBranchId = this.unidadeSelecionadaId;
 
-  readonly abaAtual = signal<'dashboard' | 'units' | 'vault' | 'assets' | 'notifications' | 'inspection' | 'roi'>('dashboard');
+  readonly abaAtual = signal<'dashboard' | 'units' | 'vault' | 'assets' | 'notifications' | 'inspection' | 'roi' | 'account'>('dashboard');
   readonly currentTab = this.abaAtual;
 
-  definirVisao(visao: 'landing' | 'auth' | 'app') {
+  definirVisao(visao: 'landing' | 'auth' | 'app' | 'checkout') {
     this.visaoAtual.set(visao);
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
-  setView(v: 'landing' | 'auth' | 'app') { this.definirVisao(v); }
+  setView(v: 'landing' | 'auth' | 'app' | 'checkout') { this.definirVisao(v); }
+
+  abrirCheckout(plano: 'monthly' | 'annual') {
+    this.planoCheckout.set(plano);
+    this.definirVisao('checkout');
+  }
 
   definirModoAutenticacao(modo: 'login' | 'signup') {
     this.modoAutenticacao.set(modo);
@@ -904,10 +911,10 @@ export class ServicoLicenfy {
   }
   setSelectedBranch(id: string) { this.definirUnidadeSelecionada(id); }
 
-  definirAba(aba: 'dashboard' | 'units' | 'vault' | 'assets' | 'notifications' | 'inspection' | 'roi') {
+  definirAba(aba: 'dashboard' | 'units' | 'vault' | 'assets' | 'notifications' | 'inspection' | 'roi' | 'account') {
     this.abaAtual.set(aba);
   }
-  setTab(tab: 'dashboard' | 'units' | 'vault' | 'assets' | 'notifications' | 'inspection' | 'roi') { this.definirAba(tab); }
+  setTab(tab: 'dashboard' | 'units' | 'vault' | 'assets' | 'notifications' | 'inspection' | 'roi' | 'account') { this.definirAba(tab); }
 
   adicionarLicenca(licenca: DocumentoLicenca) {
     this.licencas.update(ant => [licenca, ...ant]);
@@ -923,6 +930,18 @@ export class ServicoLicenfy {
     this.unidades.update(ant => [...ant, unidade]);
   }
   addBranch(b: Unidade) { this.adicionarUnidade(b); }
+
+  adicionarResponsavelUnidade(unidadeId: string, responsavel: ResponsavelUnidade) {
+    this.unidades.update(unidades => unidades.map(unidade => {
+      if (unidade.id !== unidadeId) return unidade;
+
+      const responsaveis = [...(unidade.responsaveis || unidade.responsiblePeople || []), responsavel];
+      return { ...unidade, responsaveis, responsiblePeople: responsaveis };
+    }));
+  }
+  addUnitResponsible(unitId: string, responsible: ResponsavelUnidade) {
+    this.adicionarResponsavelUnidade(unitId, responsible);
+  }
 
   adicionarRegraNotificacao(diasAntesVencimento: number, destinatarios: string[]) {
     this.regrasNotificacao.update(regras => [{

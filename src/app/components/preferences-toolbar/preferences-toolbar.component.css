@@ -220,9 +220,10 @@
   }
 
   .prefs-btn {
-    height: 32px;
-    padding: 0 9px 0 8px;
-    font-size: 0.76rem;
+    height: 30px;
+    padding: 0 7px 0 6px;
+    font-size: 0.72rem;
+    gap: 4px;
   }
 
   .prefs-icon {

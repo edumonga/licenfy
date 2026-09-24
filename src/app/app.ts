@@ -14,6 +14,8 @@ import { LandingPageComponent } from './components/landing-page/landing-page.com
 import { UnitManagementComponent } from './components/unit-management/unit-management.component';
 import { AuthComponent } from './components/auth/auth.component';
 import { PreferencesToolbarComponent } from './components/preferences-toolbar/preferences-toolbar.component';
+import { AccountComponent } from './components/account/account.component';
+import { CheckoutComponent } from './components/checkout/checkout.component';
 
 @Component({
   selector: 'app-root',
@@ -30,6 +32,8 @@ import { PreferencesToolbarComponent } from './components/preferences-toolbar/pr
     NotificationsComponent,
     InspectionModeComponent,
     RoiReportComponent,
+    AccountComponent,
+    CheckoutComponent,
     PreferencesToolbarComponent
   ],
   templateUrl: './app.html',
@@ -78,7 +82,7 @@ export class App {
     this.closeMobileMenu();
   }
 
-  setTab(tab: 'dashboard' | 'units' | 'vault' | 'assets' | 'notifications' | 'inspection' | 'roi') {
+  setTab(tab: 'dashboard' | 'units' | 'vault' | 'assets' | 'notifications' | 'inspection' | 'roi' | 'account') {
     this.service.setTab(tab);
     this.closeMobileMenu();
   }

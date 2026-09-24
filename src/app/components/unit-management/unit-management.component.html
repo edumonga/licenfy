@@ -67,7 +67,7 @@
           <h3>{{ prefs.t('units.responsible') }}</h3>
           <p>{{ prefs.t('units.responsibleDesc') }}</p>
         </div>
-        <button class="botao botao-contorno botao-sm btn btn-outline btn-sm">
+        <button type="button" class="botao botao-contorno botao-sm btn btn-outline btn-sm" (click)="abrirFormularioResponsavel()">
           <span class="material-symbols-rounded icon-sm">person_add</span> {{ prefs.t('units.addResponsible') }}
         </button>
       </div>
@@ -125,6 +125,39 @@
       <div class="acoes-modal modal-actions">
         <button type="button" class="botao botao-contorno btn btn-outline" (click)="exibirFormulario.set(false)">Cancelar</button>
         <button class="botao botao-primario btn btn-primary" type="submit">Salvar unidade</button>
+      </div>
+    </form>
+  </div>
+
+  <div *ngIf="exibirFormularioResponsavel()" class="fundo-modal modal-backdrop" (click)="exibirFormularioResponsavel.set(false)">
+    <form class="modal-unidade unit-modal responsible-modal" (submit)="$event.preventDefault(); salvarResponsavel()" (click)="$event.stopPropagation()">
+      <div class="titulo-modal modal-title">
+        <div>
+          <span class="destaque-detalhe detail-kicker">RESPONSÁVEL DA UNIDADE</span>
+          <h2>Adicionar responsável</h2>
+          <p class="responsible-modal-context">{{ prefs.localizarTexto(unidadeSelecionada.nome || unidadeSelecionada.name) }}</p>
+        </div>
+        <button type="button" class="botao-fechar close-button" (click)="exibirFormularioResponsavel.set(false)" [attr.aria-label]="prefs.t('common.close')">×</button>
+      </div>
+      <div class="grade-formulario-unidade unit-form-grid">
+        <label class="largura-completa wide">Nome completo
+          <input [(ngModel)]="novoResponsavel.nome" name="responsibleName" required autocomplete="name" placeholder="Ex.: Ana Martins" />
+        </label>
+        <label>Função / área
+          <input [(ngModel)]="novoResponsavel.cargo" name="responsibleRole" required placeholder="Ex.: Jurídico e Compliance" />
+        </label>
+        <label>E-mail corporativo
+          <input [(ngModel)]="novoResponsavel.email" name="responsibleEmail" type="email" required autocomplete="email" placeholder="ana@empresa.com.br" />
+        </label>
+        <label class="largura-completa wide">Telefone corporativo <span class="field-optional">opcional</span>
+          <input [(ngModel)]="novoResponsavel.telefone" name="responsiblePhone" autocomplete="tel" placeholder="+55 11 99999-9999" />
+        </label>
+      </div>
+      <div class="acoes-modal modal-actions">
+        <button type="button" class="botao botao-contorno btn btn-outline" (click)="exibirFormularioResponsavel.set(false)">Cancelar</button>
+        <button class="botao botao-primario btn btn-primary" type="submit">
+          <span class="material-symbols-rounded icon-sm">person_add</span> Adicionar responsável
+        </button>
       </div>
     </form>
   </div>

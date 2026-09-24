@@ -898,6 +898,10 @@
 .text-primary { color: var(--color-primary); }
 .text-attention { color: var(--status-attention-text); }
 
+.warranty-date.regular { color: var(--status-regular-text); }
+.warranty-date.attention { color: var(--status-attention-text); }
+.warranty-date.urgent { color: var(--status-urgent-text); }
+
 .qr-real-wrapper {
   display: flex;
   align-items: center;

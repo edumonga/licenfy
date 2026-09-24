@@ -12,18 +12,14 @@
   background-color: var(--color-bg-main);
 }
 
-.public-asset-page { min-height: 100vh; display: grid; place-items: center; padding: 24px; background: #f1f5f9; }
-.public-asset-card { width: min(520px, 100%); padding: 32px; border-radius: 20px; background: #fff; box-shadow: 0 20px 60px rgba(15, 23, 42, .14); color: #14243f; }
-.public-asset-logo { display: block; width: 170px; max-width: 100%; height: auto; margin: 0 auto 28px; }
-.public-asset-badge { display: inline-block; padding: 5px 9px; border-radius: 999px; background: #e8f0fb; color: #1d4f91; font-size: .7rem; font-weight: 800; letter-spacing: .06em; }
-.public-asset-card h1 { margin: 14px 0 8px; font-size: 1.55rem; line-height: 1.2; }
-.public-asset-card p { color: #54637e; line-height: 1.5; }
-.public-asset-tag { font-weight: 700; }
-.public-asset-details { display: grid; gap: 12px; margin: 24px 0; }
-.public-asset-details div { padding: 12px; border-radius: 10px; background: #f8fafc; }
-.public-asset-details dt { color: #64748b; font-size: .72rem; font-weight: 800; text-transform: uppercase; }
-.public-asset-details dd { margin: 4px 0 0; font-weight: 600; }
-.public-asset-card a { color: #1d4f91; font-weight: 700; text-decoration: none; }
+.public-asset-page { min-height: 100vh; display: grid; place-items: center; padding: 24px; background: radial-gradient(circle at top right, #dceaff, transparent 42%), #f4f7fb; }
+.public-asset-card { width: min(560px, 100%); padding: 26px; border-radius: 20px; background: #fff; box-shadow: 0 20px 60px rgba(15, 23, 42, .14); color: #14243f; }
+.public-asset-header { display: flex; justify-content: space-between; align-items: center; padding-bottom: 18px; border-bottom: 1px solid #e6edf5; }.public-asset-logo { width: 116px; max-width: 55%; height: auto; }.public-asset-header span { color: #71839c; font-size: .68rem; font-weight: 800; text-transform: uppercase; letter-spacing: .07em; }
+.public-asset-status { display: flex; align-items: center; gap: 10px; margin-top: 20px; color: #087c5b; }.public-asset-status>.material-symbols-rounded { display: grid; place-items: center; width: 35px; height: 35px; border-radius: 10px; background: #e7f8f1; font-size: 20px; }.public-asset-status strong,.public-asset-status small { display: block; }.public-asset-status strong { font-size: .8rem; }.public-asset-status small { margin-top: 2px; color: #71839c; font-size: .68rem; }
+.public-asset-tag { display: flex; align-items: center; gap: 5px; margin: 20px 0 6px; color: #2462b9; font-family: monospace; font-size: .82rem; font-weight: 800; }.public-asset-tag .material-symbols-rounded { font-size: 16px; }.public-asset-card h1 { margin: 0; font-size: clamp(1.35rem, 5vw, 1.75rem); line-height: 1.16; }.public-asset-category { margin: 8px 0 0; color: #64748b; font-size: .82rem; }
+.public-asset-details { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 24px 0 16px; }.public-asset-details div { min-width: 0; padding: 13px; border-radius: 11px; background: #f7f9fc; }.public-asset-details dt { display: flex; align-items: center; gap: 5px; color: #71839c; font-size: .68rem; font-weight: 800; }.public-asset-details dt .material-symbols-rounded { font-size: 15px; color: #2462b9; }.public-asset-details dd { margin: 6px 0 0; color: #253958; font-size: .8rem; font-weight: 700; overflow-wrap: anywhere; }.public-asset-details dd small { color: #64748b; font-size: .68rem; font-weight: 600; }
+.public-asset-help { display:flex; gap:8px; align-items:flex-start; padding:11px 12px; border-radius:10px; background:#eef5ff; color:#356191; font-size:.73rem; line-height:1.4; }.public-asset-help .material-symbols-rounded { font-size:17px; }.public-asset-return { display:flex; justify-content:center; align-items:center; gap:6px; margin-top:20px; color:#1d4f91; font-size:.8rem; font-weight:800; text-decoration:none; }.public-asset-return .material-symbols-rounded { font-size:17px; }
+@media (max-width: 460px) { .public-asset-page { padding: 12px; place-items: start center; }.public-asset-card { padding: 20px; border-radius: 15px; }.public-asset-details { grid-template-columns: 1fr; }.public-asset-header { padding-bottom: 14px; } }
 
 /* Sidebar */
 .licenfy-sidebar {
@@ -154,7 +150,6 @@
 .nav-item.active {
   background: var(--color-primary);
   color: #ffffff;
-  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.35);
 }
 
 .nav-item .material-symbols-rounded {

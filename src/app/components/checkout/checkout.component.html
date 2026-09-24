@@ -1,0 +1,18 @@
+<main class="checkout-page">
+  <header class="checkout-header" style="border-bottom: 0"><button type="button" (click)="back()"><span class="material-symbols-rounded">arrow_back</span> Voltar aos planos</button><img src="logo.png" alt="Licenfy"></header>
+  <section *ngIf="!completed()" class="checkout-shell">
+    <div class="checkout-intro"><span>ASSINATURA LICENFY</span><h1>Finalize sua assinatura</h1><p>Tenha visibilidade contínua sobre licenças, alvarás e ativos da sua operação.</p><div class="secure"><span class="material-symbols-rounded">lock</span> Ambiente seguro para contratação</div></div>
+    <form class="checkout-form" (submit)="$event.preventDefault();submit()">
+      <div class="chosen-plan" style="background: #ffffff"><div><small>Plano selecionado</small><strong>Licenfy {{ annual ? 'Anual' : 'Mensal' }}</strong><span>{{ annual ? '12 meses pelo preço de 6' : 'Flexibilidade para começar' }}</span></div><strong class="price">R$ {{ amount }}<small>{{ annual ? '/ano' : '/mês' }}</small></strong></div>
+      <h2>Crie sua conta</h2>
+      <div class="checkout-fields">
+        <label>Nome completo<input [(ngModel)]="buyer.name" name="name" required autocomplete="name"></label><label>E-mail corporativo<input [(ngModel)]="buyer.email" name="email" type="email" required autocomplete="email"></label>
+        <label>Empresa<input [(ngModel)]="buyer.company" name="company" required></label><label>CNPJ<input [(ngModel)]="buyer.cnpj" name="cnpj" inputmode="numeric"></label>
+        <label>Crie uma senha<input [(ngModel)]="buyer.password" name="password" type="password" required minlength="8" autocomplete="new-password"></label><label>Confirme a senha<input [(ngModel)]="buyer.confirmPassword" name="confirmPassword" type="password" required autocomplete="new-password"></label>
+        <label class="wide">Cartão de crédito<input [(ngModel)]="buyer.card" name="card" required inputmode="numeric" autocomplete="cc-number" placeholder="0000 0000 0000 0000"></label>
+      </div>
+      <p *ngIf="error()" class="checkout-error">{{ error() }}</p><div class="checkout-total"><span>Total • {{ cadence }}</span><strong>R$ {{ amount }}</strong></div><button class="checkout-submit" type="submit"><span class="material-symbols-rounded">lock</span> Confirmar assinatura e criar conta</button><p class="payment-note">Ao confirmar, você concorda com os termos de uso e a política de privacidade.</p>
+    </form>
+  </section>
+  <section *ngIf="completed()" class="checkout-success"><span class="material-symbols-rounded">check_circle</span><h1>Conta criada com sucesso!</h1><p>Sua assinatura foi registrada e você já pode acessar a plataforma com <strong>{{ buyer.email }}</strong>.</p><button (click)="openApp()">Acessar plataforma</button></section>
+</main>

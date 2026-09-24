@@ -7,6 +7,10 @@ export interface UsuarioAutenticado {
   nome: string;
   name?: string;
   email: string;
+  cargo?: string;
+  telefone?: string;
+  empresa?: string;
+  cnpj?: string;
   teste?: boolean;
   trial?: boolean;
 }
@@ -48,7 +52,7 @@ export class ServicoAutenticacao {
       return { sucesso: true, success: true };
     }
 
-    if (loginNormalizado === 'teste' && senha === '123') {
+    if (loginNormalizado === 'teste' && senha === '12345678') {
       this.iniciarSessao({ id: 'demo-teste', nome: 'Conta de Teste', name: 'Conta de Teste', email: 'teste@licenfy.com.br', teste: true, trial: true });
       return { sucesso: true, success: true };
     }
@@ -69,8 +73,8 @@ export class ServicoAutenticacao {
       return {
         sucesso: false,
         success: false,
-        mensagem: 'Usuário ou senha inválidos. Para teste rápido utilize login: teste e senha: 123, ou confira suas credenciais.',
-        message: 'Usuário ou senha inválidos. Para teste rápido utilize login: teste e senha: 123, ou confira suas credenciais.'
+        mensagem: 'Usuário ou senha inválidos. Confira suas credenciais e tente novamente.',
+        message: 'Invalid username or password. Check your credentials and try again.'
       };
     }
   }
@@ -82,6 +86,9 @@ export class ServicoAutenticacao {
   cadastrar(nome: string, email: string, senha: string): { sucesso: boolean; mensagem?: string; success?: boolean; message?: string } {
     const nomeLimpo = nome.trim();
     const emailNormalizado = email.trim().toLowerCase();
+    if (senha.length < 8) {
+      return { sucesso: false, success: false, mensagem: 'A senha deve ter no mínimo 8 caracteres.', message: 'Password must be at least 8 characters.' };
+    }
     if (this.obterContas().some(conta => conta.email.toLowerCase() === emailNormalizado)) {
       return { sucesso: false, success: false, mensagem: 'Já existe uma conta com este e-mail.', message: 'Já existe uma conta com este e-mail.' };
     }
@@ -112,6 +119,12 @@ export class ServicoAutenticacao {
 
   logout() {
     this.sair();
+  }
+
+  atualizarPerfil(dados: Partial<UsuarioAutenticado>) {
+    const atual = this.usuario();
+    if (!atual) return;
+    this.iniciarSessao({ ...atual, ...dados, nome: dados.nome?.trim() || atual.nome, name: dados.nome?.trim() || atual.name || atual.nome, email: dados.email?.trim() || atual.email });
   }
 
   private iniciarSessao(usuario: UsuarioAutenticado) {

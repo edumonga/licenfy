@@ -214,7 +214,10 @@
               </div>
             </td>
             <td>
-              <span class="selo-sutil badge-subtle">{{ prefs.localizarTexto(lic.orgaoEmissor || lic.issuingBody) }}</span>
+              <span class="issuer-cell">
+                <span class="material-symbols-rounded issuer-icon" aria-hidden="true">account_balance</span>
+                <span>{{ prefs.localizarTexto(lic.orgaoEmissor || lic.issuingBody) }}</span>
+              </span>
             </td>
             <td>
               <span class="nome-celula-unidade branch-cell-name">{{ prefs.localizarTexto(lic.nomeUnidade || lic.branchName) }}</span>

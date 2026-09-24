@@ -1,4 +1,4 @@
-import { Component, computed, inject, signal, OnInit, OnDestroy, HostListener } from '@angular/core';
+import { Component, inject, signal, OnInit, OnDestroy, HostListener } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ServicoLicenfy } from '../../core/services/licenfy.service';
@@ -29,12 +29,6 @@ export class PaginaInicialComponente implements OnInit, OnDestroy {
   readonly modalDemonstracaoAberto = signal<boolean>(false);
   readonly cabecalhoFlutuante = signal<boolean>(false);
 
-  readonly exibicaoEconomiaAcumulada = computed(() => {
-    const ganho = this.servico.dadosRoi().ganhoFinanceiroTotal ?? this.servico.dadosRoi().totalFinancialGain ?? 0;
-    const totalEmMilhares = ganho / 1000;
-    return `R$ ${totalEmMilhares.toLocaleString('pt-BR', { minimumFractionDigits: 1, maximumFractionDigits: 1 })}k+`;
-  });
-
   readonly slides: SlideImagem[] = [
     {
       id: 'visao-completa',
@@ -56,7 +50,7 @@ export class PaginaInicialComponente implements OnInit, OnDestroy {
       id: 'cofre-digital',
       titulo: 'Cofre digital',
       title: 'Cofre digital',
-      alt: 'Cofre Digital com OCR no celular',
+      alt: 'Cofre Digital com IA no celular',
       imagem: 'hero-slide-digital-vault-transparent.png',
       image: 'hero-slide-digital-vault-transparent.png'
     }
@@ -68,7 +62,6 @@ export class PaginaInicialComponente implements OnInit, OnDestroy {
   get service() { return this.servico; }
   get isDemoModalOpen() { return this.modalDemonstracaoAberto; }
   get isHeaderFloating() { return this.cabecalhoFlutuante; }
-  get accumulatedSavingsDisplay() { return this.exibicaoEconomiaAcumulada; }
   get currentSlideIndex() { return this.indiceSlideAtual; }
   get idioma() { return this.prefs.idioma; }
   get currentLang() { return this.prefs.idioma; }
@@ -142,6 +135,8 @@ export class PaginaInicialComponente implements OnInit, OnDestroy {
     this.servico.abrirCadastro();
   }
   openSignup() { this.abrirCadastro(); }
+
+  abrirCheckout(plano: 'monthly' | 'annual') { this.servico.abrirCheckout(plano); }
 
   irParaAplicacao(aba: 'dashboard' | 'vault' | 'assets' | 'notifications' | 'inspection' | 'roi' = 'dashboard') {
     this.servico.definirAba(aba);

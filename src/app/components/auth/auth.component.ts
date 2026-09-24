@@ -60,13 +60,13 @@ export class AutenticacaoComponente {
   }
   viewPlans() { this.verPlanos(); }
 
-  preencherTeste(login = 'teste', pass = '123') {
+  preencherTeste(login = 'teste', pass = '12345678') {
     this.dadosLogin.login = login;
     this.dadosLogin.senha = pass;
     this.dadosLogin.password = pass;
     this.erro.set('');
   }
-  fillDemo(login = 'teste', pass = '123') { this.preencherTeste(login, pass); }
+  fillDemo(login = 'teste', pass = '12345678') { this.preencherTeste(login, pass); }
 
   async enviarLogin() {
     this.erro.set('');
@@ -105,8 +105,8 @@ export class AutenticacaoComponente {
     const senha = this.dadosCadastro.senha || this.dadosCadastro.password;
     const confirmarSenha = this.dadosCadastro.confirmarSenha || this.dadosCadastro.confirmPassword;
 
-    if (!nome || !email || (senha && senha.length < 3)) {
-      this.erro.set('Preencha todos os campos. A senha deve ter no mínimo 3 caracteres.');
+    if (!nome || !email || (senha && senha.length < 8)) {
+      this.erro.set('Preencha todos os campos. A senha deve ter no mínimo 8 caracteres.');
       return;
     }
 

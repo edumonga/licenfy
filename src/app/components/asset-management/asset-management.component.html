@@ -131,7 +131,7 @@
             <span class="material-symbols-rounded icon-xs text-muted">verified</span>
             Garantia do Fabricante:
           </span>
-          <span class="valor-especificacao spec-val" [class.text-attention]="(ativo.diasAteFimGarantia ?? ativo.daysUntilWarrantyExpires ?? 100) <= 45">
+          <span class="valor-especificacao spec-val warranty-date" [ngClass]="statusGarantia(ativo.diasAteFimGarantia ?? ativo.daysUntilWarrantyExpires)">
             {{ (ativo.dataFimGarantia || ativo.warrantyExpirationDate) | date:'dd/MM/yyyy' }} ({{ ativo.diasAteFimGarantia ?? ativo.daysUntilWarrantyExpires }}d)
           </span>
         </div>

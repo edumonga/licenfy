@@ -61,8 +61,8 @@ export class CofreDigitalComponente {
     estimatedFineIfExpired: 35000,
     nomeAtivoVinculado: 'Nenhum ativo direto',
     linkedAssetName: 'Nenhum ativo direto',
-    notaRequisitoLegal: 'Aguardando extração via OCR.',
-    legalRequirementNote: 'Aguardando extração via OCR.'
+    notaRequisitoLegal: 'Aguardando extração por IA.',
+    legalRequirementNote: 'Aguardando extração por IA.'
   };
   get extractedData() { return this.dadosExtraidos; }
   set extractedData(v: any) { this.dadosExtraidos = v; }
@@ -99,7 +99,7 @@ export class CofreDigitalComponente {
 
     if (arquivo.size > 4 * 1024 * 1024) {
       this.estaDigitalizando.set(false);
-      this.erroOcr.set('O arquivo excede o limite de 4 MB para OCR.');
+      this.erroOcr.set('O arquivo excede o limite de 4 MB para processamento por IA.');
       return;
     }
 
@@ -155,7 +155,7 @@ export class CofreDigitalComponente {
     this.digitalizadoComSucesso.set(false);
     this.erroOcr.set('');
     this.usouIaReal.set(false);
-    this.etapaDigitalizacao.set('1/3: Processando arquivo e aplicando OCR...');
+    this.etapaDigitalizacao.set('1/3: Processando arquivo com IA...');
 
     if (tipoExemplo === 'alvara') {
       this.dadosExtraidos = {
@@ -179,8 +179,8 @@ export class CofreDigitalComponente {
         estimatedFineIfExpired: 30000,
         nomeAtivoVinculado: 'Nenhum ativo direto',
         linkedAssetName: 'Nenhum ativo direto',
-        notaRequisitoLegal: 'OCR detectou: Inscrição Municipal 4.819.002-1 com atividade compatível.',
-        legalRequirementNote: 'OCR detectou: Inscrição Municipal 4.819.002-1 com atividade compatível.'
+        notaRequisitoLegal: 'IA detectou: Inscrição Municipal 4.819.002-1 com atividade compatível.',
+        legalRequirementNote: 'IA detectou: Inscrição Municipal 4.819.002-1 com atividade compatível.'
       };
     } else if (tipoExemplo === 'bombeiros') {
       this.dadosExtraidos = {
@@ -204,8 +204,8 @@ export class CofreDigitalComponente {
         estimatedFineIfExpired: 55000,
         nomeAtivoVinculado: 'Bateria de Extintores e Hidrantes - Bloco A e B',
         linkedAssetName: 'Bateria de Extintores e Hidrantes - Bloco A e B',
-        notaRequisitoLegal: 'OCR detectou: Relação obrigatória com laudo de pressurização e recargas de extintores.',
-        legalRequirementNote: 'OCR detectou: Relação obrigatória com laudo de pressurização e recargas de extintores.'
+        notaRequisitoLegal: 'IA detectou: Relação obrigatória com laudo de pressurização e recargas de extintores.',
+        legalRequirementNote: 'IA detectou: Relação obrigatória com laudo de pressurização e recargas de extintores.'
       };
     } else {
       this.dadosExtraidos = {
@@ -229,8 +229,8 @@ export class CofreDigitalComponente {
         estimatedFineIfExpired: 45000,
         nomeAtivoVinculado: 'Chiller de Refrigeração Industrial Trane',
         linkedAssetName: 'Chiller de Refrigeração Industrial Trane',
-        notaRequisitoLegal: 'OCR detectou: Controle térmico contínuo e PMOC de refrigeração obrigatório.',
-        legalRequirementNote: 'OCR detectou: Controle térmico contínuo e PMOC de refrigeração obrigatório.'
+        notaRequisitoLegal: 'IA detectou: Controle térmico contínuo e PMOC de refrigeração obrigatório.',
+        legalRequirementNote: 'IA detectou: Controle térmico contínuo e PMOC de refrigeração obrigatório.'
       };
     }
 

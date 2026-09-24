@@ -665,8 +665,9 @@ input:checked + .slider:before {
 }
 
 .logs-header {
-  padding: 20px 24px;
+  padding: 22px 24px;
   border-bottom: 1px solid var(--color-border);
+  background: linear-gradient(180deg, #fbfdff 0%, #ffffff 100%);
 }
 
 .logs-title {
@@ -675,6 +676,7 @@ input:checked + .slider:before {
 }
 
 .logs-sub {
+  margin-top: 4px;
   font-size: 0.825rem;
   color: var(--color-text-muted);
 }
@@ -690,6 +692,36 @@ input:checked + .slider:before {
 }
 .channel-pill.email { background: #f1f5f9; color: #475569; }
 
+.logs-card .table-responsive {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.logs-card .licenfy-table {
+  min-width: 960px;
+}
+
+.logs-card .licenfy-table th {
+  padding: 12px 16px;
+  font-size: .68rem;
+  letter-spacing: .06em;
+}
+
+.logs-card .licenfy-table td {
+  padding: 14px 16px;
+}
+
+.logs-card .licenfy-table tbody tr:hover td {
+  background: #f8fbff;
+}
+
+.log-sent {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  white-space: nowrap;
+}
+
 .log-time {
   font-size: 0.78rem;
   color: var(--color-text-muted);
@@ -697,9 +729,32 @@ input:checked + .slider:before {
 }
 
 .log-recipient {
+  display: inline-block;
+  max-width: 24ch;
   font-size: 0.8rem;
   font-weight: 500;
   color: var(--color-slate-dark);
+  line-height: 1.45;
+  white-space: pre-line;
+  overflow-wrap: anywhere;
+}
+
+.log-reference {
+  display: grid;
+  gap: 4px;
+  max-width: 28ch;
+}
+
+.log-reference strong {
+  color: var(--color-slate-dark);
+  font-size: .82rem;
+  line-height: 1.35;
+}
+
+.log-reference span {
+  color: var(--color-text-muted);
+  font-size: .75rem;
+  line-height: 1.35;
 }
 
 .days-pill {
@@ -715,7 +770,7 @@ input:checked + .slider:before {
 .log-preview-text {
   font-size: 0.78rem;
   color: var(--color-text-muted);
-  max-width: 280px;
+  max-width: 220px;
   display: inline-block;
   text-overflow: ellipsis;
   overflow: hidden;
@@ -776,6 +831,16 @@ input:checked + .slider:before {
 
   .email-btn {
     width: 100%;
+  }
+
+  .logs-card .licenfy-table {
+    min-width: 880px;
+  }
+
+  .logs-card .licenfy-table th,
+  .logs-card .licenfy-table td {
+    padding-right: 12px;
+    padding-left: 12px;
   }
 }
 

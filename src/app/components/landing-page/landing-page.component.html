@@ -21,8 +21,9 @@
         {{ prefs.t('header.signin') }}
       </button>
 
-      <button class="btn-primary-pill" (click)="openDemoModal()">
-        {{ prefs.t('header.bookDemo') }}
+      <button class="btn-primary-pill header-demo-btn" (click)="openDemoModal()" [title]="prefs.t('header.bookDemo')">
+        <span class="btn-pill-text-desktop">{{ prefs.t('header.bookDemo') }}</span>
+        <span class="btn-pill-text-mobile">Demo</span>
       </button>
     </div>
 
@@ -88,6 +89,8 @@
 
 <!-- Plataforma -->
 <section id="plataforma" class="platform-section">
+  <div class="platform-orb platform-orb-left" aria-hidden="true"></div>
+  <div class="platform-orb platform-orb-right" aria-hidden="true"></div>
   <div class="section-container platform-layout">
     <div class="platform-copy">
       <span class="section-kicker">{{ prefs.t('landing.platformKicker') }}</span>
@@ -160,7 +163,7 @@
     <div class="features-grid">
       <div class="feature-card hover-lift" (click)="goToApp('vault')">
         <div class="feature-icon-wrapper bg-blue-subtle">
-          <span class="material-symbols-rounded text-primary">document_scanner</span>
+          <span class="material-symbols-rounded text-primary">auto_awesome</span>
         </div>
         <h3 class="feature-title">{{ prefs.t('landing.feature1Title') }}</h3>
         <p class="feature-desc">
@@ -218,6 +221,8 @@
 </section>
 
 <section id="recursos" class="resources-section">
+  <div class="resources-orb resources-orb-left" aria-hidden="true"></div>
+  <div class="resources-orb resources-orb-right" aria-hidden="true"></div>
   <div class="section-container resources-layout">
     <div>
       <span class="section-kicker">{{ prefs.t('landing.resourcesKicker') }}</span>
@@ -232,41 +237,9 @@
   </div>
 </section>
 
-<!-- ROI -->
+<!-- Planos -->
 <section id="planos" class="roi-banner-section">
   <div class="section-container">
-    <div class="roi-banner-box">
-      <div class="roi-banner-left">
-        <span class="roi-badge">{{ prefs.t('landing.roiBadge') }}</span>
-        <h2 class="roi-banner-title">{{ prefs.t('landing.roiTitle') }}</h2>
-        <p class="roi-banner-subtitle">
-          {{ prefs.t('landing.roiSubtitle') }}
-        </p>
-
-        <div class="roi-numbers-row">
-          <div class="roi-number-item">
-            <span class="number-val">{{ accumulatedSavingsDisplay() }}</span>
-            <span class="number-label">{{ prefs.t('landing.roiLabel1') }}</span>
-          </div>
-          <div class="roi-number-item">
-            <span class="number-val">Zero</span>
-            <span class="number-label">{{ prefs.t('landing.roiLabel2') }}</span>
-          </div>
-          <div class="roi-number-item">
-            <span class="number-val">94%</span>
-            <span class="number-label">{{ prefs.t('landing.roiLabel3') }}</span>
-          </div>
-        </div>
-
-        <div class="roi-action-group">
-          <button class="btn-cta-blue" (click)="openDemoModal()">
-            <span>{{ prefs.t('header.bookDemo') }}</span>
-            <span class="material-symbols-rounded">north_east</span>
-          </button>
-        </div>
-      </div>
-    </div>
-
     <div class="plans-header">
       <span class="section-kicker">{{ prefs.t('landing.plansKicker') }}</span>
       <h2 class="plans-title">{{ prefs.t('landing.plansTitle') }}</h2>
@@ -290,7 +263,7 @@
           <li><span class="material-symbols-rounded">check_circle</span>{{ prefs.t('landing.monthlyFeature3') }}</li>
           <li><span class="material-symbols-rounded">check_circle</span>{{ prefs.t('landing.monthlyFeature4') }}</li>
         </ul>
-        <button class="btn-plan-outline" (click)="openDemoModal()">
+        <button class="btn-plan-outline" (click)="abrirCheckout('monthly')">
           <span>{{ prefs.t('landing.monthlyCta') }}</span>
           <span class="material-symbols-rounded">arrow_forward</span>
         </button>
@@ -313,7 +286,7 @@
           <li><span class="material-symbols-rounded">check_circle</span>{{ prefs.t('landing.annualFeature3') }}</li>
           <li><span class="material-symbols-rounded">check_circle</span>{{ prefs.t('landing.annualFeature4') }}</li>
         </ul>
-        <button class="btn-cta-blue w-full" (click)="openDemoModal()">
+        <button class="btn-cta-blue w-full" (click)="abrirCheckout('annual')">
           <span>{{ prefs.t('landing.annualCta') }}</span>
           <span class="material-symbols-rounded">north_east</span>
         </button>

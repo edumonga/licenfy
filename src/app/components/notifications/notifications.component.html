@@ -106,11 +106,9 @@
       <table class="tabela-licenfy licenfy-table">
         <thead>
           <tr>
-            <th>{{ prefs.t('notif.channel') }}</th>
             <th>{{ prefs.t('notif.dateTime') }}</th>
             <th>{{ prefs.t('notif.recipient') }}</th>
-            <th>{{ prefs.t('notif.documentAsset') }}</th>
-            <th>{{ prefs.t('common.branch') }}</th>
+            <th>{{ prefs.t('notif.documentAsset') }} / {{ prefs.t('common.branch') }}</th>
             <th>{{ prefs.t('notif.advance') }}</th>
             <th>{{ prefs.t('notif.deliveryStatus') }}</th>
             <th>{{ prefs.t('notif.preview') }}</th>
@@ -119,14 +117,20 @@
         <tbody>
           <tr *ngFor="let reg of registros()">
             <td>
-              <span class="pilula-canal email channel-pill channel-pill-icon" title="E-mail" aria-label="E-mail">
-                <span class="material-symbols-rounded icon-xs">mail</span>
-              </span>
+              <div class="log-sent">
+                <span class="pilula-canal email channel-pill channel-pill-icon" title="E-mail" aria-label="E-mail">
+                  <span class="material-symbols-rounded icon-xs">mail</span>
+                </span>
+                <span class="horario-registro log-time">{{ reg.horario || reg.timestamp }}</span>
+              </div>
             </td>
-            <td><span class="horario-registro log-time">{{ reg.horario || reg.timestamp }}</span></td>
             <td><span class="destinatario-registro log-recipient">{{ reg.destinatario || reg.recipient }}</span></td>
-            <td><strong>{{ prefs.localizarTexto(reg.nomeLicencaOuAtivo || reg.licenseOrAssetName) }}</strong></td>
-            <td>{{ prefs.localizarTexto(reg.nomeUnidade || reg.branchName) }}</td>
+            <td>
+              <div class="log-reference">
+                <strong>{{ prefs.localizarTexto(reg.nomeLicencaOuAtivo || reg.licenseOrAssetName) }}</strong>
+                <span>{{ prefs.localizarTexto(reg.nomeUnidade || reg.branchName) }}</span>
+              </div>
+            </td>
             <td>
               <span class="pilula-dias days-pill">{{ reg.diasAntes ?? reg.daysBefore }} {{ prefs.t('common.days') }}</span>
             </td>

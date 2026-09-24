@@ -2,28 +2,33 @@
   <main class="public-asset-page">
     <app-preferences-toolbar class="floating-preferences" />
     <section class="public-asset-card">
-      <img src="logo-auth.png" alt="Licenfy" class="public-asset-logo" />
+      <header class="public-asset-header"><img src="logo.png" alt="Licenfy" class="public-asset-logo" /><span>Consulta pública</span></header>
       @if (publicAsset(); as asset) {
-        <span class="public-asset-badge">{{ prefs.t('assetPage.identified') }}</span>
-        <h1>{{ asset.name }}</h1>
-        <p class="public-asset-tag">{{ prefs.t('assetPage.property') }} {{ asset.assetTag }}</p>
+        <div class="public-asset-status"><span class="material-symbols-rounded">verified</span><div><strong>Ativo identificado</strong><small>Informações atualizadas pela operação</small></div></div>
+        <p class="public-asset-tag"><span class="material-symbols-rounded">qr_code_2</span> {{ asset.assetTag || asset.etiquetaPatrimonio }}</p>
+        <h1>{{ asset.name || asset.nome }}</h1>
+        <p class="public-asset-category">{{ asset.category || asset.categoria }} • {{ asset.brandModel || asset.marcaModelo }}</p>
         <dl class="public-asset-details">
-          <div><dt>{{ prefs.t('assetPage.unit') }}</dt><dd>{{ asset.branchName }}</dd></div>
-          <div><dt>{{ prefs.t('assetPage.location') }}</dt><dd>{{ asset.locationDetails }}</dd></div>
-          <div><dt>{{ prefs.t('assetPage.nextMaintenance') }}</dt><dd>{{ asset.nextMaintenanceDate }}</dd></div>
+          <div><dt><span class="material-symbols-rounded">apartment</span>{{ prefs.t('assetPage.unit') }}</dt><dd>{{ asset.branchName || asset.nomeUnidade }}</dd></div>
+          <div><dt><span class="material-symbols-rounded">location_on</span>{{ prefs.t('assetPage.location') }}</dt><dd>{{ asset.locationDetails || asset.detalhesLocalizacao }}</dd></div>
+          <div><dt><span class="material-symbols-rounded">event_repeat</span>{{ prefs.t('assetPage.nextMaintenance') }}</dt><dd>{{ asset.nextMaintenanceDate || asset.dataProximaManutencao }}</dd></div>
+          <div><dt><span class="material-symbols-rounded">verified_user</span>Garantia do fabricante</dt><dd>{{ (asset.warrantyExpirationDate || asset.dataFimGarantia) | date:'dd/MM/yyyy' }} <small>• {{ asset.daysUntilWarrantyExpires ?? asset.diasAteFimGarantia }} dias restantes</small></dd></div>
         </dl>
+        <div class="public-asset-help"><span class="material-symbols-rounded">info</span><span>Identificou uma ocorrência? Acione o responsável da unidade.</span></div>
       } @else {
         <span class="public-asset-badge">{{ prefs.t('assetPage.notFound') }}</span>
         <h1>{{ prefs.t('assetPage.notFoundText') }}</h1>
         <p>{{ prefs.t('assetPage.notFoundDesc') }}</p>
       }
-      <a href="/">{{ prefs.t('assetPage.go') }}</a>
+      <a href="/" class="public-asset-return"><span class="material-symbols-rounded">home</span>{{ prefs.t('assetPage.go') }}</a>
     </section>
   </main>
 } @else if (currentView() === 'landing') {
   <app-landing-page />
 } @else if (currentView() === 'auth') {
   <app-auth />
+} @else if (currentView() === 'checkout') {
+  <app-checkout />
 } @else {
   <div class="licenfy-layout">
     <div class="mobile-sidebar-backdrop" [class.open]="isMobileMenuOpen()" (click)="closeMobileMenu()"></div>
@@ -90,12 +95,20 @@
           <span>{{ prefs.t('shell.inspection') }}</span>
         </button>
 
-        <button 
-          class="nav-item" 
+        <button
+          class="nav-item"
           [class.active]="currentTab() === 'roi'"
           (click)="setTab('roi')">
           <span class="material-symbols-rounded">trending_up</span>
           <span>{{ prefs.t('shell.roi') }}</span>
+        </button>
+
+        <button
+          class="nav-item"
+          [class.active]="currentTab() === 'account'"
+          (click)="setTab('account')">
+          <span class="material-symbols-rounded">manage_accounts</span>
+          <span>Conta</span>
         </button>
       </nav>
 
@@ -141,6 +154,7 @@
               @case ('notifications') { {{ prefs.t('shell.alerts') }} }
               @case ('inspection') { {{ prefs.t('shell.inspection') }} }
               @case ('roi') { {{ prefs.t('shell.roi') }} }
+              @case ('account') { Conta }
             }
           </span>
         </div>
@@ -198,6 +212,9 @@
           }
           @case ('roi') {
             <app-roi-report />
+          }
+          @case ('account') {
+            <app-account />
           }
         }
       </main>

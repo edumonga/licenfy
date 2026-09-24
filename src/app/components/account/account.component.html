@@ -1,0 +1,40 @@
+<section class="account-page">
+  <header class="account-header">
+    <div>
+      <span class="account-kicker"><span class="material-symbols-rounded">manage_accounts</span> CONTA LICENFY</span>
+      <h1>Conta e organização</h1>
+      <p>Gerencie seus dados de acesso e as informações da empresa.</p>
+    </div>
+    <div class="plan-badge"><span class="material-symbols-rounded">workspace_premium</span><div><strong>Plano Enterprise</strong><small>Operação em expansão</small></div></div>
+  </header>
+
+  <div class="account-grid">
+    <aside class="profile-card">
+      <div class="profile-avatar">{{ initials() }}</div>
+      <h2>{{ form().nome }}</h2>
+      <p>{{ form().cargo }}</p>
+      <span class="profile-email">{{ form().email }}</span>
+      <div class="profile-status"><span></span> Conta ativa</div>
+    </aside>
+
+    <form class="account-form" (submit)="$event.preventDefault(); save()">
+      <div class="form-heading"><div><h2>Informações da conta</h2><p>Estes dados aparecem na sua sessão e nas comunicações da plataforma.</p></div><span *ngIf="saved()" class="save-feedback"><span class="material-symbols-rounded">check_circle</span> Salvo</span></div>
+      <div class="form-grid">
+        <label>Nome completo<input [ngModel]="form().nome" (ngModelChange)="setField('nome', $event)" name="name" required autocomplete="name"></label>
+        <label>E-mail corporativo<input [ngModel]="form().email" (ngModelChange)="setField('email', $event)" name="email" type="email" required autocomplete="email"></label>
+        <label>Função / área<input [ngModel]="form().cargo" (ngModelChange)="setField('cargo', $event)" name="role" placeholder="Ex.: Jurídico e Compliance"></label>
+        <label>Telefone<input [ngModel]="form().telefone" (ngModelChange)="setField('telefone', $event)" name="phone" autocomplete="tel"></label>
+        <label>Empresa<input [ngModel]="form().empresa" (ngModelChange)="setField('empresa', $event)" name="company" required></label>
+        <label>CNPJ<input [ngModel]="form().cnpj" (ngModelChange)="setField('cnpj', $event)" name="cnpj" inputmode="numeric"></label>
+      </div>
+      <div class="form-actions"><button class="btn btn-primary" type="submit"><span class="material-symbols-rounded">save</span> Salvar alterações</button></div>
+    </form>
+  </div>
+
+  <section class="account-summary" aria-label="Resumo da organização">
+    <div><span class="material-symbols-rounded">account_tree</span><strong>{{ accountStats().units }}</strong><small>unidades ativas</small></div>
+    <div><span class="material-symbols-rounded">description</span><strong>{{ accountStats().documents }}</strong><small>documentos monitorados</small></div>
+    <div><span class="material-symbols-rounded">qr_code_2</span><strong>{{ accountStats().assets }}</strong><small>ativos cadastrados</small></div>
+    <div class="security-note"><span class="material-symbols-rounded">verified_user</span><div><strong>Dados protegidos</strong><small>Sessão e preferências vinculadas à sua conta.</small></div></div>
+  </section>
+</section>
