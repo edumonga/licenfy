@@ -3,10 +3,10 @@
     <div>
       <div class="selo-subtitulo subtitle-badge">
         <span class="material-symbols-rounded icon-sm">mark_email_read</span>
-        Comunicação Corporativa & Trilha de Auditoria
+        {{ prefs.t('notif.kicker') }}
       </div>
-      <h1 class="titulo-pagina page-title">Notificações Inteligentes por E-mail Corporativo</h1>
-      <p class="descricao-pagina page-desc">Alertas de vencimento programados (90, 60, 30 e 7 dias) enviados com formalidade jurídica e corporativa aos gestores, compliance e diretoria.</p>
+      <h1 class="titulo-pagina page-title">{{ prefs.t('mod.notifTitle') }}</h1>
+      <p class="descricao-pagina page-desc">{{ prefs.t('mod.notifSub') }}</p>
     </div>
   </div>
 
@@ -17,8 +17,8 @@
           <span class="material-symbols-rounded text-primary">schedule_send</span>
         </div>
         <div>
-          <h2 class="titulo-cartao card-title">Alertas de Disparo Corporativo</h2>
-          <p class="subtitulo-cartao card-sub">Gatilhos automáticos configurados antes de qualquer vencimento</p>
+          <h2 class="titulo-cartao card-title">{{ prefs.t('notif.rulesTitle') }}</h2>
+          <p class="subtitulo-cartao card-sub">{{ prefs.t('notif.rulesSub') }}</p>
         </div>
       </div>
 
@@ -26,23 +26,26 @@
         <div *ngFor="let regra of regras()" class="linha-regra rule-row" [class.inativa]="!regra.ativa" [class.inactive]="!regra.ativa">
           <div class="selo-dias-regra rule-days-badge">
             <span class="numero-dias days-num">{{ regra.diasAntesVencimento ?? regra.daysBeforeExpiration }}</span>
-            <span class="legenda-dias days-label">dias antes</span>
+            <span class="legenda-dias days-label">{{ prefs.t('notif.daysBefore') }}</span>
           </div>
 
           <div class="detalhes-regra rule-details">
             <div class="linha-titulo-regra rule-title-row">
               <span class="etiqueta-nivel-regra rule-level-tag" [ngClass]="regra.nivelAlerta || regra.alertLevel">
-                {{ (regra.nivelAlerta || regra.alertLevel) === 'informativo' ? 'Informativo' : ((regra.nivelAlerta || regra.alertLevel) === 'alerta' ? 'Alerta Preventivo' : 'Crítico / Ação Imediata') }}
+                {{ prefs.t((regra.nivelAlerta || regra.alertLevel) === 'informativo' ? 'notif.infoLevel' : ((regra.nivelAlerta || regra.alertLevel) === 'alerta' ? 'notif.preventiveLevel' : 'notif.criticalLevel')) }}
               </span>
               <div class="icones-canal channel-icons">
-                <span class="chip-canal mail channel-chip">
-                  <span class="material-symbols-rounded icon-xs">mail</span> E-mail Corporativo
+                <span class="chip-canal mail channel-chip channel-chip-icon" title="E-mail Corporativo" aria-label="E-mail Corporativo">
+                  <span class="material-symbols-rounded icon-xs">mail</span>
                 </span>
               </div>
             </div>
-            <div class="lista-destinatarios-regra rule-recipients-list">
+            <div class="lista-destinatarios-regra rule-recipients-list" [title]="(regra.destinatarios || regra.recipients || []).join(', ')">
               <span class="material-symbols-rounded icon-xs text-muted">alternate_email</span>
-              <span>{{ (regra.destinatarios || regra.recipients || []).join(' • ') }}</span>
+              <span class="recipient-main">{{ (regra.destinatarios || regra.recipients || [])[0] }}</span>
+              @if ((regra.destinatarios || regra.recipients || []).length > 1) {
+                <span class="recipient-more">+{{ (regra.destinatarios || regra.recipients || []).length - 1 }}</span>
+              }
             </div>
           </div>
 
@@ -57,16 +60,16 @@
 
       <div class="caixa-regra-personalizada custom-rule-box">
         <div>
-          <strong>Adicionar Alerta Customizado</strong>
-          <span>Defina prazos e destinatários específicos para sua empresa.</span>
+          <strong>{{ prefs.t('notif.customTitle') }}</strong>
+          <span>{{ prefs.t('notif.customDesc') }}</span>
         </div>
         <div class="campos-regra-personalizada custom-rule-fields">
           <label>
-            <input type="number" min="1" [(ngModel)]="diasNovaRegra" /> dias antes
+            <input type="number" min="1" [(ngModel)]="diasNovaRegra" /> {{ prefs.t('notif.daysBefore') }}
           </label>
-          <input type="text" [(ngModel)]="destinatariosNovaRegra" placeholder="E-mails corporativos separados por vírgula" />
+          <input type="text" [(ngModel)]="destinatariosNovaRegra" [placeholder]="prefs.t('notif.recipientsPlaceholder')" />
           <button class="botao botao-contorno botao-sm btn btn-outline btn-sm" (click)="adicionarRegraPersonalizada()">
-            <span class="material-symbols-rounded icon-sm">add</span> Adicionar
+            <span class="material-symbols-rounded icon-sm">add</span> {{ prefs.t('common.add') }}
           </button>
         </div>
       </div>
@@ -74,18 +77,18 @@
       <div class="caixa-envio-teste test-send-box">
         <div class="linha-titulo-teste test-title-row">
           <span class="material-symbols-rounded icon-sm text-primary">send</span>
-          <strong>Simular Envio Imediato de E-mail de Alerta</strong>
+          <strong>{{ prefs.t('notif.simulateTitle') }}</strong>
         </div>
         <div class="linha-campos-teste test-input-row">
           <input type="email" [(ngModel)]="emailTeste" class="controle-formulario form-control" placeholder="compliance@suaempresa.com.br" />
           <button class="botao botao-primario btn btn-primary" (click)="enviarTesteManual()" [disabled]="enviandoTeste()">
             <span class="material-symbols-rounded icon-sm">outgoing_mail</span>
-            {{ enviandoTeste() ? 'Disparando...' : 'Disparar Teste' }}
+            {{ enviandoTeste() ? prefs.t('notif.sending') : prefs.t('notif.sendTest') }}
           </button>
         </div>
         <div *ngIf="testeEnviadoComSucesso()" class="alerta-sucesso-teste test-success-alert">
           <span class="material-symbols-rounded icon-sm">check_circle</span>
-          E-mail corporativo disparado e registrado no histórico de auditoria!
+          {{ prefs.t('notif.success') }}
         </div>
       </div>
     </div>
@@ -94,8 +97,8 @@
   <div class="cartao-registros logs-card">
     <div class="cabecalho-registros logs-header">
       <div>
-        <h3 class="titulo-registros logs-title">Histórico de Disparos de E-mail (Auditoria Corporativa)</h3>
-        <p class="subtitulo-registros logs-sub">Trilha de auditoria legal com registro de data, hora, destinatário e status de entrega de cada alerta</p>
+        <h3 class="titulo-registros logs-title">{{ prefs.t('notif.logsTitle') }}</h3>
+        <p class="subtitulo-registros logs-sub">{{ prefs.t('notif.logsSub') }}</p>
       </div>
     </div>
 
@@ -103,39 +106,38 @@
       <table class="tabela-licenfy licenfy-table">
         <thead>
           <tr>
-            <th>Canal</th>
-            <th>Data / Hora</th>
-            <th>Destinatário</th>
-            <th>Documento / Ativo</th>
-            <th>Unidade</th>
-            <th>Antecedência</th>
-            <th>Status de Entrega</th>
-            <th>Prévia do E-mail</th>
+            <th>{{ prefs.t('notif.channel') }}</th>
+            <th>{{ prefs.t('notif.dateTime') }}</th>
+            <th>{{ prefs.t('notif.recipient') }}</th>
+            <th>{{ prefs.t('notif.documentAsset') }}</th>
+            <th>{{ prefs.t('common.branch') }}</th>
+            <th>{{ prefs.t('notif.advance') }}</th>
+            <th>{{ prefs.t('notif.deliveryStatus') }}</th>
+            <th>{{ prefs.t('notif.preview') }}</th>
           </tr>
         </thead>
         <tbody>
           <tr *ngFor="let reg of registros()">
             <td>
-              <span class="pilula-canal email channel-pill">
+              <span class="pilula-canal email channel-pill channel-pill-icon" title="E-mail" aria-label="E-mail">
                 <span class="material-symbols-rounded icon-xs">mail</span>
-                E-mail
               </span>
             </td>
             <td><span class="horario-registro log-time">{{ reg.horario || reg.timestamp }}</span></td>
             <td><span class="destinatario-registro log-recipient">{{ reg.destinatario || reg.recipient }}</span></td>
-            <td><strong>{{ reg.nomeLicencaOuAtivo || reg.licenseOrAssetName }}</strong></td>
-            <td>{{ reg.nomeUnidade || reg.branchName }}</td>
+            <td><strong>{{ prefs.localizarTexto(reg.nomeLicencaOuAtivo || reg.licenseOrAssetName) }}</strong></td>
+            <td>{{ prefs.localizarTexto(reg.nomeUnidade || reg.branchName) }}</td>
             <td>
-              <span class="pilula-dias days-pill">{{ reg.diasAntes ?? reg.daysBefore }} dias</span>
+              <span class="pilula-dias days-pill">{{ reg.diasAntes ?? reg.daysBefore }} {{ prefs.t('common.days') }}</span>
             </td>
             <td>
-              <span class="selo-status badge-status" [ngClass]="reg.status === 'Lido' || reg.status === 'Ação Tomada' || reg.status === 'Entregue' ? 'regular' : 'attention'">
-                <span class="ponto-status status-dot" [ngClass]="reg.status === 'Lido' || reg.status === 'Ação Tomada' || reg.status === 'Entregue' ? 'regular' : 'attention'"></span>
-                {{ reg.status }}
+              <span class="selo-status badge-status" [ngClass]="prefs.statusClass(reg.status)">
+                <span class="ponto-status status-dot" [ngClass]="prefs.statusClass(reg.status)"></span>
+                {{ prefs.statusLabel(reg.status) }}
               </span>
             </td>
             <td>
-              <span class="texto-previa-registro log-preview-text">{{ reg.previaMensagem || reg.messagePreview }}</span>
+              <span class="texto-previa-registro log-preview-text">{{ prefs.localizarTexto(reg.previaMensagem || reg.messagePreview) }}</span>
             </td>
           </tr>
         </tbody>

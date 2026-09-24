@@ -1,8 +1,8 @@
 <div class="painel-container dashboard-container">
   <div class="cabecalho-painel dashboard-header">
     <div>
-      <h1 class="titulo-pagina page-title">Dashboard</h1>
-      <p class="descricao-pagina page-desc">Monitoramento preventivo de alvarás, licenças ambientais, vistorias e garantias de ativos.</p>
+      <h1 class="titulo-pagina page-title">{{ prefs.t('mod.dashboardTitle') }}</h1>
+      <p class="descricao-pagina page-desc">{{ prefs.t('dashboard.desc') }}</p>
     </div>
 
     <div class="acoes-cabecalho header-actions">
@@ -13,7 +13,7 @@
           (click)="alternarAlertaVinculo()"
           [attr.aria-expanded]="alertaVinculoAberto"
           aria-controls="detalhes-alerta-vinculo"
-          aria-label="1 alerta de manutenção vinculado">
+          [attr.aria-label]="prefs.t('dashboard.alertAria')">
           <span class="material-symbols-rounded">notifications</span>
           <span class="contador-alerta notification-count" aria-hidden="true">1</span>
         </button>
@@ -22,24 +22,24 @@
           <div class="cabecalho-alerta notification-popover-header">
             <span class="material-symbols-rounded">link</span>
             <div>
-              <p>Manutenção vinculada</p>
-              <strong>AVCB vence em 25 dias</strong>
+              <p>{{ prefs.t('dashboard.alertTitle') }}</p>
+              <strong>{{ prefs.t('dashboard.alertText') }}</strong>
             </div>
           </div>
-          <p class="texto-alerta notification-popover-text">A renovação depende da recarga e vistoria da Bateria de Extintores (EQ-0199).</p>
+          <p class="texto-alerta notification-popover-text">{{ prefs.t('dashboard.alertDesc') }}</p>
           <button class="acao-alerta notification-action" type="button" (click)="irParaAtivos()">
-            Ver ativo vinculado
+            {{ prefs.t('dashboard.viewAsset') }}
             <span class="material-symbols-rounded">arrow_forward</span>
           </button>
         </section>
       </div>
       <button class="botao botao-contorno btn btn-outline" (click)="irParaCofre()">
         <span class="material-symbols-rounded">cloud_upload</span>
-        Upload de Licença
+        {{ prefs.t('dashboard.upload') }}
       </button>
       <button class="botao botao-primario btn btn-primary" (click)="irParaInspecao()">
         <span class="material-symbols-rounded">policy</span>
-        Dossiê Fiscalização
+        {{ prefs.t('dashboard.dossier') }}
       </button>
     </div>
   </div>
@@ -47,7 +47,7 @@
   <div class="barra-seletor-filial branch-selector-bar">
     <span class="rotulo-seletor selector-label">
       <span class="material-symbols-rounded">apartment</span>
-      Filtrar Unidade:
+      {{ prefs.t('dashboard.filterUnit') }}
     </span>
     <div class="pilulas-filial branch-pills">
       <button 
@@ -55,7 +55,7 @@
         [class.ativa]="unidadeSelecionadaId() === 'all'"
         [class.active]="unidadeSelecionadaId() === 'all'"
         (click)="selecionarUnidade('all')">
-        Todas as Unidades (Visão Consolidada)
+        {{ prefs.t('dashboard.allUnits') }}
       </button>
       <button 
         *ngFor="let u of unidades()" 
@@ -64,7 +64,7 @@
         [class.active]="unidadeSelecionadaId() === u.id"
         (click)="selecionarUnidade(u.id)">
         <span class="ponto-status status-dot" [ngClass]="u.status"></span>
-        {{ u.nome || u.name }}
+        {{ prefs.localizarTexto(u.nome || u.name) }}
         <span class="pontuacao-pilula pill-score">{{ u.pontuacaoConformidade ?? u.complianceScore }}%</span>
       </button>
     </div>
@@ -74,12 +74,12 @@
     <div class="cartao-score score-card">
       <div class="cabecalho-score score-header">
         <div>
-          <span class="legenda-cartao card-caption">Índice Geral de Regularidade</span>
-          <h2 class="titulo-score score-title">Score de Compliance</h2>
+          <span class="legenda-cartao card-caption">{{ prefs.t('dashboard.scoreCaption') }}</span>
+          <h2 class="titulo-score score-title">{{ prefs.t('dashboard.scoreTitle') }}</h2>
         </div>
-        <span class="selo-status badge-status" [ngClass]="status()">
+        <span class="selo-status badge-status" [ngClass]="prefs.statusClass(status())">
           <span class="ponto-status status-dot" [ngClass]="status()"></span>
-          {{ status() === 'regular' ? 'Conforme' : (status() === 'attention' || status() === 'atencao' ? 'Atenção' : 'Risco Crítico') }}
+          {{ prefs.statusLabel(status() === 'regular' ? 'current' : status()) }}
         </span>
       </div>
 
@@ -98,7 +98,7 @@
           </svg>
           <div class="conteudo-central-gauge gauge-center-content">
             <span class="valor-gauge gauge-value">{{ pontuacao() }}%</span>
-            <span class="unidade-gauge gauge-unit">Conformidade</span>
+            <span class="unidade-gauge gauge-unit">{{ prefs.t('dashboard.compliance') }}</span>
           </div>
         </div>
 
@@ -106,21 +106,21 @@
           <div class="item-detalhamento breakdown-item">
             <span class="rotulo-detalhamento breakdown-label">
               <span class="material-symbols-rounded text-regular icon-sm">check_circle</span>
-              Licenças Válidas
+              {{ prefs.t('dashboard.validLicenses') }}
             </span>
             <span class="numero-detalhamento breakdown-num">{{ resumo().regular }}</span>
           </div>
           <div class="item-detalhamento breakdown-item">
             <span class="rotulo-detalhamento breakdown-label">
               <span class="material-symbols-rounded text-attention icon-sm">schedule</span>
-              Renovação Próxima (< 30d)
+              {{ prefs.t('dashboard.renewSoon') }}
             </span>
             <span class="numero-detalhamento text-attention breakdown-num">{{ resumo().atencao ?? resumo().attention }}</span>
           </div>
           <div class="item-detalhamento breakdown-item">
             <span class="rotulo-detalhamento breakdown-label">
               <span class="material-symbols-rounded text-urgent icon-sm">error</span>
-              Risco Crítico / Iminente
+              {{ prefs.t('dashboard.criticalRisk') }}
             </span>
             <span class="numero-detalhamento text-urgent breakdown-num">{{ resumo().urgente ?? resumo().urgent }}</span>
           </div>
@@ -129,7 +129,7 @@
 
       <div class="rodape-score score-footer">
         <span class="material-symbols-rounded icon-sm text-primary">shield</span>
-        <span>Zero multas nos últimos 12 meses nas filiais monitoradas.</span>
+        <span>{{ prefs.t('dashboard.zeroFines') }}</span>
       </div>
     </div>
 
@@ -139,11 +139,11 @@
           <div class="envelope-icone-estatistica regular stat-icon-wrapper">
             <span class="material-symbols-rounded">verified</span>
           </div>
-          <span class="selo-status regular badge-status">Regular</span>
+          <span class="selo-status regular badge-status">{{ prefs.t('status.regular') }}</span>
         </div>
         <div class="numero-estatistica stat-number">{{ resumo().regular }}</div>
-        <div class="rotulo-estatistica stat-label">Documentos & Licenças em dia</div>
-        <p class="descricao-estatistica stat-desc">Sem pendências jurídicas ou de órgãos fiscalizadores.</p>
+        <div class="rotulo-estatistica stat-label">{{ prefs.t('dashboard.regularDocs') }}</div>
+        <p class="descricao-estatistica stat-desc">{{ prefs.t('dashboard.regularDocsDesc') }}</p>
       </div>
 
       <div class="caixa-estatistica atencao attention stat-box">
@@ -151,11 +151,11 @@
           <div class="envelope-icone-estatistica atencao attention stat-icon-wrapper">
             <span class="material-symbols-rounded">notification_important</span>
           </div>
-          <span class="selo-status atencao attention badge-status">Atenção</span>
+          <span class="selo-status atencao attention badge-status">{{ prefs.t('status.attention') }}</span>
         </div>
         <div class="numero-estatistica stat-number">{{ resumo().atencao ?? resumo().attention }}</div>
-        <div class="rotulo-estatistica stat-label">Prazos em contagem regressiva</div>
-        <p class="descricao-estatistica stat-desc">Disparos de alertas em andamento (30 a 60 dias).</p>
+        <div class="rotulo-estatistica stat-label">{{ prefs.t('dashboard.attentionDocs') }}</div>
+        <p class="descricao-estatistica stat-desc">{{ prefs.t('dashboard.attentionDocsDesc') }}</p>
       </div>
 
       <div class="caixa-estatistica urgente urgent stat-box">
@@ -163,11 +163,11 @@
           <div class="envelope-icone-estatistica urgente urgent stat-icon-wrapper">
             <span class="material-symbols-rounded">warning</span>
           </div>
-          <span class="selo-status urgente urgent badge-status">Urgente</span>
+          <span class="selo-status urgente urgent badge-status">{{ prefs.t('status.urgent') }}</span>
         </div>
         <div class="numero-estatistica stat-number">{{ resumo().urgente ?? resumo().urgent }}</div>
-        <div class="rotulo-estatistica stat-label">Risco iminente ou pendência crítica</div>
-        <p class="descricao-estatistica stat-desc">Ação emergencial recomendada para evitar auto de infração.</p>
+        <div class="rotulo-estatistica stat-label">{{ prefs.t('dashboard.urgentDocs') }}</div>
+        <p class="descricao-estatistica stat-desc">{{ prefs.t('dashboard.urgentDocsDesc') }}</p>
       </div>
     </div>
   </div>
@@ -175,13 +175,13 @@
   <div class="cartao-tabela table-card">
     <div class="cabecalho-tabela table-header">
       <div>
-        <h3 class="titulo-tabela table-title">Monitoramento Ativo de Obrigações</h3>
-        <p class="subtitulo-tabela table-subtitle">Alvarás, licenças ambientais, sanitárias e vistorias sob gestão contínua</p>
+        <h3 class="titulo-tabela table-title">{{ prefs.t('dashboard.monitoringTitle') }}</h3>
+        <p class="subtitulo-tabela table-subtitle">{{ prefs.t('dashboard.monitoringSub') }}</p>
       </div>
       <div class="ferramentas-tabela table-tools">
         <button class="botao botao-contorno btn btn-outline" (click)="irParaCofre()">
           <span class="material-symbols-rounded">folder_open</span>
-          Acessar Cofre Digital
+          {{ prefs.t('dashboard.accessVault') }}
         </button>
       </div>
     </div>
@@ -190,58 +190,59 @@
       <table class="tabela-licenfy licenfy-table">
         <thead>
           <tr>
-            <th>Status</th>
-            <th>Documento / Obrigação</th>
-            <th>Órgão Emissor</th>
-            <th>Unidade / Filial</th>
-            <th>Vencimento</th>
-            <th>Ativo Vinculado</th>
-            <th class="text-right">Ação Preventiva</th>
+            <th>{{ prefs.t('dashboard.status') }}</th>
+            <th>{{ prefs.t('dashboard.document') }}</th>
+            <th>{{ prefs.t('dashboard.issuer') }}</th>
+            <th>{{ prefs.t('dashboard.unitBranch') }}</th>
+            <th>{{ prefs.t('dashboard.expiration') }}</th>
+            <th>{{ prefs.t('dashboard.linkedAsset') }}</th>
+            <th class="text-right">{{ prefs.t('dashboard.preventiveAction') }}</th>
           </tr>
         </thead>
         <tbody>
           <tr *ngFor="let lic of licencas()">
             <td>
-              <span class="selo-status badge-status" [ngClass]="lic.status">
-                <span class="ponto-status status-dot" [ngClass]="lic.status"></span>
-                {{ lic.status === 'regular' ? 'Regular' : (lic.status === 'attention' || lic.status === 'atencao' ? 'Atenção' : 'Urgente') }}
+              <span class="selo-status badge-status" [ngClass]="prefs.statusClass(lic.status)">
+                <span class="ponto-status status-dot" [ngClass]="prefs.statusClass(lic.status)"></span>
+                {{ prefs.statusLabel(lic.status) }}
               </span>
             </td>
             <td>
               <div class="celula-titulo-doc doc-title-cell">
-                <span class="titulo-doc doc-title">{{ lic.titulo || lic.title }}</span>
+                <span class="titulo-doc doc-title">{{ prefs.localizarTexto(lic.titulo || lic.title) }}</span>
                 <span class="numero-doc doc-num">{{ lic.numeroDocumento || lic.documentNumber }}</span>
               </div>
             </td>
             <td>
-              <span class="selo-sutil badge-subtle">{{ lic.orgaoEmissor || lic.issuingBody }}</span>
+              <span class="selo-sutil badge-subtle">{{ prefs.localizarTexto(lic.orgaoEmissor || lic.issuingBody) }}</span>
             </td>
             <td>
-              <span class="nome-celula-unidade branch-cell-name">{{ lic.nomeUnidade || lic.branchName }}</span>
+              <span class="nome-celula-unidade branch-cell-name">{{ prefs.localizarTexto(lic.nomeUnidade || lic.branchName) }}</span>
             </td>
             <td>
               <div class="celula-vencimento expiration-cell">
                 <span class="data-vencimento exp-date">{{ (lic.dataVencimento || lic.expirationDate) | date:'dd/MM/yyyy' }}</span>
                 <span class="contagem-vencimento exp-countdown" [ngClass]="lic.status">
                   <span class="material-symbols-rounded icon-xs">timelapse</span>
-                  {{ lic.diasRestantes ?? lic.daysRemaining }} dias restantes
+                  {{ lic.diasRestantes ?? lic.daysRemaining }} {{ prefs.t('dashboard.daysRemaining') }}
                 </span>
               </div>
             </td>
             <td>
               <div *ngIf="lic.nomeAtivoVinculado || lic.linkedAssetName" class="selo-ativo-vinculado linked-asset-badge" (click)="irParaAtivos()">
                 <span class="material-symbols-rounded icon-xs">build</span>
-                {{ lic.nomeAtivoVinculado || lic.linkedAssetName }}
+                {{ prefs.localizarTexto(lic.nomeAtivoVinculado || lic.linkedAssetName) }}
               </div>
-              <span *ngIf="!lic.nomeAtivoVinculado && !lic.linkedAssetName" class="texto-mutado-sm text-muted-sm">Sem vínculo direto</span>
+              <span *ngIf="!lic.nomeAtivoVinculado && !lic.linkedAssetName" class="texto-mutado-sm text-muted-sm">{{ prefs.t('dashboard.noLink') }}</span>
             </td>
             <td class="text-right">
               <button 
-                class="botao botao-contorno btn btn-outline btn-sm action-btn" 
+                class="botao botao-contorno btn btn-outline btn-sm action-btn action-btn-icon" 
                 (click)="notificarGestor(lic)"
-                [disabled]="idRecemNotificado === lic.id">
-                <span class="material-symbols-rounded icon-sm text-primary">forward_to_inbox</span>
-                {{ idRecemNotificado === lic.id ? 'E-mail Disparado!' : 'Alertar por E-mail' }}
+                [disabled]="idRecemNotificado === lic.id"
+                [title]="idRecemNotificado === lic.id ? prefs.t('dashboard.emailSent') : prefs.t('dashboard.alertEmail')"
+                [attr.aria-label]="idRecemNotificado === lic.id ? prefs.t('dashboard.emailSent') : prefs.t('dashboard.alertEmail')">
+                <span class="material-symbols-rounded icon-sm text-primary">{{ idRecemNotificado === lic.id ? 'mark_email_read' : 'forward_to_inbox' }}</span>
               </button>
             </td>
           </tr>

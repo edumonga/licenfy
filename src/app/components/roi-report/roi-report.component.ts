@@ -1,6 +1,7 @@
 import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ServicoLicenfy } from '../../core/services/licenfy.service';
+import { PreferenciasService } from '../../core/services/preferencias.service';
 
 @Component({
   selector: 'app-roi-report',
@@ -11,6 +12,7 @@ import { ServicoLicenfy } from '../../core/services/licenfy.service';
 })
 export class RelatorioRoiComponente {
   readonly servico = inject(ServicoLicenfy);
+  readonly prefs = inject(PreferenciasService);
   readonly roi = this.servico.dadosRoi;
 
   readonly custoAnualSoftware = 14400;

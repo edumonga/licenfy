@@ -2,6 +2,7 @@ import { Component, inject, signal, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ServicoLicenfy } from '../../core/services/licenfy.service';
+import { PreferenciasService } from '../../core/services/preferencias.service';
 import { AtivoFisico, PhysicalAsset } from '../../core/models/types';
 import { QrCanvasComponente } from '../qr-canvas/qr-canvas.component';
 
@@ -14,6 +15,7 @@ import { QrCanvasComponente } from '../qr-canvas/qr-canvas.component';
 })
 export class GestaoAtivosComponente {
   readonly servico = inject(ServicoLicenfy);
+  readonly prefs = inject(PreferenciasService);
 
   readonly ativos = this.servico.ativosFiltrados;
   readonly unidades = this.servico.unidades;

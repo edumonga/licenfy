@@ -2,13 +2,13 @@
   <div class="cabecalho-unidades units-header">
     <div>
       <div class="selo-subtitulo subtitle-badge">
-        <span class="material-symbols-rounded icon-sm">account_tree</span> Estrutura da operação
+        <span class="material-symbols-rounded icon-sm">account_tree</span> {{ prefs.t('units.structure') }}
       </div>
-      <h1 class="titulo-pagina page-title">Unidades e responsáveis</h1>
-      <p class="descricao-pagina page-desc">Organize a rede em empresa → unidade → documentos e ativos, sem concentrar o conhecimento em uma única pessoa.</p>
+      <h1 class="titulo-pagina page-title">{{ prefs.t('mod.unitsTitle') }}</h1>
+      <p class="descricao-pagina page-desc">{{ prefs.t('units.desc') }}</p>
     </div>
     <button class="botao botao-primario btn btn-primary" (click)="exibirFormulario.set(true)">
-      <span class="material-symbols-rounded">add_business</span> Nova unidade
+      <span class="material-symbols-rounded">add_business</span> {{ prefs.t('units.new') }}
     </button>
   </div>
 
@@ -16,21 +16,21 @@
     <span class="material-symbols-rounded text-primary">corporate_fare</span>
     <strong>Grupo Alpha Brasil S.A.</strong>
     <span class="seta-hierarquia hierarchy-arrow">→</span>
-    <span>{{ unidades().length }} unidades ativas</span>
+    <span>{{ unidades().length }} {{ prefs.t('units.active') }}</span>
     <span class="seta-hierarquia hierarchy-arrow">→</span>
-    <span>documentos e ativos por unidade</span>
+    <span>{{ prefs.t('units.docsAssets') }}</span>
   </div>
 
   <div class="grade-unidades units-grid">
     <section class="cartao-lista-unidades unit-list-card">
       <div class="linha-titulo-secao section-heading-row">
-        <h2>Rede de unidades</h2>
-        <span>{{ unidades().length }} cadastradas</span>
+        <h2>{{ prefs.t('units.network') }}</h2>
+        <span>{{ unidades().length }} {{ prefs.t('units.registered') }}</span>
       </div>
       <button *ngFor="let u of unidades()" class="linha-unidade unit-row" [class.selecionada]="u.id === unidadeSelecionadaId()" [class.selected]="u.id === unidadeSelecionadaId()" (click)="selecionarUnidade(u.id)">
         <span class="ponto-status status-dot" [ngClass]="u.status"></span>
         <span class="texto-linha-unidade unit-row-copy">
-          <strong>{{ u.nome || u.name }}</strong>
+          <strong>{{ prefs.localizarTexto(u.nome || u.name) }}</strong>
           <small>{{ u.cidade || u.city }} · {{ u.cnpj }}</small>
         </span>
         <span class="pontuacao-unidade unit-score">{{ u.pontuacaoConformidade ?? u.complianceScore }}%</span>
@@ -41,42 +41,42 @@
       <div class="topo-detalhe detail-top">
         <div>
           <span class="destaque-detalhe detail-kicker">UNIDADE SELECIONADA</span>
-          <h2>{{ unidadeSelecionada.nome || unidadeSelecionada.name }}</h2>
+          <h2>{{ prefs.localizarTexto(unidadeSelecionada.nome || unidadeSelecionada.name) }}</h2>
           <p>{{ unidadeSelecionada.razaoSocial || unidadeSelecionada.companyName }} · {{ unidadeSelecionada.cnpj }}</p>
         </div>
-        <span class="selo-status badge-status" [ngClass]="unidadeSelecionada.status">
-          {{ unidadeSelecionada.status === 'regular' ? 'Regular' : (unidadeSelecionada.status === 'attention' || unidadeSelecionada.status === 'atencao' ? 'Atenção' : 'Crítica') }}
+        <span class="selo-status badge-status" [ngClass]="prefs.statusClass(unidadeSelecionada.status)">
+          {{ prefs.statusLabel(unidadeSelecionada.status) }}
         </span>
       </div>
       <div class="grade-informacoes-detalhe detail-info-grid">
         <div>
           <span class="material-symbols-rounded">location_on</span>
-          <p><strong>Endereço</strong>{{ unidadeSelecionada.endereco || unidadeSelecionada.address }}</p>
+          <p><strong>{{ prefs.t('units.address') }}</strong>{{ unidadeSelecionada.endereco || unidadeSelecionada.address }}</p>
         </div>
         <div>
           <span class="material-symbols-rounded">description</span>
-          <p><strong>Documentos</strong>{{ (unidadeSelecionada.contagemLicencas?.total ?? unidadeSelecionada.licensesCount?.total) || 0 }} documentos sob gestão</p>
+          <p><strong>{{ prefs.t('units.documents') }}</strong>{{ (unidadeSelecionada.contagemLicencas?.total ?? unidadeSelecionada.licensesCount?.total) || 0 }} {{ prefs.t('units.managedDocs') }}</p>
         </div>
         <div>
           <span class="material-symbols-rounded">precision_manufacturing</span>
-          <p><strong>Ativos</strong>{{ (unidadeSelecionada.contagemAtivos?.total ?? unidadeSelecionada.assetsCount?.total) || 0 }} ativos vinculados</p>
+          <p><strong>{{ prefs.t('units.assets') }}</strong>{{ (unidadeSelecionada.contagemAtivos?.total ?? unidadeSelecionada.assetsCount?.total) || 0 }} {{ prefs.t('units.linkedAssets') }}</p>
         </div>
       </div>
       <div class="cabecalho-responsaveis responsibles-heading">
         <div>
-          <h3>Responsáveis e destinatários</h3>
-          <p>Todos recebem alertas automáticos conforme a unidade.</p>
+          <h3>{{ prefs.t('units.responsible') }}</h3>
+          <p>{{ prefs.t('units.responsibleDesc') }}</p>
         </div>
         <button class="botao botao-contorno botao-sm btn btn-outline btn-sm">
-          <span class="material-symbols-rounded icon-sm">person_add</span> Adicionar responsável
+          <span class="material-symbols-rounded icon-sm">person_add</span> {{ prefs.t('units.addResponsible') }}
         </button>
       </div>
       <div class="lista-responsaveis responsibles-list">
         <div *ngFor="let pessoa of (unidadeSelecionada.responsaveis || unidadeSelecionada.responsiblePeople)" class="linha-responsavel responsible-row">
           <div class="avatar-responsavel avatar">{{ (pessoa.nome || pessoa.name || 'U').slice(0, 1) }}</div>
           <div class="texto-pessoa person-copy">
-            <strong>{{ pessoa.nome || pessoa.name }} <span *ngIf="pessoa.principal || pessoa.primary" class="etiqueta-principal primary-tag">Principal</span></strong>
-            <span>{{ pessoa.cargo || pessoa.role }}</span>
+            <strong>{{ prefs.localizarTexto(pessoa.nome || pessoa.name) }} <span *ngIf="pessoa.principal || pessoa.primary" class="etiqueta-principal primary-tag">{{ prefs.t('units.primary') }}</span></strong>
+            <span>{{ prefs.localizarTexto(pessoa.cargo || pessoa.role) }}</span>
           </div>
           <div class="contato-pessoa person-contact">
             <span>{{ pessoa.email }}</span>

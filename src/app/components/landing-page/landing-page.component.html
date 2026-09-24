@@ -5,26 +5,24 @@
       <img src="logo.png" alt="Licenfy" class="logo-img" />
     </a>
 
-    <nav class="nav-menu" aria-label="Navegação principal">
-      <a href="#plataforma" class="nav-link">Plataforma</a>
-      <a href="#solucoes" class="nav-link">Soluções</a>
-      <a href="#industrias" class="nav-link">Indústrias</a>
-      <a href="#modulos" class="nav-link">Módulos</a>
-      <a href="#recursos" class="nav-link">Recursos</a>
-      <a href="#planos" class="nav-link">Planos</a>
+    <nav class="nav-menu" [attr.aria-label]="prefs.t('landing.mainNavAria')">
+      <a href="#plataforma" class="nav-link">{{ prefs.t('nav.platform') }}</a>
+      <a href="#solucoes" class="nav-link">{{ prefs.t('nav.solutions') }}</a>
+      <a href="#industrias" class="nav-link">{{ prefs.t('nav.industries') }}</a>
+      <a href="#modulos" class="nav-link">{{ prefs.t('nav.modules') }}</a>
+      <a href="#recursos" class="nav-link">{{ prefs.t('nav.features') }}</a>
+      <a href="#planos" class="nav-link">{{ prefs.t('nav.pricing') }}</a>
     </nav>
 
     <div class="header-right">
-      <button class="lang-selector" title="Português do Brasil">
-        <span class="material-symbols-rounded">language</span>
-      </button>
+      <app-preferences-toolbar />
 
       <button class="btn-text" (click)="openLogin()">
-        Entrar
+        {{ prefs.t('header.signin') }}
       </button>
 
       <button class="btn-primary-pill" (click)="openDemoModal()">
-        Agende uma demo
+        {{ prefs.t('header.bookDemo') }}
       </button>
     </div>
 
@@ -39,16 +37,16 @@
 
   <div class="hero-container">
     <div class="hero-content">
-      <span class="section-kicker">REGULARIDADE OPERACIONAL EM TEMPO REAL</span>
-      <h1 class="hero-title">Nunca mais seja interditado por um alvará que venceu sem avisar</h1>
+      <span class="section-kicker">{{ prefs.t('landing.heroKicker') }}</span>
+      <h1 class="hero-title">{{ prefs.t('landing.heroTitle') }}</h1>
 
       <p class="hero-subtitle">
-        O Licenfy centraliza suas licenças, alvarás e ativos com monitoramento contínuo e alertas que escalam por e-mail corporativo — do time local até a diretoria.
+        {{ prefs.t('landing.heroSub') }}
       </p>
 
       <div class="hero-cta-group">
         <button class="btn-cta-blue" (click)="openDemoModal()">
-          <span>Agende uma demo</span>
+          <span>{{ prefs.t('header.bookDemo') }}</span>
           <span class="material-symbols-rounded arrow-icon">north_east</span>
         </button>
 
@@ -57,20 +55,20 @@
       <div class="hero-trust-badges">
         <div class="trust-item">
           <span class="material-symbols-rounded text-neutral">check_circle</span>
-          <span>Zero risco de interdição nas filiais</span>
+          <span>{{ prefs.t('landing.trust1') }}</span>
         </div>
         <div class="trust-item">
           <span class="material-symbols-rounded text-neutral">check_circle</span>
-          <span>OCR de alvarás em PDF — meta de 99%+ de precisão</span>
+          <span>{{ prefs.t('landing.trust2') }}</span>
         </div>
         <div class="trust-item">
           <span class="material-symbols-rounded text-neutral">check_circle</span>
-          <span>Pronto para redes com 1 a 100+ unidades</span>
+          <span>{{ prefs.t('landing.trust3') }}</span>
         </div>
       </div>
     </div>
 
-    <div class="hero-product-visual" aria-label="Painel de operação Licenfy em computador e celular">
+    <div class="hero-product-visual" [attr.aria-label]="prefs.t('landing.heroVisualAria')">
       <div class="hero-product-carousel" aria-live="polite">
         @for (slide of slides; track slide.id; let index = $index) {
           <figure class="hero-product-slide" [class.is-active]="currentSlideIndex() === index">
@@ -78,9 +76,9 @@
           </figure>
         }
       </div>
-      <div class="hero-carousel-controls" aria-label="Escolher demonstração do produto">
+      <div class="hero-carousel-controls" [attr.aria-label]="prefs.t('landing.carouselAria')">
         @for (slide of slides; track slide.id; let index = $index) {
-          <button type="button" [class.is-active]="currentSlideIndex() === index" (click)="setSlide(index)" [attr.aria-label]="'Ver ' + slide.titulo"></button>
+          <button type="button" [class.is-active]="currentSlideIndex() === index" (click)="setSlide(index)" [attr.aria-label]="prefs.t('landing.viewSlide') + ' ' + slide.titulo"></button>
         }
       </div>
     </div>
@@ -92,14 +90,14 @@
 <section id="plataforma" class="platform-section">
   <div class="section-container platform-layout">
     <div class="platform-copy">
-      <span class="section-kicker">PLATAFORMA LICENFY</span>
-      <h2>Uma única visão para cada prazo, documento e ativo.</h2>
-      <p>Troque arquivos espalhados e planilhas manuais por uma operação conectada, com contexto por unidade e histórico pronto para auditorias.</p>
+      <span class="section-kicker">{{ prefs.t('landing.platformKicker') }}</span>
+      <h2>{{ prefs.t('landing.platformTitle') }}</h2>
+      <p>{{ prefs.t('landing.platformSub') }}</p>
     </div>
     <div class="platform-points">
-      <div><span class="material-symbols-rounded">hub</span><strong>Operação conectada</strong><p>Licenças, pessoas e ativos no mesmo fluxo.</p></div>
-      <div><span class="material-symbols-rounded">visibility</span><strong>Visão por unidade</strong><p>Priorize a ação certa em cada filial.</p></div>
-      <div><span class="material-symbols-rounded">history</span><strong>Histórico auditável</strong><p>Decisões e documentos sempre rastreáveis.</p></div>
+      <div><span class="material-symbols-rounded">hub</span><strong>{{ prefs.t('landing.platformPoint1Title') }}</strong><p>{{ prefs.t('landing.platformPoint1Desc') }}</p></div>
+      <div><span class="material-symbols-rounded">visibility</span><strong>{{ prefs.t('landing.platformPoint2Title') }}</strong><p>{{ prefs.t('landing.platformPoint2Desc') }}</p></div>
+      <div><span class="material-symbols-rounded">history</span><strong>{{ prefs.t('landing.platformPoint3Title') }}</strong><p>{{ prefs.t('landing.platformPoint3Desc') }}</p></div>
     </div>
   </div>
 </section>
@@ -108,13 +106,13 @@
 <section id="solucoes" class="solutions-section">
   <div class="section-container">
     <div class="section-badge-header">
-      <span class="section-kicker">SOLUÇÕES PARA A SUA OPERAÇÃO</span>
-      <h2 class="section-headline">Controle que acompanha o ritmo do seu negócio.</h2>
+      <span class="section-kicker">{{ prefs.t('landing.solKicker') }}</span>
+      <h2 class="section-headline">{{ prefs.t('landing.solutionsTitle') }}</h2>
     </div>
     <div class="solutions-grid">
-      <article class="solution-card"><span class="material-symbols-rounded">storefront</span><h3>Redes e franquias</h3><p>Padronize a conformidade de cada unidade, sem sobrecarregar o time central.</p></article>
-      <article class="solution-card"><span class="material-symbols-rounded">gavel</span><h3>Jurídico e regularidade</h3><p>Antecipe riscos e mantenha evidências organizadas para fiscalizações.</p></article>
-      <article class="solution-card"><span class="material-symbols-rounded">business_center</span><h3>Facilities e operações</h3><p>Conecte obrigações regulatórias à manutenção dos ativos físicos.</p></article>
+      <article class="solution-card"><span class="material-symbols-rounded">storefront</span><h3>{{ prefs.t('landing.solution1Title') }}</h3><p>{{ prefs.t('landing.solution1Desc') }}</p></article>
+      <article class="solution-card"><span class="material-symbols-rounded">gavel</span><h3>{{ prefs.t('landing.solution2Title') }}</h3><p>{{ prefs.t('landing.solution2Desc') }}</p></article>
+      <article class="solution-card"><span class="material-symbols-rounded">business_center</span><h3>{{ prefs.t('landing.solution3Title') }}</h3><p>{{ prefs.t('landing.solution3Desc') }}</p></article>
     </div>
   </div>
 </section>
@@ -122,28 +120,28 @@
 <!-- Empresas -->
 <section id="industrias" class="social-proof-section">
   <div class="section-container">
-    <h3 class="social-proof-title">O Licenfy atende diversos setores</h3>
+    <h3 class="social-proof-title">{{ prefs.t('landing.industriesTitle') }}</h3>
     
     <div class="logos-grid">
       <div class="logo-box">
         <span class="material-symbols-rounded logo-icon">factory</span>
-        <span class="logo-text">Indústria leve</span>
-        <span class="logo-detail">Ambiental, ativos e manutenção</span>
+        <span class="logo-text">{{ prefs.t('landing.industry1') }}</span>
+        <span class="logo-detail">{{ prefs.t('landing.industry1Desc') }}</span>
       </div>
       <div class="logo-box">
         <span class="material-symbols-rounded logo-icon">local_hospital</span>
-        <span class="logo-text">Saúde</span>
-        <span class="logo-detail">Farmácias e clínicas</span>
+        <span class="logo-text">{{ prefs.t('landing.industry2') }}</span>
+        <span class="logo-detail">{{ prefs.t('landing.industry2Desc') }}</span>
       </div>
       <div class="logo-box">
         <span class="material-symbols-rounded logo-icon">storefront</span>
-        <span class="logo-text">Varejo multi-loja</span>
-        <span class="logo-detail">Redes de 5 a 50 unidades</span>
+        <span class="logo-text">{{ prefs.t('landing.industry3') }}</span>
+        <span class="logo-detail">{{ prefs.t('landing.industry3Desc') }}</span>
       </div>
       <div class="logo-box">
         <span class="material-symbols-rounded logo-icon">restaurant</span>
-        <span class="logo-text">Alimentação</span>
-        <span class="logo-detail">Restaurantes e food service</span>
+        <span class="logo-text">{{ prefs.t('landing.industry4') }}</span>
+        <span class="logo-detail">{{ prefs.t('landing.industry4Desc') }}</span>
       </div>
     </div>
   </div>
@@ -153,9 +151,9 @@
 <section id="modulos" class="features-section">
   <div class="section-container">
     <div class="section-badge-header">
-      <h2 class="section-headline">Da gaveta ao controle absoluto em 4 pilares</h2>
+      <h2 class="section-headline">{{ prefs.t('landing.featuresTitle') }}</h2>
       <p class="section-subheadline">
-        O fim do pesadelo das planilhas esquecidas, multas municipais e surpresas na hora da fiscalização.
+        {{ prefs.t('landing.featuresSub') }}
       </p>
     </div>
 
@@ -164,55 +162,54 @@
         <div class="feature-icon-wrapper bg-blue-subtle">
           <span class="material-symbols-rounded text-primary">document_scanner</span>
         </div>
-        <h3 class="feature-title">Cofre Digital & OCR Automatizado</h3>
+        <h3 class="feature-title">{{ prefs.t('landing.feature1Title') }}</h3>
         <p class="feature-desc">
-          Basta arrastar o PDF do alvará. O sistema de OCR lê e cataloga automaticamente órgão emissor, datas de emissão e vencimento, além de condicionantes técnicas.
+          {{ prefs.t('landing.feature1Desc') }}
         </p>
         <div class="feature-link">
-          <span>Explorar Cofre Digital</span>
+          <span>{{ prefs.t('landing.feature1Cta') }}</span>
           <span class="material-symbols-rounded">arrow_forward</span>
         </div>
       </div>
 
-      <div class="feature-card highlighted hover-lift" (click)="goToApp('inspection')">
-        <div class="feature-tag">1-CLIQUE</div>
-        <div class="feature-icon-wrapper bg-primary">
-          <span class="material-symbols-rounded text-white">policy</span>
+      <div class="feature-card hover-lift" (click)="goToApp('inspection')">
+        <div class="feature-icon-wrapper bg-blue-subtle">
+          <span class="material-symbols-rounded text-primary">policy</span>
         </div>
-        <h3 class="feature-title">Modo Fiscalização</h3>
+        <h3 class="feature-title">{{ prefs.t('landing.feature2Title') }}</h3>
         <p class="feature-desc">
-          O fiscal da prefeitura ou bombeiro chegou de surpresa na filial? Em 1 clique você gera o dossiê oficial consolidado com QR Code público de autenticidade para apresentar no balcão.
+          {{ prefs.t('landing.feature2Desc') }}
         </p>
         <div class="feature-link">
-          <span>Ver Dossiê em Ação</span>
+          <span>{{ prefs.t('landing.feature2Cta') }}</span>
           <span class="material-symbols-rounded">arrow_forward</span>
         </div>
       </div>
 
       <div class="feature-card hover-lift" (click)="goToApp('assets')">
-        <div class="feature-icon-wrapper bg-navy-subtle">
-          <span class="material-symbols-rounded text-navy-muted">qr_code_2</span>
+        <div class="feature-icon-wrapper bg-blue-subtle">
+          <span class="material-symbols-rounded text-primary">qr_code_2</span>
         </div>
-        <h3 class="feature-title">Ativos Físicos com QR Code</h3>
+        <h3 class="feature-title">{{ prefs.t('landing.feature3Title') }}</h3>
         <p class="feature-desc">
-          Gere etiquetas para colar em extintores, elevadores, geradores e ar-condicionado. A equipe local aponta a câmera do celular e confere a validade da recarga sem login.
+          {{ prefs.t('landing.feature3Desc') }}
         </p>
         <div class="feature-link">
-          <span>Ver Gestão de Ativos</span>
+          <span>{{ prefs.t('landing.feature3Cta') }}</span>
           <span class="material-symbols-rounded">arrow_forward</span>
         </div>
       </div>
 
       <div class="feature-card hover-lift" (click)="goToApp('notifications')">
-        <div class="feature-icon-wrapper bg-navy-subtle">
-          <span class="material-symbols-rounded text-navy-muted">mark_email_read</span>
+        <div class="feature-icon-wrapper bg-blue-subtle">
+          <span class="material-symbols-rounded text-primary">mark_email_read</span>
         </div>
-        <h3 class="feature-title">Alertas Inteligentes</h3>
+        <h3 class="feature-title">{{ prefs.t('landing.feature4Title') }}</h3>
         <p class="feature-desc">
-          Dispare notificações automáticas por e-mail para o gerente da unidade, responsáveis e diretoria com 90, 60 e 30 dias de antecedência. Garanta governança com trilha de auditoria.
+          {{ prefs.t('landing.feature4Desc') }}
         </p>
         <div class="feature-link">
-          <span>Configurar Alertas</span>
+          <span>{{ prefs.t('landing.feature4Cta') }}</span>
           <span class="material-symbols-rounded">arrow_forward</span>
         </div>
       </div>
@@ -223,14 +220,14 @@
 <section id="recursos" class="resources-section">
   <div class="section-container resources-layout">
     <div>
-      <span class="section-kicker">RECURSOS</span>
-      <h2>Informação pronta quando a operação precisa agir.</h2>
-      <p>Mais previsibilidade para decisões diárias e respostas rápidas em qualquer cenário.</p>
+      <span class="section-kicker">{{ prefs.t('landing.resourcesKicker') }}</span>
+      <h2>{{ prefs.t('landing.resourcesTitle') }}</h2>
+      <p>{{ prefs.t('landing.resourcesSub') }}</p>
     </div>
     <div class="resources-list">
-      <div><span class="material-symbols-rounded">picture_as_pdf</span><div><strong>Leitura de documentos por OCR</strong><p>Extração automática de campos e datas de validade.</p></div></div>
-      <div><span class="material-symbols-rounded">mail</span><div><strong>Alertas escalonados</strong><p>Notificações por prazo para os responsáveis certos.</p></div></div>
-      <div><span class="material-symbols-rounded">qr_code_2</span><div><strong>QR Code para ativos</strong><p>Consulta imediata da situação no local da operação.</p></div></div>
+      <div><span class="material-symbols-rounded">picture_as_pdf</span><div><strong>{{ prefs.t('landing.resource1Title') }}</strong><p>{{ prefs.t('landing.resource1Desc') }}</p></div></div>
+      <div><span class="material-symbols-rounded">mail</span><div><strong>{{ prefs.t('landing.resource2Title') }}</strong><p>{{ prefs.t('landing.resource2Desc') }}</p></div></div>
+      <div><span class="material-symbols-rounded">qr_code_2</span><div><strong>{{ prefs.t('landing.resource3Title') }}</strong><p>{{ prefs.t('landing.resource3Desc') }}</p></div></div>
     </div>
   </div>
 </section>
@@ -240,34 +237,87 @@
   <div class="section-container">
     <div class="roi-banner-box">
       <div class="roi-banner-left">
-        <span class="roi-badge">RETORNO SOBRE INVESTIMENTO</span>
-        <h2 class="roi-banner-title">O custo de uma única interdição paga 10 anos de Licenfy</h2>
+        <span class="roi-badge">{{ prefs.t('landing.roiBadge') }}</span>
+        <h2 class="roi-banner-title">{{ prefs.t('landing.roiTitle') }}</h2>
         <p class="roi-banner-subtitle">
-          Empresas que utilizam o Licenfy reduzem a zero o índice de multas e economizam milhares de horas de trabalho operacional do jurídico e de facilities.
+          {{ prefs.t('landing.roiSubtitle') }}
         </p>
 
         <div class="roi-numbers-row">
           <div class="roi-number-item">
             <span class="number-val">{{ accumulatedSavingsDisplay() }}</span>
-            <span class="number-label">Economia acumulada gerada na plataforma</span>
+            <span class="number-label">{{ prefs.t('landing.roiLabel1') }}</span>
           </div>
           <div class="roi-number-item">
             <span class="number-val">Zero</span>
-            <span class="number-label">Autuações pendentes nas unidades monitoradas</span>
+            <span class="number-label">{{ prefs.t('landing.roiLabel2') }}</span>
           </div>
           <div class="roi-number-item">
             <span class="number-val">94%</span>
-            <span class="number-label">Score médio de conformidade nas unidades monitoradas</span>
+            <span class="number-label">{{ prefs.t('landing.roiLabel3') }}</span>
           </div>
         </div>
 
         <div class="roi-action-group">
           <button class="btn-cta-blue" (click)="openDemoModal()">
-            <span>Agende uma demo</span>
+            <span>{{ prefs.t('header.bookDemo') }}</span>
             <span class="material-symbols-rounded">north_east</span>
           </button>
         </div>
       </div>
+    </div>
+
+    <div class="plans-header">
+      <span class="section-kicker">{{ prefs.t('landing.plansKicker') }}</span>
+      <h2 class="plans-title">{{ prefs.t('landing.plansTitle') }}</h2>
+      <p class="plans-subtitle">{{ prefs.t('landing.plansSub') }}</p>
+    </div>
+
+    <div class="plans-grid">
+      <article class="plan-card">
+        <span class="plan-name">{{ prefs.t('landing.monthly') }}</span>
+        <h3 class="plan-headline">{{ prefs.t('landing.monthlyHeadline') }}</h3>
+        <p class="plan-desc">{{ prefs.t('landing.monthlyDesc') }}</p>
+        <div class="plan-price-row">
+          <span class="plan-currency">R$</span>
+          <span class="plan-value">200</span>
+          <span class="plan-period">{{ prefs.t('landing.monthlyPeriod') }}</span>
+        </div>
+        <p class="plan-note">{{ prefs.t('landing.monthlyNote') }}</p>
+        <ul class="plan-features">
+          <li><span class="material-symbols-rounded">check_circle</span>{{ prefs.t('landing.monthlyFeature1') }}</li>
+          <li><span class="material-symbols-rounded">check_circle</span>{{ prefs.t('landing.monthlyFeature2') }}</li>
+          <li><span class="material-symbols-rounded">check_circle</span>{{ prefs.t('landing.monthlyFeature3') }}</li>
+          <li><span class="material-symbols-rounded">check_circle</span>{{ prefs.t('landing.monthlyFeature4') }}</li>
+        </ul>
+        <button class="btn-plan-outline" (click)="openDemoModal()">
+          <span>{{ prefs.t('landing.monthlyCta') }}</span>
+          <span class="material-symbols-rounded">arrow_forward</span>
+        </button>
+      </article>
+
+      <article class="plan-card plan-highlight">
+        <span class="plan-tag">{{ prefs.t('landing.saveTag') }}</span>
+        <span class="plan-name">{{ prefs.t('landing.annual') }}</span>
+        <h3 class="plan-headline">{{ prefs.t('landing.annualHeadline') }}</h3>
+        <p class="plan-desc">{{ prefs.t('landing.annualDesc') }}</p>
+        <div class="plan-price-row">
+          <span class="plan-currency">R$</span>
+          <span class="plan-value">1.200</span>
+          <span class="plan-period">{{ prefs.t('landing.annualPeriod') }}</span>
+        </div>
+        <p class="plan-note">{{ prefs.t('landing.annualNote') }} <strong>{{ prefs.t('landing.annualNoteStrong') }}</strong> {{ prefs.t('landing.annualNoteRest') }}</p>
+        <ul class="plan-features">
+          <li><span class="material-symbols-rounded">check_circle</span>{{ prefs.t('landing.annualFeature1') }}</li>
+          <li><span class="material-symbols-rounded">check_circle</span>{{ prefs.t('landing.annualFeature2') }}</li>
+          <li><span class="material-symbols-rounded">check_circle</span>{{ prefs.t('landing.annualFeature3') }}</li>
+          <li><span class="material-symbols-rounded">check_circle</span>{{ prefs.t('landing.annualFeature4') }}</li>
+        </ul>
+        <button class="btn-cta-blue w-full" (click)="openDemoModal()">
+          <span>{{ prefs.t('landing.annualCta') }}</span>
+          <span class="material-symbols-rounded">north_east</span>
+        </button>
+      </article>
     </div>
   </div>
 </section>
@@ -278,12 +328,12 @@
   <div class="footer-orb footer-orb-right"></div>
 
   <div class="footer-cta">
-    <p class="footer-cta-kicker">CONFORMIDADE EM MOVIMENTO</p>
-    <h2>Controle total.<br><strong>Comece agora.</strong></h2>
-    <p>Transforme licenças, alvarás e ativos em uma operação segura e previsível.</p>
+    <p class="footer-cta-kicker">{{ prefs.t('landing.footerKicker') }}</p>
+    <h2>{{ prefs.t('landing.footerTitle') }}</h2>
+    <p>{{ prefs.t('landing.footerSub') }}</p>
     <div class="footer-cta-actions">
       <button class="footer-cta-primary" (click)="openDemoModal()">
-        Agende uma demo
+        {{ prefs.t('header.bookDemo') }}
         <span class="material-symbols-rounded">arrow_forward</span>
       </button>
     </div>
@@ -295,64 +345,64 @@
       <div class="footer-col-brand">
         <img src="logo.png" alt="Licenfy" class="footer-logo" />
         <p class="footer-brand-desc">
-          A plataforma definitiva de conformidade regulatória, gestão de alvarás e ativos com tecnologia de ponta para médias e grandes empresas.
+          {{ prefs.t('landing.footerDesc') }}
         </p>
         <div class="security-badges">
           <span class="sec-badge">
             <span class="material-symbols-rounded icon-xs">lock</span>
-            Criptografia Bancária
+            {{ prefs.t('landing.encryption') }}
           </span>
           <a class="sec-badge" href="https://www.gov.br/governodigital/pt-br/lgpd-pagina-do-cidadao/o-que-e-a-lgpd" target="_blank" rel="noopener noreferrer">
             <span class="material-symbols-rounded icon-xs">verified_user</span>
-            Lei Geral de Proteção de Dados (LGPD)
+            {{ prefs.t('common.lgpdLaw') }}
           </a>
         </div>
       </div>
 
       <div class="footer-col">
-        <h4 class="footer-col-title">Plataforma</h4>
+        <h4 class="footer-col-title">{{ prefs.t('landing.footerPlatform') }}</h4>
         <ul class="footer-links">
-          <li><a href="#" (click)="$event.preventDefault(); goToApp('dashboard')">Dashboard de Risco</a></li>
-          <li><a href="#" (click)="$event.preventDefault(); goToApp('vault')">Cofre Digital & OCR</a></li>
-          <li><a href="#" (click)="$event.preventDefault(); goToApp('assets')">Ativos & QR Code</a></li>
-          <li><a href="#" (click)="$event.preventDefault(); goToApp('inspection')">Modo Fiscalização</a></li>
-          <li><a href="#" (click)="$event.preventDefault(); goToApp('notifications')">Alertas Inteligentes</a></li>
+          <li><a href="#" (click)="$event.preventDefault(); goToApp('dashboard')">{{ prefs.t('common.riskDashboard') }}</a></li>
+          <li><a href="#" (click)="$event.preventDefault(); goToApp('vault')">{{ prefs.t('common.digitalVault') }}</a></li>
+          <li><a href="#" (click)="$event.preventDefault(); goToApp('assets')">{{ prefs.t('common.assetsQr') }}</a></li>
+          <li><a href="#" (click)="$event.preventDefault(); goToApp('inspection')">{{ prefs.t('common.inspectionMode') }}</a></li>
+          <li><a href="#" (click)="$event.preventDefault(); goToApp('notifications')">{{ prefs.t('common.smartAlerts') }}</a></li>
         </ul>
       </div>
 
       <div class="footer-col">
-        <h4 class="footer-col-title">Soluções</h4>
+        <h4 class="footer-col-title">{{ prefs.t('landing.footerSolutions') }}</h4>
         <ul class="footer-links">
-          <li><a href="#modulos">Automação de Licenças</a></li>
-          <li><a href="#modulos">Gestão de Ativos</a></li>
-          <li><a href="#planos">Inteligência de Risco</a></li>
-          <li><a href="#" (click)="$event.preventDefault(); openDemoModal()">Para Redes e Franquias</a></li>
-          <li><a href="#" (click)="$event.preventDefault(); openDemoModal()">Para Operações Enterprise</a></li>
+          <li><a href="#modulos">{{ prefs.t('landing.footerLicenseAutomation') }}</a></li>
+          <li><a href="#modulos">{{ prefs.t('landing.footerAssetManagement') }}</a></li>
+          <li><a href="#planos">{{ prefs.t('landing.footerRisk') }}</a></li>
+          <li><a href="#" (click)="$event.preventDefault(); openDemoModal()">{{ prefs.t('common.enterpriseNetworks') }}</a></li>
+          <li><a href="#" (click)="$event.preventDefault(); openDemoModal()">{{ prefs.t('landing.footerEnterprise') }}</a></li>
         </ul>
       </div>
 
       <div class="footer-col">
-        <h4 class="footer-col-title">Contato & Demonstração</h4>
+        <h4 class="footer-col-title">{{ prefs.t('landing.contact') }}</h4>
         <ul class="footer-links">
           <li><a href="mailto:contato@licenfy.com.br">contato&#64;licenfy.com.br</a></li>
           <li><a href="tel:+551140001234">+55 11 4000-1234</a></li>
-          <li><a href="#" (click)="$event.preventDefault(); openDemoModal()">Agendar com Consultor</a></li>
+          <li><a href="#" (click)="$event.preventDefault(); openDemoModal()">{{ prefs.t('landing.scheduleConsultant') }}</a></li>
         </ul>
       </div>
     </div>
 
     <div class="footer-bottom">
       <div class="footer-legal-links">
-        <a href="#" (click)="$event.preventDefault()">Termos de Uso</a>
-        <a href="#" (click)="$event.preventDefault()">Política de Privacidade</a>
-        <a href="#" (click)="$event.preventDefault()">Segurança da Informação</a>
+        <a href="#" (click)="$event.preventDefault()">{{ prefs.t('landing.terms') }}</a>
+        <a href="#" (click)="$event.preventDefault()">{{ prefs.t('landing.privacy') }}</a>
+        <a href="#" (click)="$event.preventDefault()">{{ prefs.t('landing.security') }}</a>
       </div>
       <div class="footer-socials" aria-label="Redes sociais">
         <a href="#" (click)="$event.preventDefault()" aria-label="LinkedIn"><span class="material-symbols-rounded">business_center</span></a>
         <a href="#" (click)="$event.preventDefault()" aria-label="Instagram"><span class="material-symbols-rounded">photo_camera</span></a>
         <a href="#" (click)="$event.preventDefault()" aria-label="YouTube"><span class="material-symbols-rounded">play_circle</span></a>
       </div>
-      <div class="copy-text">© 2026 Licenfy Tecnologia S.A. Todos os direitos reservados.</div>
+      <div class="copy-text">{{ prefs.t('landing.rights') }}</div>
     </div>
     </div>
   </footer>
@@ -365,7 +415,7 @@
       <div class="modal-header">
         <div class="modal-title-wrap">
           <span class="material-symbols-rounded text-primary">calendar_month</span>
-          <h3>Agende uma Demonstração Personalizada</h3>
+          <h3>{{ prefs.t('landing.modalTitle') }}</h3>
         </div>
         <button class="modal-close" (click)="closeDemoModal()">
           <span class="material-symbols-rounded">close</span>
@@ -374,45 +424,45 @@
 
       <div class="modal-body">
         <p class="modal-intro">
-          Veja como o Licenfy elimina o risco de multas e interdições nas suas filiais com inteligência artificial e OCR.
+          {{ prefs.t('landing.modalIntro') }}
         </p>
 
         <form class="demo-form" (submit)="$event.preventDefault(); goToApp('dashboard')">
           <div class="form-row">
             <div class="form-field">
-              <label>Seu Nome Completo</label>
+              <label>{{ prefs.t('landing.modalName') }}</label>
               <input type="text" placeholder="Ex: Carlos Eduardo" class="form-input" required />
             </div>
             <div class="form-field">
-              <label>E-mail Corporativo</label>
+              <label>{{ prefs.t('landing.modalEmail') }}</label>
               <input type="email" placeholder="carlos@empresa.com.br" class="form-input" required />
             </div>
           </div>
 
           <div class="form-row">
             <div class="form-field">
-              <label>Telefone Corporativo</label>
+              <label>{{ prefs.t('landing.modalPhone') }}</label>
               <input type="tel" placeholder="(11) 99999-8888" class="form-input" required />
             </div>
             <div class="form-field">
-              <label>Quantidade de Filiais / Unidades</label>
+              <label>{{ prefs.t('landing.modalUnits') }}</label>
               <select class="form-select">
-                <option>1 a 5 filiais</option>
-                <option>6 a 20 filiais</option>
-                <option>21 a 50 filiais</option>
-                <option>Mais de 50 filiais</option>
+                <option>{{ prefs.t('landing.modalUnits1') }}</option>
+                <option>{{ prefs.t('landing.modalUnits2') }}</option>
+                <option>{{ prefs.t('landing.modalUnits3') }}</option>
+                <option>{{ prefs.t('landing.modalUnits4') }}</option>
               </select>
             </div>
           </div>
 
           <div class="modal-actions">
             <button type="submit" class="btn-cta-blue w-full">
-              <span>Agendar com Especialista</span>
+              <span>{{ prefs.t('landing.modalSubmit') }}</span>
               <span class="material-symbols-rounded">arrow_forward</span>
             </button>
 
             <button type="button" class="btn-cta-light w-full mt-2" (click)="closeDemoModal(); openLogin()">
-              <span>Entrar no Sistema Direto (Sandbox)</span>
+              <span>{{ prefs.t('landing.modalSandbox') }}</span>
             </button>
           </div>
         </form>

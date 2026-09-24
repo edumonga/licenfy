@@ -5,7 +5,7 @@
         <span class="material-symbols-rounded icon-sm">qr_code_2</span>
         Operação na Ponta sem Necessidade de App
       </div>
-      <h1 class="titulo-pagina page-title">Gestão de Ativos Físicos e Etiquetas QR Code</h1>
+      <h1 class="titulo-pagina page-title">{{ prefs.t('mod.assetsTitle') }}</h1>
       <p class="descricao-pagina page-desc">Etiquetas físicas aplicadas nos equipamentos. Ao escanear pelo celular, qualquer colaborador acessa garantias, manutenções e NFs.</p>
     </div>
     <button class="botao botao-primario btn btn-primary" (click)="exibirFormularioAtivo.set(true)">
@@ -96,13 +96,13 @@
           <span class="material-symbols-rounded icon-xs">qr_code</span>
           {{ ativo.etiquetaPatrimonio || ativo.assetTag }}
         </div>
-        <span class="selo-status badge-status" [ngClass]="ativo.statusManutencao || ativo.maintenanceStatus">
+        <span class="selo-status badge-status" [ngClass]="prefs.statusClass(ativo.statusManutencao || ativo.maintenanceStatus)">
           <span class="ponto-status status-dot" [ngClass]="ativo.statusManutencao || ativo.maintenanceStatus"></span>
-          {{ (ativo.statusManutencao === 'regular' || ativo.maintenanceStatus === 'regular') ? 'Em Dia' : ((ativo.statusManutencao === 'attention' || ativo.statusManutencao === 'atencao' || ativo.maintenanceStatus === 'attention') ? 'Revisão Próxima' : 'Urgente') }}
+          {{ prefs.t(ativo.statusManutencao === 'regular' || ativo.maintenanceStatus === 'regular' ? 'assets.maintenanceRegular' : (ativo.statusManutencao === 'attention' || ativo.statusManutencao === 'atencao' || ativo.maintenanceStatus === 'attention' ? 'assets.maintenanceAttention' : 'assets.maintenanceUrgent')) }}
         </span>
       </div>
 
-      <h3 class="titulo-ativo asset-title">{{ ativo.nome || ativo.name }}</h3>
+      <h3 class="titulo-ativo asset-title">{{ prefs.localizarTexto(ativo.nome || ativo.name) }}</h3>
       
       <div class="lista-especificacoes spec-specs-list asset-specs-list">
         <div class="linha-especificacao spec-row">
@@ -110,14 +110,14 @@
             <span class="material-symbols-rounded icon-xs text-muted">apartment</span>
             Unidade:
           </span>
-          <span class="valor-especificacao spec-val">{{ ativo.nomeUnidade || ativo.branchName }}</span>
+          <span class="valor-especificacao spec-val">{{ prefs.localizarTexto(ativo.nomeUnidade || ativo.branchName) }}</span>
         </div>
         <div class="linha-especificacao spec-row">
           <span class="rotulo-especificacao spec-label">
             <span class="material-symbols-rounded icon-xs text-muted">pin_drop</span>
             Localização:
           </span>
-          <span class="valor-especificacao spec-val">{{ ativo.detalhesLocalizacao || ativo.locationDetails }}</span>
+          <span class="valor-especificacao spec-val">{{ prefs.localizarTexto(ativo.detalhesLocalizacao || ativo.locationDetails) }}</span>
         </div>
         <div class="linha-especificacao spec-row">
           <span class="rotulo-especificacao spec-label">
@@ -142,7 +142,7 @@
           <span class="material-symbols-rounded icon-xs text-primary">link</span>
           <span>Unificação Legal + Operacional</span>
         </div>
-        <div class="nome-licenca-vinculada linked-license-name">{{ ativo.licencaVinculadaTitulo || ativo.linkedLicenseTitle }}</div>
+        <div class="nome-licenca-vinculada linked-license-name">{{ prefs.localizarTexto(ativo.licencaVinculadaTitulo || ativo.linkedLicenseTitle) }}</div>
       </div>
 
       <div class="caixa-resumo-manutencoes maintenance-summary-box">
@@ -179,7 +179,7 @@
 
       <div class="corpo-modal modal-body">
         <p class="descricao-modal nao-imprimir modal-desc no-print">
-          Etiqueta pronta para aplicação direta no equipamento. O QR Code permite consulta instantânea pelo navegador do celular sem instalar aplicativos.
+          {{ prefs.t('assets.physicalDesc') }}
         </p>
 
         <div class="etiqueta-fisica physical-tag">
@@ -187,7 +187,7 @@
             <img src="logo.png" alt="Licenfy" class="imagem-logo-etiqueta tag-logo-img" />
             <div class="selo-status-etiqueta tag-status-stamp">
               <span class="material-symbols-rounded icon-xs">verified</span>
-              ATIVO IDENTIFICADO
+              {{ prefs.t('assetPage.identified') }}
             </div>
           </div>
 
@@ -202,25 +202,25 @@
                   lightColor="#ffffff">
                 </app-qr-canvas>
               </div>
-              <span class="dica-escanear-qr qr-scan-hint">Aponte a câmera</span>
+              <span class="dica-escanear-qr qr-scan-hint">{{ prefs.t('assets.scanCamera') }}</span>
             </div>
 
             <div class="secao-info-etiqueta tag-info-section">
               <div class="patrimonio-etiqueta tag-patrimonio">
-                <span class="rotulo-patrimonio tag-patrimonio-label">PATRIMÔNIO</span>
+                <span class="rotulo-patrimonio tag-patrimonio-label">{{ prefs.t('assets.assetProperty') }}</span>
                 <span class="valor-patrimonio tag-patrimonio-val">{{ ativo.etiquetaPatrimonio || ativo.assetTag }}</span>
               </div>
               <div class="nome-ativo-etiqueta tag-asset-name">{{ ativo.nome || ativo.name }}</div>
               <div class="localizacao-etiqueta tag-location">{{ ativo.detalhesLocalizacao || ativo.locationDetails }}</div>
               <div class="nome-unidade-etiqueta tag-branch-name">{{ ativo.nomeUnidade || ativo.branchName }}</div>
               <div class="nota-garantia-etiqueta tag-warranty-note">
-                <strong>Garantia até:</strong> {{ (ativo.dataFimGarantia || ativo.warrantyExpirationDate) | date:'dd/MM/yyyy' }}
+                <strong>{{ prefs.t('assets.warrantyLabel') }}</strong> {{ (ativo.dataFimGarantia || ativo.warrantyExpirationDate) | date:'dd/MM/yyyy' }}
               </div>
             </div>
           </div>
 
           <div class="rodape-etiqueta tag-footer">
-            <span>GESTÃO OPERACIONAL LICENFY</span>
+            <span>{{ prefs.t('assets.operationalManagement') }}</span>
             <span>ID: {{ ativo.id }}</span>
           </div>
         </div>
@@ -278,21 +278,21 @@
               <div class="bloco-status-mobile mobile-status-block">
                 <div class="titulo-bloco-mobile mobile-block-title">
                   <span class="material-symbols-rounded icon-xs text-primary">security</span>
-                  Garantia Vigente
+                  {{ prefs.t('assets.warrantyActive') }}
                 </div>
                 <div class="info-garantia-mobile mobile-warranty-info">
-                  <span>Válida até {{ (ativo.dataFimGarantia || ativo.warrantyExpirationDate) | date:'dd/MM/yyyy' }}</span>
-                  <span class="selo-dias days-badge">{{ ativo.diasAteFimGarantia ?? ativo.daysUntilWarrantyExpires }} dias restantes</span>
+                  <span>{{ prefs.t('assets.validUntil') }} {{ (ativo.dataFimGarantia || ativo.warrantyExpirationDate) | date:'dd/MM/yyyy' }}</span>
+                  <span class="selo-dias days-badge">{{ ativo.diasAteFimGarantia ?? ativo.daysUntilWarrantyExpires }} {{ prefs.t('assets.remainingDays') }}</span>
                 </div>
                 <div class="selo-nf-mobile mobile-nf-badge">
-                  NF de Compra: {{ ativo.numeroNotaFiscal || ativo.invoiceNumber }}
+                  {{ prefs.t('assets.purchaseInvoice') }} {{ ativo.numeroNotaFiscal || ativo.invoiceNumber }}
                 </div>
               </div>
 
               <div class="bloco-historico-mobile mobile-history-block">
                 <div class="titulo-bloco-mobile mobile-block-title">
                   <span class="material-symbols-rounded icon-xs text-primary">history</span>
-                  Histórico de Intervenções
+                  {{ prefs.t('assets.interventionHistory') }}
                 </div>
                 <div *ngFor="let m of (ativo.manutencoes || ativo.maintenances || [])" class="item-historico-mobile mobile-history-item">
                   <div class="topo-item-historico history-item-top">
@@ -300,35 +300,35 @@
                     <span class="data-historico history-date">{{ (m.data || m.date) | date:'dd/MM/yyyy' }}</span>
                   </div>
                   <p class="notas-historico history-notes">{{ m.observacoes || m.notes }}</p>
-                  <div class="tecnico-historico history-tech">Técnico: {{ m.tecnicoOuEmpresa || m.technicianOrCompany }}</div>
+                  <div class="tecnico-historico history-tech">{{ prefs.t('assets.technician') }} {{ prefs.localizarTexto(m.tecnicoOuEmpresa || m.technicianOrCompany) }}</div>
                 </div>
               </div>
 
               <button class="botao-acao-mobile mobile-action-btn" (click)="reportarIncidente()" [disabled]="incidenteReportado()">
                 <span class="material-symbols-rounded icon-sm">support_agent</span>
-                {{ incidenteReportado() ? 'Chamado Registrado com Sucesso!' : 'Reportar Ocorrência / Acionar Garantia' }}
+                {{ incidenteReportado() ? prefs.t('assets.issueRegistered') : prefs.t('assets.reportIssue') }}
               </button>
             </div>
           </div>
         </div>
 
         <div class="explicacao-simulador-mobile mobile-sim-explanation">
-          <h4 class="titulo-explicacao explanation-title">Como funciona na prática?</h4>
+          <h4 class="titulo-explicacao explanation-title">{{ prefs.t('assets.howWorks') }}</h4>
           <p class="descricao-explicacao explanation-desc">
-            O técnico aponta a câmera nativa do smartphone para a etiqueta física colada na máquina.
+            {{ prefs.t('assets.howWorksDesc') }}
           </p>
           <ul class="pontos-explicacao explanation-points">
             <li>
               <span class="material-symbols-rounded icon-sm text-primary">check_circle</span>
-              <strong>Acesso direto:</strong> Não exige download de aplicativo em lojas.
+              <strong>{{ prefs.t('assets.directAccess') }}</strong> {{ prefs.t('assets.directAccessDesc') }}
             </li>
             <li>
               <span class="material-symbols-rounded icon-sm text-primary">check_circle</span>
-              <strong>Evita despesas:</strong> Consulta na hora se a peça ainda está coberta pela garantia da nota fiscal.
+              <strong>{{ prefs.t('assets.savesCosts') }}</strong> {{ prefs.t('assets.savesCostsDesc') }}
             </li>
             <li>
               <span class="material-symbols-rounded icon-sm text-primary">check_circle</span>
-              <strong>Rastreabilidade:</strong> Histórico das revisões preventivas atualizado em tempo real.
+              <strong>{{ prefs.t('assets.traceability') }}</strong> {{ prefs.t('assets.traceabilityDesc') }}
             </li>
           </ul>
         </div>

@@ -5,7 +5,7 @@
         <span class="material-symbols-rounded icon-sm">lock</span>
         Cofre Digital Criptografado & Leitura Automática
       </div>
-      <h1 class="titulo-pagina page-title">Cofre Digital com OCR Inteligente</h1>
+      <h1 class="titulo-pagina page-title">{{ prefs.t('mod.vaultTitle') }}</h1>
       <p class="descricao-pagina page-desc">Centralize todos os PDFs, notas fiscais e alvarás. O sistema lê as informações e preenche as datas automaticamente.</p>
     </div>
   </div>
@@ -191,20 +191,20 @@
           <div class="icone-tipo-doc doc-type-icon">
             <span class="material-symbols-rounded">picture_as_pdf</span>
           </div>
-          <span class="selo-status badge-status" [ngClass]="doc.status">
+          <span class="selo-status badge-status" [ngClass]="prefs.statusClass(doc.status)">
             <span class="ponto-status status-dot" [ngClass]="doc.status"></span>
             {{ doc.status === 'regular' ? 'Válido' : (doc.status === 'attention' || doc.status === 'atencao' ? 'Renovar em Breve' : 'Vencendo') }}
           </span>
         </div>
 
-        <h4 class="titulo-cartao-doc doc-card-title">{{ doc.titulo || doc.title }}</h4>
+        <h4 class="titulo-cartao-doc doc-card-title">{{ prefs.localizarTexto(doc.titulo || doc.title) }}</h4>
         <div class="item-meta-doc doc-meta-item">
           <span class="material-symbols-rounded icon-xs text-muted">account_balance</span>
-          <span>{{ doc.orgaoEmissor || doc.issuingBody }}</span>
+          <span>{{ prefs.localizarTexto(doc.orgaoEmissor || doc.issuingBody) }}</span>
         </div>
         <div class="item-meta-doc doc-meta-item">
           <span class="material-symbols-rounded icon-xs text-muted">apartment</span>
-          <span>{{ doc.nomeUnidade || doc.branchName }}</span>
+          <span>{{ prefs.localizarTexto(doc.nomeUnidade || doc.branchName) }}</span>
         </div>
         <div class="item-meta-doc doc-meta-item">
           <span class="material-symbols-rounded icon-xs text-muted">tag</span>

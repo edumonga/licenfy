@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { LicenfyService } from './core/services/licenfy.service';
 import { AuthService } from './core/services/auth.service';
+import { PreferenciasService } from './core/services/preferencias.service';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { DigitalVaultComponent } from './components/digital-vault/digital-vault.component';
 import { AssetManagementComponent } from './components/asset-management/asset-management.component';
@@ -12,6 +13,7 @@ import { RoiReportComponent } from './components/roi-report/roi-report.component
 import { LandingPageComponent } from './components/landing-page/landing-page.component';
 import { UnitManagementComponent } from './components/unit-management/unit-management.component';
 import { AuthComponent } from './components/auth/auth.component';
+import { PreferencesToolbarComponent } from './components/preferences-toolbar/preferences-toolbar.component';
 
 @Component({
   selector: 'app-root',
@@ -27,7 +29,8 @@ import { AuthComponent } from './components/auth/auth.component';
     AssetManagementComponent,
     NotificationsComponent,
     InspectionModeComponent,
-    RoiReportComponent
+    RoiReportComponent,
+    PreferencesToolbarComponent
   ],
   templateUrl: './app.html',
   styleUrls: ['./app.css']
@@ -35,6 +38,7 @@ import { AuthComponent } from './components/auth/auth.component';
 export class App {
   readonly service = inject(LicenfyService);
   readonly auth = inject(AuthService);
+  readonly prefs = inject(PreferenciasService);
 
   readonly currentView = this.service.currentView;
   readonly currentTab = this.service.currentTab;

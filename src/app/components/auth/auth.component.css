@@ -170,8 +170,133 @@
 .auth-form-panel {
   display: grid;
   place-items: center;
+  align-content: center;
+  gap: 12px;
   padding: 36px;
   background: #f8fafc;
+}
+
+.auth-top-toggles {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  width: min(440px, 100%);
+}
+
+.auth-icon-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  border: 1px solid #e2e8f0;
+  background: #ffffff;
+  color: #475569;
+  cursor: pointer;
+  transition: background-color 0.15s ease;
+}
+
+.auth-icon-btn:hover {
+  background: #f1f5f9;
+  color: #0f172a;
+}
+
+/* Tema escuro — auth */
+:host-context(html.dark-theme) .painel-formulario,
+:host-context(html.dark-theme) .auth-form-panel {
+  background: #0b1220;
+}
+
+:host-context(html.dark-theme) .abas-autenticacao,
+:host-context(html.dark-theme) .auth-tabs {
+  background: #16213a;
+}
+
+:host-context(html.dark-theme) .abas-autenticacao button.ativa,
+:host-context(html.dark-theme) .abas-autenticacao button.active,
+:host-context(html.dark-theme) .auth-tabs button.ativa,
+:host-context(html.dark-theme) .auth-tabs button.active {
+  background: #1e293b;
+  color: #f8fafc;
+  box-shadow: none;
+}
+
+:host-context(html.dark-theme) .abas-autenticacao button,
+:host-context(html.dark-theme) .auth-tabs button {
+  color: #94a3b8;
+}
+
+:host-context(html.dark-theme) .introducao-formulario h2,
+:host-context(html.dark-theme) .form-intro h2 {
+  color: #f8fafc;
+}
+
+:host-context(html.dark-theme) .introducao-formulario p,
+:host-context(html.dark-theme) .form-intro p,
+:host-context(html.dark-theme) .trocar-modo,
+:host-context(html.dark-theme) .auth-switch {
+  color: #94a3b8;
+}
+
+:host-context(html.dark-theme) .formulario-autenticacao label,
+:host-context(html.dark-theme) .auth-form label {
+  color: #cbd5e1;
+}
+
+:host-context(html.dark-theme) .formulario-autenticacao input,
+:host-context(html.dark-theme) .auth-form input {
+  background: #111c33;
+  border-color: #1e293b;
+  color: #f8fafc;
+}
+
+:host-context(html.dark-theme) .formulario-autenticacao label.caixa-lgpd,
+:host-context(html.dark-theme) .auth-form label.lgpd-box,
+:host-context(html.dark-theme) .caixa-lgpd,
+:host-context(html.dark-theme) .lgpd-box {
+  background: #111c33;
+  border-color: #1e293b;
+}
+
+:host-context(html.dark-theme) .formulario-autenticacao label.caixa-lgpd:hover,
+:host-context(html.dark-theme) .auth-form label.lgpd-box:hover {
+  background: #16223e;
+  border-color: #334155;
+}
+
+:host-context(html.dark-theme) .formulario-autenticacao label.caixa-lgpd.is-checked,
+:host-context(html.dark-theme) .auth-form label.lgpd-box.is-checked {
+  background: #14284f;
+  border-color: #1d4ed8;
+}
+
+:host-context(html.dark-theme) .caixa-lgpd .lgpd-text,
+:host-context(html.dark-theme) .lgpd-box .lgpd-text,
+:host-context(html.dark-theme) .caixa-lgpd span:last-child,
+:host-context(html.dark-theme) .lgpd-box span:last-child {
+  color: #94a3b8;
+}
+
+:host-context(html.dark-theme) .caixa-lgpd a,
+:host-context(html.dark-theme) .lgpd-box a {
+  color: #60a5fa;
+}
+
+:host-context(html.dark-theme) .caixa-lgpd a:hover,
+:host-context(html.dark-theme) .lgpd-box a:hover {
+  color: #93c5fd;
+}
+
+:host-context(html.dark-theme) .auth-icon-btn {
+  background: #111c33;
+  border-color: #1e293b;
+  color: #94a3b8;
+}
+
+:host-context(html.dark-theme) .auth-icon-btn:hover {
+  background: #1e293b;
+  color: #f8fafc;
 }
 
 .cartao-autenticacao,
@@ -326,6 +451,72 @@
 .erro-formulario .material-symbols-rounded,
 .form-error .material-symbols-rounded {
   font-size: 18px;
+}
+
+.formulario-autenticacao label.caixa-lgpd,
+.auth-form label.lgpd-box,
+.caixa-lgpd,
+.lgpd-box {
+  display: flex !important;
+  flex-direction: row !important;
+  align-items: flex-start !important;
+  gap: 10px;
+  padding: 10px 12px;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  font-weight: 400;
+  text-align: left;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  user-select: none;
+}
+
+.formulario-autenticacao label.caixa-lgpd:hover,
+.auth-form label.lgpd-box:hover {
+  background: #f1f5f9;
+  border-color: #cbd5e1;
+}
+
+.formulario-autenticacao label.caixa-lgpd.is-checked,
+.auth-form label.lgpd-box.is-checked {
+  background: #f0f7ff;
+  border-color: #bfdbfe;
+}
+
+.caixa-lgpd input[type="checkbox"],
+.lgpd-box input[type="checkbox"] {
+  flex: 0 0 auto;
+  width: 16px;
+  height: 16px;
+  margin: 2px 0 0 0;
+  padding: 0;
+  accent-color: #2563eb;
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+.caixa-lgpd .lgpd-text,
+.lgpd-box .lgpd-text,
+.caixa-lgpd span:last-child,
+.lgpd-box span:last-child {
+  font-size: 0.77rem;
+  font-weight: 400;
+  line-height: 1.45;
+  color: #475569;
+}
+
+.caixa-lgpd a,
+.lgpd-box a {
+  color: #2563eb;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.caixa-lgpd a:hover,
+.lgpd-box a:hover {
+  color: #1d4ed8;
+  text-decoration: underline;
 }
 
 .trocar-modo,

@@ -9,6 +9,80 @@
   color: #111827;
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   overflow-x: hidden;
+  transition: background-color .2s ease, color .2s ease;
+}
+
+:host-context(html.dark-theme) {
+  background-color: #0b1220;
+  color: #e2e8f0;
+}
+
+:host-context(html.dark-theme) .header-container {
+  border-color: #1e293b;
+}
+
+:host-context(html.dark-theme) .main-header.is-floating .header-container {
+  background: #111c33;
+  border-color: #263653;
+}
+
+:host-context(html.dark-theme) .nav-link,
+:host-context(html.dark-theme) .section-kicker,
+:host-context(html.dark-theme) .plans-subtitle,
+:host-context(html.dark-theme) .plan-desc,
+:host-context(html.dark-theme) .plan-note,
+:host-context(html.dark-theme) .plan-features li {
+  color: #94a3b8;
+}
+
+:host-context(html.dark-theme) .nav-link:hover,
+:host-context(html.dark-theme) .plans-title,
+:host-context(html.dark-theme) .platform-copy h2,
+:host-context(html.dark-theme) .resources-layout h2,
+:host-context(html.dark-theme) .solution-card h3,
+:host-context(html.dark-theme) .platform-points strong,
+:host-context(html.dark-theme) .resources-list strong,
+:host-context(html.dark-theme) .social-proof-title,
+:host-context(html.dark-theme) .section-headline {
+  color: #f8fafc;
+}
+
+:host-context(html.dark-theme) .platform-section,
+:host-context(html.dark-theme) .solutions-section,
+:host-context(html.dark-theme) .social-proof-section,
+:host-context(html.dark-theme) .features-section,
+:host-context(html.dark-theme) .resources-section {
+  background: #0b1220;
+}
+
+:host-context(html.dark-theme) .solution-card,
+:host-context(html.dark-theme) .platform-points > div,
+:host-context(html.dark-theme) .resources-list > div,
+:host-context(html.dark-theme) .feature-card,
+:host-context(html.dark-theme) .logo-box,
+:host-context(html.dark-theme) .plan-card {
+  background: #111c33;
+  border-color: #263653;
+  box-shadow: 0 10px 28px rgba(0, 0, 0, .2);
+}
+
+:host-context(html.dark-theme) .plan-highlight {
+  background: linear-gradient(180deg, #172b50 0%, #111c33 65%);
+}
+
+:host-context(html.dark-theme) .roi-banner-section {
+  background: #0b1220;
+}
+
+:host-context(html.dark-theme) .footer-showcase {
+  background: linear-gradient(135deg, #06152f 0%, #0a2b60 53%, #0b3c84 100%);
+}
+
+:host-context(html.dark-theme) .main-footer,
+:host-context(html.dark-theme) .auth-card,
+:host-context(html.dark-theme) .demo-modal-box {
+  background: #111c33;
+  color: #e2e8f0;
 }
 
 /* 1. Top Announcement Bar - Exata réplica do print do Pipefy */
@@ -193,7 +267,9 @@
   white-space: nowrap;
 }
 
-.lang-selector {
+/* Controles globais de preferências */
+.lang-selector,
+.theme-selector {
   background: none;
   border: none;
   color: #64748b;
@@ -201,14 +277,56 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  gap: 3px;
   padding: 7px;
   border-radius: 50%;
-  transition: background-color 0.15s;
+  transition: background-color .15s ease, color .15s ease;
 }
 
-.lang-selector:hover {
+.lang-selector:hover,
+.theme-selector:hover {
   background-color: #f3f4f6;
   color: #111827;
+}
+
+.lang-code {
+  font-size: .68rem;
+  font-weight: 800;
+  letter-spacing: .04em;
+}
+
+:host-context(html.dark-theme) .lang-selector,
+:host-context(html.dark-theme) .theme-selector {
+  color: #94a3b8;
+}
+
+:host-context(html.dark-theme) .lang-selector:hover,
+:host-context(html.dark-theme) .theme-selector:hover {
+  background: #1e293b;
+  color: #f8fafc;
+}
+
+:host-context(html.dark-theme) .btn-text {
+  background: #111c33;
+  border-color: #334155;
+  color: #cbd5e1;
+}
+
+:host-context(html.dark-theme) .btn-text:hover {
+  border-color: #64748b;
+  color: #ffffff;
+}
+
+:host-context(html.dark-theme) .footer-brand-desc,
+:host-context(html.dark-theme) .footer-links a,
+:host-context(html.dark-theme) .footer-legal-links a,
+:host-context(html.dark-theme) .copy-text {
+  color: #94a3b8;
+}
+
+:host-context(html.dark-theme) .footer-links a:hover,
+:host-context(html.dark-theme) .footer-legal-links a:hover {
+  color: #60a5fa;
 }
 
 .btn-text {
@@ -2483,6 +2601,176 @@
   background-color: #f1f5f9;
 }
 
+/* 7.1 Planos — Mensal R$200 / Anual R$1.200 */
+.plans-header {
+  max-width: 720px;
+  margin: 48px auto 28px;
+  text-align: center;
+}
+
+.plans-title {
+  margin: 0 0 10px;
+  color: #10213d;
+  font-size: clamp(1.7rem, 3.2vw, 2.4rem);
+  line-height: 1.15;
+  letter-spacing: -.04em;
+}
+
+.plans-subtitle {
+  margin: 0;
+  color: #607087;
+  font-size: 1rem;
+  line-height: 1.6;
+}
+
+.plans-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 20px;
+  max-width: 920px;
+  margin: 0 auto;
+  align-items: stretch;
+}
+
+.plan-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  padding: 30px 28px;
+  background: #ffffff;
+  border: 1px solid #e2eaf5;
+  border-radius: 22px;
+  box-shadow: 0 10px 28px rgba(26, 70, 130, .07);
+}
+
+.plan-highlight {
+  border: 2px solid #095ed7;
+  background: linear-gradient(180deg, #f4f8ff 0%, #ffffff 55%);
+  box-shadow: 0 16px 38px rgba(9, 94, 215, .14);
+}
+
+.plan-tag {
+  position: absolute;
+  top: -13px;
+  left: 28px;
+  padding: 5px 12px;
+  border-radius: 9999px;
+  background: #095ed7;
+  color: #fff;
+  font-size: .7rem;
+  font-weight: 800;
+  letter-spacing: .08em;
+}
+
+.plan-name {
+  color: #0758ce;
+  font-size: .72rem;
+  font-weight: 800;
+  letter-spacing: .11em;
+  text-transform: uppercase;
+}
+
+.plan-headline {
+  margin: 8px 0 6px;
+  color: #10213d;
+  font-size: 1.35rem;
+  letter-spacing: -.02em;
+}
+
+.plan-desc {
+  margin: 0 0 18px;
+  color: #607087;
+  font-size: .92rem;
+  line-height: 1.55;
+}
+
+.plan-price-row {
+  display: flex;
+  align-items: baseline;
+  gap: 4px;
+  color: #0f1f3a;
+}
+
+.plan-currency {
+  font-size: 1.1rem;
+  font-weight: 800;
+}
+
+.plan-value {
+  font-size: clamp(2.4rem, 4vw, 3rem);
+  font-weight: 800;
+  letter-spacing: -.05em;
+  line-height: 1;
+}
+
+.plan-period {
+  color: #607087;
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.plan-note {
+  margin: 8px 0 18px;
+  color: #738197;
+  font-size: .85rem;
+}
+
+.plan-note strong {
+  color: #10213d;
+}
+
+.plan-features {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin: 0 0 24px;
+  padding: 0;
+  list-style: none;
+}
+
+.plan-features li {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  color: #334155;
+  font-size: .88rem;
+  line-height: 1.5;
+}
+
+.plan-features .material-symbols-rounded {
+  color: #095ed7;
+  font-size: 20px;
+  flex-shrink: 0;
+}
+
+.btn-plan-outline {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  margin-top: auto;
+  padding: 13px 20px;
+  border: 1.5px solid #095ed7;
+  border-radius: 9999px;
+  background: #fff;
+  color: #095ed7;
+  font-size: .92rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background-color .2s ease, transform .2s ease;
+}
+
+.btn-plan-outline:hover {
+  background: #eaf3ff;
+  transform: translateY(-1px);
+}
+
+.plan-highlight .btn-cta-blue {
+  margin-top: auto;
+  justify-content: center;
+}
+
 /* 8. Encerramento e Footer */
 .footer-showcase {
   position: relative;
@@ -2953,8 +3241,17 @@
     align-items: center;
     gap: 8px;
   }
-  .lang-selector {
-    display: none;
+  .lang-selector,
+  .theme-selector {
+    display: flex;
+    padding: 6px;
+  }
+  .lang-selector .material-symbols-rounded,
+  .theme-selector .material-symbols-rounded {
+    font-size: 19px;
+  }
+  .lang-code {
+    font-size: 0.62rem;
   }
   .btn-text {
     padding: 6px 8px;
@@ -3350,6 +3647,20 @@
 
   .roi-action-group .btn-cta-white {
     width: 100%;
+  }
+
+  .plans-header {
+    margin: 36px auto 22px;
+    padding: 0 4px;
+  }
+
+  .plans-grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  .plan-card {
+    padding: 24px 20px;
   }
 
   .footer-showcase {

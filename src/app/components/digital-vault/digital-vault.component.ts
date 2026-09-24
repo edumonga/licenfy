@@ -2,6 +2,7 @@ import { Component, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ServicoLicenfy } from '../../core/services/licenfy.service';
+import { PreferenciasService } from '../../core/services/preferencias.service';
 import { ServicoGeminiOcr } from '../../core/services/gemini-ocr.service';
 import { DocumentoLicenca, StatusConformidade, LicenseDocument, ComplianceStatus } from '../../core/models/types';
 
@@ -14,6 +15,7 @@ import { DocumentoLicenca, StatusConformidade, LicenseDocument, ComplianceStatus
 })
 export class CofreDigitalComponente {
   readonly servico = inject(ServicoLicenfy);
+  readonly prefs = inject(PreferenciasService);
   readonly gemini = inject(ServicoGeminiOcr);
 
   readonly licencas = this.servico.licencasFiltradas;

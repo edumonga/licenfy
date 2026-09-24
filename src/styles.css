@@ -84,6 +84,21 @@
   --transition-normal: var(--transicao-padrao);
 }
 
+html.dark-theme {
+  --cor-fundo-principal: #0b1220;
+  --cor-fundo-cartao: #111c33;
+  --cor-fundo-suave: #16213a;
+  --cor-texto-principal: #e2e8f0;
+  --cor-texto-mutado: #94a3b8;
+  --cor-borda: #1e293b;
+  color-scheme: dark;
+}
+
+html.dark-theme body {
+  background-color: var(--cor-fundo-principal);
+  color: var(--cor-texto-principal);
+}
+
 *, *::before, *::after {
   box-sizing: border-box;
   margin: 0;
@@ -154,6 +169,7 @@ h1, h2, h3, h4, h5, h6 {
   display: inline-flex;
   align-items: center;
   gap: 6px;
+  min-height: 24px;
   padding: 4px 10px;
   border-radius: 9999px;
   font-size: 0.75rem;
@@ -168,6 +184,7 @@ h1, h2, h3, h4, h5, h6 {
   background-color: var(--status-regular-fundo);
   color: var(--status-regular-texto);
   border: 1px solid var(--status-regular-borda);
+  border-radius: 9999px;
 }
 
 .selo-status.atencao,
@@ -177,6 +194,7 @@ h1, h2, h3, h4, h5, h6 {
   background-color: var(--status-atencao-fundo);
   color: var(--status-atencao-texto);
   border: 1px solid var(--status-atencao-borda);
+  border-radius: 9999px;
 }
 
 .selo-status.urgente,
@@ -186,6 +204,7 @@ h1, h2, h3, h4, h5, h6 {
   background-color: var(--status-urgente-fundo);
   color: var(--status-urgente-texto);
   border: 1px solid var(--status-urgente-borda);
+  border-radius: 9999px;
 }
 
 /* Ponto de status */
@@ -300,6 +319,246 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 /* Impressão */
+/* Tema escuro global — aplicado a landing, autenticação e módulos operacionais */
+html.dark-theme {
+  --cor-borda-hover: #334155;
+  --cor-texto-claro: #64748b;
+  --status-regular-fundo: #12372f;
+  --status-regular-borda: #166534;
+  --status-atencao-fundo: #3b2f12;
+  --status-atencao-borda: #92400e;
+  --status-urgente-fundo: #3b1d24;
+  --status-urgente-borda: #991b1b;
+}
+
+html.dark-theme body,
+html.dark-theme app-root,
+html.dark-theme .licenfy-layout,
+html.dark-theme .licenfy-main-wrapper,
+html.dark-theme .licenfy-content-body,
+html.dark-theme .public-asset-page,
+html.dark-theme .painel-container,
+html.dark-theme .painel-unidades,
+html.dark-theme .painel-cofre,
+html.dark-theme .painel-ativos,
+html.dark-theme .painel-notificacoes,
+html.dark-theme .painel-inspecao,
+html.dark-theme .painel-roi {
+  background-color: #0b1220 !important;
+  color: #e2e8f0 !important;
+}
+
+html.dark-theme .licenfy-topbar,
+html.dark-theme .topbar-branch-box,
+html.dark-theme .topbar-icon-btn,
+html.dark-theme .btn-desktop-menu,
+html.dark-theme .prefs-toolbar,
+html.dark-theme .auth-card,
+html.dark-theme .demo-modal-box,
+html.dark-theme .cartao-alerta,
+html.dark-theme .cartao-tabela,
+html.dark-theme .caixa-estatistica,
+html.dark-theme .barra-seletor-filial,
+html.dark-theme .hierarchy-bar,
+html.dark-theme .cartao-lista-unidades,
+html.dark-theme .cartao-detalhe-unidade,
+html.dark-theme .cartao-secao-ocr,
+html.dark-theme .cartao-lista-cofre,
+html.dark-theme .cartao-item-documento,
+html.dark-theme .cartao-ativo,
+html.dark-theme .cartao-kpi-roi,
+html.dark-theme .subcartao-roi,
+html.dark-theme .cartao-historico-dossie,
+html.dark-theme .selecao-dossie,
+html.dark-theme .caixa-regra-personalizada,
+html.dark-theme .caixa-envio-teste,
+html.dark-theme .cartao-registros {
+  background-color: #111c33 !important;
+  border-color: #263653 !important;
+  color: #e2e8f0 !important;
+}
+
+html.dark-theme [class*="-card"]:not(.physical-tag):not(.qr-real-wrapper),
+html.dark-theme [class*="-box"]:not(.physical-tag),
+html.dark-theme [class*="-section"]:not(.dossier-paper),
+html.dark-theme [class*="-panel"] {
+  border-color: #263653 !important;
+}
+
+html.dark-theme :is(h1, h2, h3, h4, h5, h6) {
+  color: #f8fafc !important;
+}
+
+html.dark-theme :is(p, label, dt, dd, small, th, td) {
+  color: #cbd5e1 !important;
+}
+
+html.dark-theme .page-desc,
+html.dark-theme .card-sub,
+html.dark-theme .subtitle-badge,
+html.dark-theme .section-kicker,
+html.dark-theme .detail-kicker,
+html.dark-theme .card-caption,
+html.dark-theme .section-sub,
+html.dark-theme .logs-sub,
+html.dark-theme .table-subtitle,
+html.dark-theme .stat-desc,
+html.dark-theme .feature-desc,
+html.dark-theme .form-intro p {
+  color: #94a3b8 !important;
+}
+
+html.dark-theme input,
+html.dark-theme select,
+html.dark-theme textarea,
+html.dark-theme .form-control,
+html.dark-theme .form-input,
+html.dark-theme .form-select,
+html.dark-theme .topbar-branch-select,
+html.dark-theme .search-input,
+html.dark-theme .category-select,
+html.dark-theme .branch-select {
+  background-color: #0f1b30 !important;
+  border-color: #334155 !important;
+  color: #f8fafc !important;
+}
+
+html.dark-theme input::placeholder,
+html.dark-theme textarea::placeholder {
+  color: #64748b !important;
+}
+
+html.dark-theme option {
+  background: #111c33;
+  color: #f8fafc;
+}
+
+html.dark-theme .btn-outline,
+html.dark-theme .botao-contorno,
+html.dark-theme .btn-ghost,
+html.dark-theme .botao-fantasma,
+html.dark-theme .btn-text {
+  background: #16213a !important;
+  border-color: #334155 !important;
+  color: #cbd5e1 !important;
+}
+
+html.dark-theme .btn-outline:hover,
+html.dark-theme .botao-contorno:hover,
+html.dark-theme .btn-ghost:hover,
+html.dark-theme .botao-fantasma:hover {
+  background: #1e293b !important;
+  border-color: #64748b !important;
+  color: #ffffff !important;
+}
+
+html.dark-theme .licenfy-table,
+html.dark-theme .roi-table,
+html.dark-theme .dossier-table,
+html.dark-theme .tabela-licenfy,
+html.dark-theme .tabela-dossie,
+html.dark-theme .tabela-roi {
+  background: #0f1b30 !important;
+  color: #e2e8f0 !important;
+}
+
+html.dark-theme .licenfy-table th,
+html.dark-theme .roi-table th,
+html.dark-theme .dossier-table th,
+html.dark-theme .tabela-licenfy th,
+html.dark-theme .tabela-dossie th,
+html.dark-theme .tabela-roi th {
+  background: #16213a !important;
+  color: #cbd5e1 !important;
+  border-color: #334155 !important;
+}
+
+html.dark-theme .licenfy-table td,
+html.dark-theme .roi-table td,
+html.dark-theme .dossier-table td,
+html.dark-theme .tabela-licenfy td,
+html.dark-theme .tabela-dossie td,
+html.dark-theme .tabela-roi td {
+  background: transparent !important;
+  border-color: #263653 !important;
+  color: #e2e8f0 !important;
+}
+
+html.dark-theme .badge-status.regular,
+html.dark-theme .selo-status.regular,
+html.dark-theme .status-dot.regular {
+  background: #12372f !important;
+  border-color: #166534 !important;
+  color: #6ee7b7 !important;
+}
+
+html.dark-theme .badge-status.attention,
+html.dark-theme .badge-status.atencao,
+html.dark-theme .selo-status.attention,
+html.dark-theme .selo-status.atencao {
+  background: #3b2f12 !important;
+  border-color: #92400e !important;
+  color: #fbbf24 !important;
+}
+
+html.dark-theme .badge-status.urgent,
+html.dark-theme .badge-status.urgente,
+html.dark-theme .selo-status.urgent,
+html.dark-theme .selo-status.urgente {
+  background: #3b1d24 !important;
+  border-color: #991b1b !important;
+  color: #fca5a5 !important;
+}
+
+html.dark-theme .status-dot.attention,
+html.dark-theme .status-dot.atencao,
+html.dark-theme .status-dot.urgent,
+html.dark-theme .status-dot.urgente {
+  box-shadow: 0 0 0 3px rgba(251, 191, 36, .16) !important;
+}
+
+html.dark-theme .public-asset-card,
+html.dark-theme .history-modal,
+html.dark-theme .modal-content,
+html.dark-theme .modal-unidade {
+  background: #111c33 !important;
+  border-color: #263653 !important;
+  color: #e2e8f0 !important;
+}
+
+html.dark-theme .public-asset-details div,
+html.dark-theme .detail-info-grid > div,
+html.dark-theme .human-review-note {
+  background: #16213a !important;
+  border-color: #334155 !important;
+  color: #cbd5e1 !important;
+}
+
+html.dark-theme .form-error,
+html.dark-theme .erro-formulario {
+  background: #3b1d24 !important;
+  border-color: #991b1b !important;
+  color: #fecaca !important;
+}
+
+html.dark-theme ::-webkit-scrollbar-track {
+  background: #0f1b30;
+}
+
+html.dark-theme ::-webkit-scrollbar-thumb {
+  background: #334155;
+}
+
+@media print {
+  html.dark-theme body,
+  html.dark-theme .dossier-paper,
+  html.dark-theme .printable-area,
+  html.dark-theme .area-impressao {
+    background: #ffffff !important;
+    color: #111827 !important;
+  }
+}
+
 @media print {
   body * {
     visibility: hidden;

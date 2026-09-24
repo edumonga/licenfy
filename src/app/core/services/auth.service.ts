@@ -69,8 +69,8 @@ export class ServicoAutenticacao {
       return {
         sucesso: false,
         success: false,
-        mensagem: 'Usuário ou senha inválidos. Para teste rápido utilize login: teste e senha: 123, ou crie uma conta.',
-        message: 'Usuário ou senha inválidos. Para teste rápido utilize login: teste e senha: 123, ou crie uma conta.'
+        mensagem: 'Usuário ou senha inválidos. Para teste rápido utilize login: teste e senha: 123, ou confira suas credenciais.',
+        message: 'Usuário ou senha inválidos. Para teste rápido utilize login: teste e senha: 123, ou confira suas credenciais.'
       };
     }
   }

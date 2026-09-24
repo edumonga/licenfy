@@ -1,0 +1,35 @@
+<div class="prefs-toolbar" [attr.aria-label]="prefs.t('nav.platform')">
+  <button type="button" class="prefs-btn" (click)="alternarMenu($event)"
+    [class.is-open]="abrirMenu"
+    [title]="prefs.idioma() === 'pt' ? prefs.t('header.toEN') : prefs.idioma() === 'en' ? prefs.t('header.toES') : prefs.t('header.toPT')"
+    [attr.aria-expanded]="abrirMenu" aria-haspopup="listbox">
+    <span class="material-symbols-rounded prefs-icon">language</span>
+    <span class="prefs-text">{{ prefs.idioma() === 'pt' ? 'PT' : prefs.idioma() === 'en' ? 'EN' : 'ES' }}</span>
+    <span class="material-symbols-rounded prefs-chevron">expand_more</span>
+  </button>
+  @if (abrirMenu) {
+    <div class="language-menu" role="listbox" [attr.aria-label]="prefs.t('nav.platform')">
+      <button type="button" role="option" [attr.aria-selected]="prefs.idioma() === 'pt'" [class.active]="prefs.idioma() === 'pt'" (click)="selecionar('pt')">
+        <span class="lang-name">Português</span>
+        <span class="lang-code">PT</span>
+        @if (prefs.idioma() === 'pt') {
+          <span class="material-symbols-rounded check-icon">check</span>
+        }
+      </button>
+      <button type="button" role="option" [attr.aria-selected]="prefs.idioma() === 'en'" [class.active]="prefs.idioma() === 'en'" (click)="selecionar('en')">
+        <span class="lang-name">English</span>
+        <span class="lang-code">EN</span>
+        @if (prefs.idioma() === 'en') {
+          <span class="material-symbols-rounded check-icon">check</span>
+        }
+      </button>
+      <button type="button" role="option" [attr.aria-selected]="prefs.idioma() === 'es'" [class.active]="prefs.idioma() === 'es'" (click)="selecionar('es')">
+        <span class="lang-name">Español</span>
+        <span class="lang-code">ES</span>
+        @if (prefs.idioma() === 'es') {
+          <span class="material-symbols-rounded check-icon">check</span>
+        }
+      </button>
+    </div>
+  }
+</div>

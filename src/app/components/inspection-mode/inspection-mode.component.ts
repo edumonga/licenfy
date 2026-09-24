@@ -2,6 +2,7 @@ import { Component, inject, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ServicoLicenfy } from '../../core/services/licenfy.service';
+import { PreferenciasService } from '../../core/services/preferencias.service';
 import { Unidade, DocumentoLicenca, Branch, LicenseDocument } from '../../core/models/types';
 
 @Component({
@@ -13,6 +14,7 @@ import { Unidade, DocumentoLicenca, Branch, LicenseDocument } from '../../core/m
 })
 export class ModoInspecaoComponente {
   readonly servico = inject(ServicoLicenfy);
+  readonly prefs = inject(PreferenciasService);
 
   readonly unidades = this.servico.unidades;
   readonly unidadeSelecionadaId = signal<string>('sp-matriz');

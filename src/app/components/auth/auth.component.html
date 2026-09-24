@@ -1,114 +1,72 @@
 <main class="pagina-autenticacao auth-page">
   <section class="painel-marca auth-brand-panel">
     <button class="botao-voltar back-link" (click)="voltarAoSite()">
-      <span class="material-symbols-rounded">arrow_back</span> Voltar ao site
+      <span class="material-symbols-rounded">arrow_back</span> {{ prefs.t('auth.back') }}
     </button>
     <div class="conteudo-marca brand-content">
       <div class="centro-logo brand-logo-center">
         <img src="logo-auth.png" alt="Licenfy" class="logo-marca-autenticacao auth-brand-logo" />
       </div>
-      <span class="destaque-marca brand-overline">PLATAFORMA DE COMPLIANCE</span>
-      <h1>Controle total, sem perder o ritmo do dia a dia.</h1>
-      <p>Documentos, prazos, ativos e responsáveis em um só lugar.</p>
+      <span class="destaque-marca brand-overline">{{ prefs.t('auth.brandKicker') }}</span>
+      <h1>{{ prefs.t('auth.brandTitle') }}</h1>
+      <p>{{ prefs.t('auth.brandDesc') }}</p>
       <div class="pontos-marca brand-points">
-        <span><i>✓</i> Acesso seguro para sua equipe</span>
-        <span><i>✓</i> Alertas e histórico auditável</span>
-        <span><i>✓</i> Visão consolidada por unidade</span>
-        <span><i>✓</i> Ambiente de teste com dados de exemplo</span>
+        <span><i>✓</i> {{ prefs.t('auth.brandPoint1') }}</span>
+        <span><i>✓</i> {{ prefs.t('auth.brandPoint2') }}</span>
+        <span><i>✓</i> {{ prefs.t('auth.brandPoint3') }}</span>
+        <span><i>✓</i> {{ prefs.t('auth.brandPoint4') }}</span>
       </div>
     </div>
-    <span class="rodape-marca brand-footer">© 2026 Licenfy Tecnologia</span>
+    <span class="rodape-marca brand-footer">© 2026 {{ prefs.t('common.brand') }}</span>
   </section>
 
   <section class="painel-formulario auth-form-panel">
+    <app-preferences-toolbar class="floating-preferences" />
     <div class="cartao-autenticacao auth-card">
-      <div class="abas-autenticacao auth-tabs">
-        <button [class.ativa]="modo() === 'login'" [class.active]="modo() === 'login'" (click)="alterarModo('login')">
-          Entrar com conta criada
-        </button>
-        <button [class.ativa]="modo() === 'signup'" [class.active]="modo() === 'signup'" (click)="alterarModo('signup')">
-          Testar / Criar conta
-        </button>
+      <div class="introducao-formulario form-intro">
+        <span class="subtitulo-olho eyebrow">{{ prefs.t('auth.welcomeBack') }}</span>
+        <h2>{{ prefs.t('auth.loginTitle') }}</h2>
+        <p>{{ prefs.t('auth.loginSub') }}</p>
       </div>
 
-      @if (modo() === 'login') {
-        <div class="introducao-formulario form-intro">
-          <span class="subtitulo-olho eyebrow">BEM-VINDO DE VOLTA</span>
-          <h2>Entre na sua conta</h2>
-          <p>Acesse o painel da sua empresa com sua conta já cadastrada.</p>
-        </div>
+      <form (submit)="$event.preventDefault(); enviarLogin()" class="formulario-autenticacao auth-form">
+        <label>
+          {{ prefs.t('auth.email') }}
+          <input [(ngModel)]="dadosLogin.login" name="login" type="email" autocomplete="email" [placeholder]="prefs.t('auth.emailPlaceholder')" required />
+        </label>
+        <label>
+          {{ prefs.t('auth.password') }}
+          <input [(ngModel)]="dadosLogin.senha" name="password" type="password" autocomplete="current-password" [placeholder]="prefs.t('auth.passwordPlaceholder')" required />
+        </label>
 
-        <form (submit)="$event.preventDefault(); enviarLogin()" class="formulario-autenticacao auth-form">
-          <label>
-            E-mail corporativo
-            <input [(ngModel)]="dadosLogin.login" name="login" type="email" autocomplete="email" placeholder="seu@empresa.com.br" required />
-          </label>
-          <label>
-            Senha
-            <input [(ngModel)]="dadosLogin.senha" name="password" type="password" autocomplete="current-password" placeholder="Sua senha" required />
-          </label>
+        @if (erro()) {
+          <div class="erro-formulario form-error">
+            <span class="material-symbols-rounded">error</span>
+            <span>{{ erro() }}</span>
+          </div>
+        }
 
-          @if (erro()) {
-            <div class="erro-formulario form-error">
-              <span class="material-symbols-rounded">error</span>
-              <span>{{ erro() }}</span>
-            </div>
-          }
+        <label class="caixa-lgpd lgpd-box" [class.is-checked]="aceiteLgpdLogin()">
+          <input type="checkbox" [checked]="aceiteLgpdLogin()" (change)="aceiteLgpdLogin.set($any($event.target).checked)" name="aceiteLgpdLogin" required />
+          <span class="lgpd-text">
+            {{ prefs.idioma() === 'pt' ? 'Li e concordo com os ' : 'I agree to the ' }}
+            <a href="#" (click)="$event.preventDefault()">{{ prefs.t('landing.terms') }}</a>
+            {{ prefs.idioma() === 'pt' ? ' e a ' : ' and ' }}
+            <a href="#" (click)="$event.preventDefault()">{{ prefs.t('landing.privacy') }}</a>{{ prefs.idioma() === 'pt' ? ', conforme a LGPD.' : ' under LGPD.' }}
+          </span>
+        </label>
 
-          <button class="botao-submeter auth-submit" [disabled]="carregando()">
-            {{ carregando() ? 'Autenticando...' : 'Entrar na plataforma' }}
-            <span class="material-symbols-rounded">arrow_forward</span>
-          </button>
-          <a class="link-esqueci-senha forgot-password-link" href="mailto:suporte@licenfy.com.br?subject=Recupera%C3%A7%C3%A3o%20de%20senha">Esqueci minha senha</a>
-        </form>
+        <button class="botao-submeter auth-submit" [disabled]="carregando()">
+          {{ carregando() ? prefs.t('auth.authenticating') : prefs.t('auth.loginBtn') }}
+          <span class="material-symbols-rounded">arrow_forward</span>
+        </button>
+          <a class="link-esqueci-senha forgot-password-link" href="mailto:suporte@licenfy.com.br?subject=Recupera%C3%A7%C3%A3o%20de%20senha">{{ prefs.t('auth.forgot') }}</a>
+      </form>
 
-        <p class="trocar-modo auth-switch">
-          Ainda não tem uma conta?
-          <button type="button" (click)="alterarModo('signup')">Crie uma conta de teste</button>
-        </p>
-      } @else {
-        <div class="introducao-formulario form-intro">
-          <span class="subtitulo-olho eyebrow">COMECE AGORA</span>
-          <h2>Crie sua conta de teste</h2>
-          <p>Experimente o Licenfy de imediato — sem necessidade de banco de dados.</p>
-        </div>
-
-        <form (submit)="$event.preventDefault(); enviarCadastro()" class="formulario-autenticacao auth-form">
-          <label>
-            Nome completo
-            <input [(ngModel)]="dadosCadastro.nome" name="name" autocomplete="name" placeholder="Ex: Carlos Eduardo" required />
-          </label>
-          <label>
-            E-mail corporativo
-            <input [(ngModel)]="dadosCadastro.email" name="email" type="email" autocomplete="email" placeholder="carlos@empresa.com.br" required />
-          </label>
-          <label>
-            Crie uma senha
-            <input [(ngModel)]="dadosCadastro.senha" name="password" type="password" autocomplete="new-password" placeholder="Mínimo 3 caracteres" required />
-          </label>
-          <label>
-            Confirme sua senha
-            <input [(ngModel)]="dadosCadastro.confirmarSenha" name="confirmPassword" type="password" autocomplete="new-password" placeholder="Repita a senha criada" required />
-          </label>
-
-          @if (erro()) {
-            <div class="erro-formulario form-error">
-              <span class="material-symbols-rounded">error</span>
-              <span>{{ erro() }}</span>
-            </div>
-          }
-
-          <button class="botao-submeter auth-submit">
-            Criar conta e acessar plataforma
-            <span class="material-symbols-rounded">arrow_forward</span>
-          </button>
-        </form>
-
-        <p class="trocar-modo auth-switch">
-          Já tem uma conta?
-          <button type="button" (click)="alterarModo('login')">Entrar</button>
-        </p>
-      }
+      <p class="trocar-modo auth-switch">
+        {{ prefs.t('auth.noAccount') }}
+        <button type="button" (click)="verPlanos()">{{ prefs.t('common.seePlans') }}</button>
+      </p>
     </div>
   </section>
 </main>

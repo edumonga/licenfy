@@ -1,0 +1,231 @@
+:host {
+  display: inline-flex;
+  vertical-align: middle;
+}
+
+.prefs-toolbar {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+}
+
+.prefs-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  height: 36px;
+  padding: 0 11px 0 10px;
+  border: 1px solid #e2e8f0;
+  border-radius: 9999px;
+  background: #ffffff;
+  color: #64748b;
+  font: 600 0.82rem var(--font-body, inherit);
+  cursor: pointer;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+  transition: all 0.15s ease;
+  white-space: nowrap;
+}
+
+.prefs-btn:hover,
+.prefs-btn.is-open {
+  background: #f8fafc;
+  border-color: #cbd5e1;
+  color: #1e293b;
+}
+
+.prefs-icon {
+  font-size: 18px;
+  color: #64748b;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: color 0.15s ease;
+}
+
+.prefs-btn:hover .prefs-icon,
+.prefs-btn.is-open .prefs-icon {
+  color: #1e293b;
+}
+
+.prefs-text {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: inherit;
+  letter-spacing: 0.02em;
+}
+
+.prefs-chevron {
+  font-size: 16px;
+  color: #94a3b8;
+  transition: transform 0.15s ease, color 0.15s ease;
+  margin-left: -2px;
+}
+
+.prefs-btn:hover .prefs-chevron,
+.prefs-btn.is-open .prefs-chevron {
+  color: #64748b;
+}
+
+.prefs-btn.is-open .prefs-chevron {
+  transform: rotate(180deg);
+}
+
+/* Menu Dropdown */
+.language-menu {
+  position: absolute;
+  top: calc(100% + 6px);
+  right: 0;
+  z-index: 1100;
+  display: grid;
+  min-width: 155px;
+  gap: 2px;
+  padding: 4px;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  background: #ffffff;
+  box-shadow: 0 4px 16px rgba(15, 23, 42, 0.08);
+}
+
+.language-menu button {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 7px 10px;
+  border: 0;
+  border-radius: 6px;
+  background: transparent;
+  color: #475569;
+  font: 500 0.82rem var(--font-body, inherit);
+  text-align: left;
+  cursor: pointer;
+  transition: background-color 0.12s ease, color 0.12s ease;
+}
+
+.lang-name {
+  color: #334155;
+}
+
+.lang-code {
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: #94a3b8;
+  margin-left: auto;
+  margin-right: 6px;
+}
+
+.check-icon {
+  font-size: 15px;
+  color: #475569;
+}
+
+.language-menu button:hover {
+  background: #f1f5f9;
+  color: #0f172a;
+}
+
+.language-menu button:hover .lang-name {
+  color: #0f172a;
+}
+
+.language-menu button.active {
+  background: #f8fafc;
+  color: #0f172a;
+}
+
+.language-menu button.active .lang-name {
+  color: #0f172a;
+  font-weight: 600;
+}
+
+.language-menu button.active .lang-code {
+  color: #475569;
+}
+
+/* Modo escuro */
+:host-context(html.dark-theme) .prefs-btn {
+  background: #111c33;
+  border-color: #334155;
+  color: #94a3b8;
+  box-shadow: none;
+}
+
+:host-context(html.dark-theme) .prefs-btn:hover,
+:host-context(html.dark-theme) .prefs-btn.is-open {
+  background: #1e293b;
+  border-color: #475569;
+  color: #f1f5f9;
+}
+
+:host-context(html.dark-theme) .prefs-icon,
+:host-context(html.dark-theme) .prefs-chevron {
+  color: #94a3b8;
+}
+
+:host-context(html.dark-theme) .prefs-btn:hover .prefs-icon,
+:host-context(html.dark-theme) .prefs-btn:hover .prefs-chevron,
+:host-context(html.dark-theme) .prefs-btn.is-open .prefs-icon,
+:host-context(html.dark-theme) .prefs-btn.is-open .prefs-chevron {
+  color: #f1f5f9;
+}
+
+:host-context(html.dark-theme) .language-menu {
+  background: #0f172a;
+  border-color: #334155;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+}
+
+:host-context(html.dark-theme) .language-menu button {
+  color: #94a3b8;
+}
+
+:host-context(html.dark-theme) .language-menu button .lang-name {
+  color: #cbd5e1;
+}
+
+:host-context(html.dark-theme) .language-menu button:hover {
+  background: #1e293b;
+  color: #f8fafc;
+}
+
+:host-context(html.dark-theme) .language-menu button:hover .lang-name {
+  color: #f8fafc;
+}
+
+:host-context(html.dark-theme) .language-menu button.active {
+  background: #1e293b;
+}
+
+:host-context(html.dark-theme) .language-menu button.active .lang-name {
+  color: #f8fafc;
+}
+
+:host-context(html.dark-theme) .check-icon {
+  color: #cbd5e1;
+}
+
+/* Floating mode in Auth or App */
+:host(.floating-preferences) {
+  position: fixed;
+  top: 16px;
+  right: 20px;
+  z-index: 1000;
+}
+
+@media (max-width: 768px) {
+  :host(.floating-preferences) {
+    top: 10px;
+    right: 12px;
+  }
+
+  .prefs-btn {
+    height: 32px;
+    padding: 0 9px 0 8px;
+    font-size: 0.76rem;
+  }
+
+  .prefs-icon {
+    font-size: 16px;
+  }
+}

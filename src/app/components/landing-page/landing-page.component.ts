@@ -2,6 +2,8 @@ import { Component, computed, inject, signal, OnInit, OnDestroy, HostListener } 
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ServicoLicenfy } from '../../core/services/licenfy.service';
+import { PreferenciasService } from '../../core/services/preferencias.service';
+import { PreferencesToolbarComponent } from '../preferences-toolbar/preferences-toolbar.component';
 
 export interface SlideImagem {
   id: string;
@@ -16,12 +18,13 @@ export type ImageSlide = SlideImagem;
 @Component({
   selector: 'app-landing-page',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, PreferencesToolbarComponent],
   templateUrl: './landing-page.component.html',
   styleUrls: ['./landing-page.component.css']
 })
 export class PaginaInicialComponente implements OnInit, OnDestroy {
   readonly servico = inject(ServicoLicenfy);
+  readonly prefs = inject(PreferenciasService);
 
   readonly modalDemonstracaoAberto = signal<boolean>(false);
   readonly cabecalhoFlutuante = signal<boolean>(false);
@@ -67,6 +70,8 @@ export class PaginaInicialComponente implements OnInit, OnDestroy {
   get isHeaderFloating() { return this.cabecalhoFlutuante; }
   get accumulatedSavingsDisplay() { return this.exibicaoEconomiaAcumulada; }
   get currentSlideIndex() { return this.indiceSlideAtual; }
+  get idioma() { return this.prefs.idioma; }
+  get currentLang() { return this.prefs.idioma; }
 
   ngOnInit() {
     this.aoRolarJanela();
@@ -129,6 +134,9 @@ export class PaginaInicialComponente implements OnInit, OnDestroy {
     this.servico.abrirLogin();
   }
   openLogin() { this.abrirLogin(); }
+
+  alternarIdioma() { this.prefs.alternarIdioma(); }
+  toggleLanguage() { this.alternarIdioma(); }
 
   abrirCadastro() {
     this.servico.abrirCadastro();

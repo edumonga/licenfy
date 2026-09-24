@@ -5,7 +5,7 @@
         <span class="material-symbols-rounded icon-sm">shield</span>
         Modo Fiscalização Imediata
       </div>
-      <h1 class="titulo-pagina page-title">Dossiê Unificado de Conformidade Legal</h1>
+      <h1 class="titulo-pagina page-title">{{ prefs.t('mod.inspectionTitle') }}</h1>
       <p class="descricao-pagina page-desc">Compilação instantânea de todos os alvarás, laudos e licenças vigentes, pronta para auditoria externa e fiscais.</p>
     </div>
 
@@ -32,7 +32,7 @@
     <div class="seletores-documentos document-checks">
       <label *ngFor="let doc of documentosDisponiveis()">
         <input type="checkbox" [checked]="idsDocumentosSelecionados().includes(doc.id)" (change)="alternarDocumento(doc.id)" />
-        <span>{{ doc.titulo || doc.title }}</span>
+        <span>{{ prefs.localizarTexto(doc.titulo || doc.title) }}</span>
       </label>
     </div>
   </div>
@@ -116,17 +116,17 @@
           <tbody>
             <tr *ngFor="let lic of licencasDaUnidade()">
               <td>
-                <strong>{{ lic.titulo || lic.title }}</strong>
+                <strong>{{ prefs.localizarTexto(lic.titulo || lic.title) }}</strong>
                 <div *ngIf="lic.notaRequisitoLegal || lic.legalRequirementNote" class="nota-legal-doc doc-legal-note">{{ lic.notaRequisitoLegal || lic.legalRequirementNote }}</div>
               </td>
-              <td>{{ lic.orgaoEmissor || lic.issuingBody }}</td>
+              <td>{{ prefs.localizarTexto(lic.orgaoEmissor || lic.issuingBody) }}</td>
               <td class="texto-mono mono-font">{{ lic.numeroDocumento || lic.documentNumber }}</td>
               <td>{{ (lic.dataEmissao || lic.issueDate) | date:'dd/MM/yyyy' }}</td>
               <td>
                 <strong>{{ (lic.dataVencimento || lic.expirationDate) | date:'dd/MM/yyyy' }}</strong>
               </td>
               <td>
-                <span class="selo-status badge-status" [ngClass]="lic.status">
+                <span class="selo-status badge-status" [ngClass]="prefs.statusClass(lic.status)">
                   <span class="ponto-status status-dot" [ngClass]="lic.status"></span>
                   {{ lic.status === 'regular' ? 'Vigente' : 'Em Renovação' }}
                 </span>

@@ -2,6 +2,7 @@ import { Component, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ServicoLicenfy } from '../../core/services/licenfy.service';
+import { PreferenciasService } from '../../core/services/preferencias.service';
 import { RegistroNotificacao, NotificationLog } from '../../core/models/types';
 
 @Component({
@@ -13,6 +14,7 @@ import { RegistroNotificacao, NotificationLog } from '../../core/models/types';
 })
 export class NotificacoesComponente {
   readonly servico = inject(ServicoLicenfy);
+  readonly prefs = inject(PreferenciasService);
 
   readonly regras = this.servico.regrasNotificacao;
   readonly registros = this.servico.registrosNotificacao;

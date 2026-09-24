@@ -1,6 +1,7 @@
 import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ServicoLicenfy } from '../../core/services/licenfy.service';
+import { PreferenciasService } from '../../core/services/preferencias.service';
 import { DocumentoLicenca } from '../../core/models/types';
 
 @Component({
@@ -12,6 +13,7 @@ import { DocumentoLicenca } from '../../core/models/types';
 })
 export class PainelComponente {
   readonly servico = inject(ServicoLicenfy);
+  readonly prefs = inject(PreferenciasService);
 
   readonly unidades = this.servico.unidades;
   readonly unidadeSelecionadaId = this.servico.unidadeSelecionadaId;

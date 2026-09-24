@@ -195,6 +195,12 @@
 }
 .channel-chip.wa { background: #dcfce7; color: #15803d; }
 .channel-chip.mail { background: #f1f5f9; color: #475569; }
+.channel-chip-icon,
+.channel-pill-icon {
+  gap: 0;
+  padding: 6px;
+  line-height: 0;
+}
 
 .rule-recipients-list {
   display: flex;
@@ -203,11 +209,27 @@
   font-size: 0.78rem;
   color: var(--color-text-muted);
   min-width: 0;
+  max-width: 100%;
+  overflow: hidden;
 }
 
-.rule-recipients-list > span:last-child {
+.recipient-main {
   min-width: 0;
-  overflow-wrap: anywhere;
+  max-width: 220px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.recipient-more {
+  flex-shrink: 0;
+  padding: 1px 7px;
+  border-radius: 9999px;
+  background: #eef2ff;
+  color: #4338ca;
+  font-size: 0.7rem;
+  font-weight: 700;
+  white-space: nowrap;
 }
 
 .custom-rule-box { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 14px 16px; border: 1px dashed var(--color-primary-border); border-radius: 10px; background: var(--color-primary-light); }

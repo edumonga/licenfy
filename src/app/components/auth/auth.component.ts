@@ -3,22 +3,27 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ServicoLicenfy } from '../../core/services/licenfy.service';
 import { ServicoAutenticacao } from '../../core/services/auth.service';
+import { PreferenciasService } from '../../core/services/preferencias.service';
+import { PreferencesToolbarComponent } from '../preferences-toolbar/preferences-toolbar.component';
 
 @Component({
   selector: 'app-auth',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, PreferencesToolbarComponent],
   templateUrl: './auth.component.html',
   styleUrls: ['./auth.component.css']
 })
 export class AutenticacaoComponente {
   readonly servico = inject(ServicoLicenfy);
   readonly autenticacao = inject(ServicoAutenticacao);
+  readonly prefs = inject(PreferenciasService);
 
   readonly modo = this.servico.modoAutenticacao;
   readonly carregando = signal(false);
   readonly erro = signal('');
   readonly mensagemSucesso = signal('');
+  readonly aceiteLgpdLogin = signal(false);
+  readonly aceiteLgpdCadastro = signal(false);
 
   readonly dadosLogin = { login: '', senha: '', password: '' };
   readonly dadosCadastro = { nome: '', email: '', senha: '', confirmarSenha: '', name: '', password: '', confirmPassword: '' };
@@ -44,6 +49,17 @@ export class AutenticacaoComponente {
   }
   backToSite() { this.voltarAoSite(); }
 
+  verPlanos() {
+    this.servico.definirVisao('landing');
+    setTimeout(() => {
+      const el = document.getElementById('planos');
+      if (el) {
+        el.scrollIntoView({ behavior: 'smooth' });
+      }
+    }, 120);
+  }
+  viewPlans() { this.verPlanos(); }
+
   preencherTeste(login = 'teste', pass = '123') {
     this.dadosLogin.login = login;
     this.dadosLogin.senha = pass;
@@ -55,6 +71,10 @@ export class AutenticacaoComponente {
   async enviarLogin() {
     this.erro.set('');
     this.mensagemSucesso.set('');
+    if (!this.aceiteLgpdLogin()) {
+      this.erro.set(this.prefs.t('auth.needLogin'));
+      return;
+    }
     this.carregando.set(true);
 
     const senha = this.dadosLogin.senha || this.dadosLogin.password;
@@ -74,6 +94,11 @@ export class AutenticacaoComponente {
   enviarCadastro() {
     this.erro.set('');
     this.mensagemSucesso.set('');
+
+    if (!this.aceiteLgpdCadastro()) {
+      this.erro.set(this.prefs.t('auth.needSignup'));
+      return;
+    }
 
     const nome = (this.dadosCadastro.nome || this.dadosCadastro.name || '').trim();
     const email = (this.dadosCadastro.email || '').trim();

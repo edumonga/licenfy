@@ -679,6 +679,11 @@
   font-size: 0.78rem;
 }
 
+.action-btn-icon {
+  padding: 8px;
+  line-height: 0;
+}
+
 .icon-xs { font-size: 14px; }
 .icon-sm { font-size: 18px; }
 
