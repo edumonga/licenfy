@@ -51,9 +51,14 @@ export class App {
   readonly selectedBranchId = this.service.selectedBranchId;
   readonly score = this.service.overallComplianceScore;
   readonly status = this.service.overallComplianceStatus;
+  readonly selectedBranchName = computed(() => {
+    const id = this.selectedBranchId();
+    return id === 'all' ? this.prefs.t('shell.allUnits') : this.branches().find(branch => branch.id === id)?.name || this.prefs.t('shell.allUnits');
+  });
 
   readonly isMobileMenuOpen = signal(false);
   readonly isDesktopSidebarOpen = signal(false);
+  readonly isBranchPickerOpen = signal(false);
   readonly publicAssetTag = signal(this.getPublicAssetTag());
   readonly publicAsset = computed(() => {
     const assetTag = this.publicAssetTag();
@@ -89,6 +94,11 @@ export class App {
 
   onBranchChange(id: string) {
     this.service.setSelectedBranch(id);
+    this.isBranchPickerOpen.set(false);
+  }
+
+  toggleBranchPicker() {
+    this.isBranchPickerOpen.update(open => !open);
   }
 
   getUserInitials(): string {

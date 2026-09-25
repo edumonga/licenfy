@@ -161,15 +161,16 @@
 
         <div class="topbar-right">
           <app-preferences-toolbar />
-          <div class="topbar-branch-box">
+          <div class="topbar-branch-box" [class.is-open]="isBranchPickerOpen()">
             <span class="material-symbols-rounded icon-sm text-muted">domain</span>
-            <select 
-              [ngModel]="selectedBranchId()" 
-              (ngModelChange)="onBranchChange($event)"
-              class="topbar-branch-select">
-              <option value="all">{{ prefs.t('shell.allUnits') }}</option>
-              <option *ngFor="let b of branches()" [value]="b.id">{{ b.name }}</option>
-            </select>
+            <button type="button" class="topbar-branch-select" (click)="toggleBranchPicker()" [attr.aria-expanded]="isBranchPickerOpen()" aria-haspopup="listbox">
+              {{ selectedBranchName() }}
+              <span class="material-symbols-rounded">expand_more</span>
+            </button>
+            <div *ngIf="isBranchPickerOpen()" class="branch-picker-menu" role="listbox" aria-label="Selecionar unidade">
+              <button type="button" role="option" [attr.aria-selected]="selectedBranchId() === 'all'" [class.selected]="selectedBranchId() === 'all'" (click)="onBranchChange('all')"><span class="material-symbols-rounded">apps</span>{{ prefs.t('shell.allUnits') }}</button>
+              <button *ngFor="let b of branches()" type="button" role="option" [attr.aria-selected]="selectedBranchId() === b.id" [class.selected]="selectedBranchId() === b.id" (click)="onBranchChange(b.id)"><span class="material-symbols-rounded">location_city</span>{{ b.name }}</button>
+            </div>
           </div>
 
           <button class="btn btn-outline btn-sm topbar-action-btn" (click)="setTab('inspection')" [title]="prefs.t('shell.inspection')">
