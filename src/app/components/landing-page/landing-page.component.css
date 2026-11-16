@@ -2466,10 +2466,8 @@
 }
 
 .social-proof-title {
-  max-width: 1340px;
   margin: 0 auto 30px;
-  padding: 0 24px;
-  text-align: left;
+  text-align: center;
   font-size: .72rem;
   font-weight: 800;
   color: #d7ebff;
@@ -2481,11 +2479,15 @@
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 24px;
+  max-width: 1056px;
+  margin-inline: auto;
 }
 
 .logo-box {
   display: flex;
   align-items: center;
+  justify-content: center;
+  text-align: center;
   flex-wrap: wrap;
   gap: 0 9px;
   min-height: 64px;
@@ -2518,7 +2520,6 @@
 
 .logo-detail {
   flex-basis: 100%;
-  padding-left: 47px;
   margin-top: 4px;
   color: #d6e6fb;
   font-size: 0.73rem;
