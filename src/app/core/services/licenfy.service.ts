@@ -30,6 +30,7 @@ export class ServicoLicenfy {
   readonly authMode = this.modoAutenticacao;
   readonly erroAutenticacao = signal(false);
   readonly avisoCadastro = signal<'required' | 'notice' | null>(null);
+  readonly erroSenha = signal<'credentials' | 'signup' | 'rate' | 'unavailable' | null>(null);
 
   readonly unidadeSelecionadaId = signal<string>('all');
   readonly selectedBranchId = this.unidadeSelecionadaId;
@@ -54,6 +55,7 @@ export class ServicoLicenfy {
   setAuthMode(m: 'login' | 'signup') { this.definirModoAutenticacao(m); }
 
   abrirLogin() {
+    this.erroSenha.set(null);
     this.avisoCadastro.set(null);
     this.erroAutenticacao.set(false);
     this.modoAutenticacao.set('login');
@@ -62,6 +64,7 @@ export class ServicoLicenfy {
   openLogin() { this.abrirLogin(); }
 
   abrirCadastro() {
+    this.erroSenha.set(null);
     this.avisoCadastro.set(null);
     this.erroAutenticacao.set(false);
     this.modoAutenticacao.set('signup');

@@ -30,7 +30,7 @@ async function workspace(req: IncomingMessage & { body?: { revision?: number; st
   }
 
   const user = session(req);
-  if (!user || typeof user.id !== 'string' || !/^[0-9]{1,128}$/.test(user.id)) {
+  if (!user || typeof user.id !== 'string' || !/^(?:[0-9]{1,128}|manual-[0-9a-f]{32})$/.test(user.id)) {
     return json(res, 401, { message: 'Sessão ausente ou expirada.' });
   }
 

@@ -20,7 +20,7 @@
       <div class="form-heading"><div><h2>Informações da conta</h2><p>Estes dados aparecem na sua sessão e nas comunicações da plataforma.</p></div><span *ngIf="saved()" class="save-feedback"><span class="material-symbols-rounded">check_circle</span> Salvo</span></div>
       <div class="form-grid">
         <label>Nome completo<input [ngModel]="form().nome" (ngModelChange)="setField('nome', $event)" name="name" required autocomplete="name"></label>
-        <label>E-mail da conta Google<input [value]="form().email" type="email" readonly></label>
+        <label>E-mail da conta<input [value]="form().email" type="email" readonly></label>
         <label>Função / área<input [ngModel]="form().cargo" (ngModelChange)="setField('cargo', $event)" name="role" placeholder="Ex.: Jurídico e Compliance"></label>
         <label>Telefone<input [ngModel]="form().telefone" (ngModelChange)="setField('telefone', $event)" name="phone" autocomplete="tel"></label>
         <label>Empresa<input [ngModel]="form().empresa" (ngModelChange)="setField('empresa', $event)" name="company" required></label>

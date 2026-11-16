@@ -25,30 +25,54 @@
     <div class="cartao-autenticacao auth-card">
       <div class="introducao-formulario form-intro">
         <h2>{{ prefs.t(servico.modoAutenticacao() === 'signup' ? 'auth.signupTitle' : 'auth.loginTitle') }}</h2>
-        <p>{{ prefs.t('auth.googleDescription') }}</p>
       </div>
       @if (servico.avisoCadastro()) {
         <p class="erro-formulario form-error" role="status">{{ prefs.t(servico.avisoCadastro() === 'required' ? 'auth.accountRequired' : 'auth.noticeRequired') }}</p>
       } @else if (servico.erroAutenticacao()) {
         <p class="erro-formulario form-error" role="alert">{{ prefs.t('auth.googleError') }}</p>
+      } @else if (servico.erroSenha(); as error) {
+        <p class="erro-formulario form-error" role="alert">{{ prefs.t('auth.passwordError.' + error) }}</p>
       }
       @if (servico.modoAutenticacao() === 'signup') {
-        <form action="/api/auth?action=signup" method="post" class="formulario-autenticacao auth-form">
+        <form action="/api/auth?action=password-signup" method="post" class="formulario-autenticacao auth-form">
+          <label>{{ prefs.t('auth.name') }}
+            <input name="name" autocomplete="name" maxlength="100" required>
+          </label>
+          <label>{{ prefs.t('auth.email') }}
+            <input type="email" name="email" autocomplete="email" maxlength="254" required>
+          </label>
+          <label>{{ prefs.t('auth.createPass') }}
+            <input type="password" name="password" autocomplete="new-password" minlength="12" maxlength="128" required aria-describedby="password-hint">
+            <small id="password-hint">{{ prefs.t('auth.passwordHint') }}</small>
+          </label>
           <label class="caixa-lgpd lgpd-box">
-            <input type="checkbox" name="privacyAcknowledged" value="yes" required>
+            <input #notice type="checkbox" name="privacyAcknowledged" value="yes" required (change)="privacyRead.set(notice.checked)">
             <span class="lgpd-text">{{ prefs.t('auth.noticeRead') }}
               <a href="/privacidade" target="_blank" rel="noopener">{{ prefs.t('landing.privacy') }}</a>.
             </span>
           </label>
-          <button class="botao-submeter auth-submit" type="submit">{{ prefs.t('auth.googleSignup') }}</button>
+          <button class="botao-submeter auth-submit" type="submit">{{ prefs.t('auth.signupBtn') }}</button>
         </form>
-        <button class="auth-mode-link" type="button" (click)="servico.openLogin()">{{ prefs.t('auth.loginTitle') }}</button>
+        <form action="/api/auth?action=signup" method="post" class="auth-provider">
+          <input type="hidden" name="privacyAcknowledged" [value]="privacyRead() ? 'yes' : ''">
+          <button class="botao-submeter auth-submit auth-google" type="submit" [disabled]="!privacyRead()">{{ prefs.t('auth.googleSignup') }}</button>
+        </form>
+        <button class="auth-mode-link" type="button" (click)="openMode('login')">{{ prefs.t('auth.loginTitle') }}</button>
       } @else {
-        <form action="/api/auth" method="get" class="formulario-autenticacao auth-form">
-          <input type="hidden" name="action" value="google">
-          <button class="botao-submeter auth-submit" type="submit">{{ prefs.t('auth.googleLogin') }}</button>
+        <form action="/api/auth?action=password" method="post" class="formulario-autenticacao auth-form">
+          <label>{{ prefs.t('auth.email') }}
+            <input type="email" name="email" autocomplete="username" maxlength="254" required>
+          </label>
+          <label>{{ prefs.t('auth.password') }}
+            <input type="password" name="password" autocomplete="current-password" maxlength="128" required>
+          </label>
+          <button class="botao-submeter auth-submit" type="submit">{{ prefs.t('auth.loginBtn') }}</button>
         </form>
-        <button class="auth-mode-link" type="button" (click)="servico.openSignup()">{{ prefs.t('auth.signupTitle') }}</button>
+        <form action="/api/auth" method="get" class="auth-provider">
+          <input type="hidden" name="action" value="google">
+          <button class="botao-submeter auth-submit auth-google" type="submit">{{ prefs.t('auth.googleLogin') }}</button>
+        </form>
+        <button class="auth-mode-link" type="button" (click)="openMode('signup')">{{ prefs.t('auth.signupTitle') }}</button>
       }
     </div>
   </section>

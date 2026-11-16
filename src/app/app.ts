@@ -72,14 +72,28 @@ export class App {
     if (this.publicAssetTag()) return;
     const url = new URL(window.location.href);
     const result = url.searchParams.get('login');
-    if (result === 'ok' || result === 'erro' || result === 'criar' || result === 'privacidade') {
+    const passwordResults = {
+      'manual-invalido': 'credentials',
+      'manual-dados': 'signup',
+      'manual-limite': 'rate',
+      'manual-limite-cadastro': 'rate',
+      'manual-erro': 'unavailable',
+      'manual-erro-cadastro': 'unavailable',
+    } as const;
+    const passwordError = result && Object.hasOwn(passwordResults, result)
+      ? passwordResults[result as keyof typeof passwordResults] : null;
+    if (passwordError || result === 'ok' || result === 'erro' || result === 'criar' || result === 'privacidade') {
       url.searchParams.delete('login');
       window.history.replaceState(null, '', url);
     }
 
     void this.auth.restaurarSessao().then(authenticated => {
       if (authenticated) void this.workspace.load();
-      if (result === 'criar' || result === 'privacidade') {
+      if (passwordError) {
+        if (result === 'manual-dados' || result?.endsWith('-cadastro')) this.service.openSignup();
+        else this.service.openLogin();
+        this.service.erroSenha.set(passwordError);
+      } else if (result === 'criar' || result === 'privacidade') {
         this.service.openSignup();
         this.service.avisoCadastro.set(result === 'criar' ? 'required' : 'notice');
       } else if (result === 'erro' || (result === 'ok' && !authenticated)) {

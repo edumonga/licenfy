@@ -626,3 +626,11 @@
   font: inherit;
   cursor: pointer;
 }
+.auth-provider { margin-top: .8rem; }
+
+.auth-submit.auth-google {
+  background: transparent;
+  border: 1px solid currentColor;
+  color: inherit;
+  box-shadow: none;
+}

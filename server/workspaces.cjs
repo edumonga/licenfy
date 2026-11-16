@@ -1,4 +1,5 @@
 const { Pool } = require('pg');
+const privacyNoticeVersion = '2026-11-16';
 
 let pool;
 
@@ -77,8 +78,8 @@ function hasAccount(ownerId) {
 function registerAccount(ownerId) {
   return withWorkspace(ownerId, client => client.query(
     'insert into licenfy.accounts (owner_id, privacy_notice_version) values ($1, $2) on conflict (owner_id) do nothing',
-    [ownerId, '2026-11-16'],
+    [ownerId, privacyNoticeVersion],
   ));
 }
 
-module.exports = { load, save, hasAccount, registerAccount };
+module.exports = { load, save, hasAccount, registerAccount, withWorkspace, privacyNoticeVersion };
