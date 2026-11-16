@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ServicoLicenfy } from '../../core/services/licenfy.service';
 import { PreferenciasService } from '../../core/services/preferencias.service';
+import { ServicoAutenticacao } from '../../core/services/auth.service';
 import { PreferencesToolbarComponent } from '../preferences-toolbar/preferences-toolbar.component';
 
 export interface SlideImagem {
@@ -24,6 +25,7 @@ export type ImageSlide = SlideImagem;
 })
 export class PaginaInicialComponente implements OnInit, OnDestroy {
   readonly servico = inject(ServicoLicenfy);
+  readonly autenticacao = inject(ServicoAutenticacao);
   readonly prefs = inject(PreferenciasService);
 
   readonly modalDemonstracaoAberto = signal<boolean>(false);
@@ -124,7 +126,11 @@ export class PaginaInicialComponente implements OnInit, OnDestroy {
   closeDemoModal() { this.fecharModalDemonstracao(); }
 
   abrirLogin() {
-    this.servico.abrirLogin();
+    if (this.autenticacao.user()) {
+      this.servico.definirVisao('app');
+    } else {
+      this.servico.abrirLogin();
+    }
   }
   openLogin() { this.abrirLogin(); }
 
@@ -140,7 +146,7 @@ export class PaginaInicialComponente implements OnInit, OnDestroy {
 
   irParaAplicacao(aba: 'dashboard' | 'vault' | 'assets' | 'notifications' | 'inspection' | 'roi' = 'dashboard') {
     this.servico.definirAba(aba);
-    this.servico.definirVisao('app');
+    this.abrirLogin();
   }
   goToApp(tab: 'dashboard' | 'vault' | 'assets' | 'notifications' | 'inspection' | 'roi' = 'dashboard') { this.irParaAplicacao(tab); }
 }

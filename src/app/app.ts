@@ -16,6 +16,7 @@ import { AuthComponent } from './components/auth/auth.component';
 import { PreferencesToolbarComponent } from './components/preferences-toolbar/preferences-toolbar.component';
 import { AccountComponent } from './components/account/account.component';
 import { CheckoutComponent } from './components/checkout/checkout.component';
+import { WorkspaceService } from './core/services/workspace.service';
 
 @Component({
   selector: 'app-root',
@@ -36,12 +37,14 @@ import { CheckoutComponent } from './components/checkout/checkout.component';
     CheckoutComponent,
     PreferencesToolbarComponent
   ],
+  host: { '(window:beforeunload)': 'confirmUnsavedChanges($event)' },
   templateUrl: './app.html',
   styleUrls: ['./app.css']
 })
 export class App {
   readonly service = inject(LicenfyService);
   readonly auth = inject(AuthService);
+  readonly workspace = inject(WorkspaceService);
   readonly prefs = inject(PreferenciasService);
 
   readonly currentView = this.service.currentView;
@@ -64,6 +67,34 @@ export class App {
     const assetTag = this.publicAssetTag();
     return assetTag ? this.service.assets().find(asset => asset.assetTag === assetTag) || null : null;
   });
+
+  ngOnInit() {
+    if (this.publicAssetTag()) return;
+    const url = new URL(window.location.href);
+    const result = url.searchParams.get('login');
+    if (result === 'ok' || result === 'erro') {
+      url.searchParams.delete('login');
+      window.history.replaceState(null, '', url);
+    }
+
+    void this.auth.restaurarSessao().then(authenticated => {
+      if (authenticated) void this.workspace.load();
+      if (result === 'erro' || (result === 'ok' && !authenticated)) {
+        this.service.erroAutenticacao.set(true);
+        this.service.openLogin();
+      } else if (authenticated && this.currentView() === 'landing') {
+        this.service.setView('app');
+      }
+    });
+  }
+
+  confirmUnsavedChanges(event: BeforeUnloadEvent) {
+    if (this.workspace.hasUnsavedChanges()) event.preventDefault();
+  }
+
+  reloadWorkspace() {
+    window.location.reload();
+  }
 
   private getPublicAssetTag(): string | null {
     const match = window.location.pathname.match(/^\/asset\/([^/]+)\/?$/);
@@ -109,8 +140,14 @@ export class App {
     return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
   }
 
-  logout() {
-    this.auth.logout();
-    this.service.setView('landing');
+  async logout() {
+    try {
+      await this.workspace.flush();
+      if (this.workspace.hasUnsavedChanges()) return;
+      await this.auth.logout();
+      window.location.replace('/');
+    } catch {
+      window.alert(this.prefs.t('auth.logoutError'));
+    }
   }
 }

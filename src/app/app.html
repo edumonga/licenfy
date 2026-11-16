@@ -29,7 +29,28 @@
   <app-auth />
 } @else if (currentView() === 'checkout') {
   <app-checkout />
-} @else {
+} @else if (currentUser() && !workspace.ready()) {
+  <main class="workspace-notice" role="status">
+    @if (workspace.status() === 'load-error') {
+      <p>Não foi possível carregar o espaço de trabalho.</p>
+      <button class="btn btn-outline" type="button" (click)="workspace.load()">Tentar novamente</button>
+      <button class="btn btn-outline" type="button" (click)="logout()">Sair</button>
+    } @else {
+      <p>Carregando espaço de trabalho…</p>
+    }
+  </main>
+} @else if (currentUser()) {
+  @if (workspace.status() === 'save-error' || workspace.status() === 'conflict') {
+    <aside class="workspace-notice" role="alert">
+      @if (workspace.status() === 'conflict') {
+        <p>Outra sessão salvou uma versão mais recente. Suas últimas alterações estão abertas nesta aba.</p>
+        <button class="btn btn-outline" type="button" (click)="reloadWorkspace()">Descartar alterações locais e recarregar</button>
+      } @else {
+        <p>As últimas alterações ainda não foram salvas.</p>
+        <button class="btn btn-outline" type="button" (click)="workspace.flush()">Tentar salvar novamente</button>
+      }
+    </aside>
+  }
   <div class="licenfy-layout">
     <div class="mobile-sidebar-backdrop" [class.open]="isMobileMenuOpen()" (click)="closeMobileMenu()"></div>
 

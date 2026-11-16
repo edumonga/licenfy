@@ -14,144 +14,54 @@ export interface UsuarioAutenticado {
   teste?: boolean;
   trial?: boolean;
 }
+
 export type AuthUser = UsuarioAutenticado;
-
-interface ContaArmazenada extends UsuarioAutenticado {
-  senha: string;
-  password?: string;
-}
-
-interface RespostaLoginApi {
-  id: number;
-  nome: string;
-  email: string;
-}
 
 @Injectable({ providedIn: 'root' })
 export class ServicoAutenticacao {
-  private readonly chaveContas = 'licenfy-contas-teste';
-  private readonly chaveSessao = 'licenfy-sessao';
-  private readonly urlBaseApi = 'http://localhost:3001';
+  private readonly usuario = signal<UsuarioAutenticado | null>(null);
+  readonly user = this.usuario.asReadonly();
 
-  readonly usuario = signal<UsuarioAutenticado | null>(this.carregarSessao());
-  readonly user = this.usuario;
-
-  constructor(private readonly http: HttpClient) {}
-
-  async entrar(login: string, senha: string): Promise<{ sucesso: boolean; mensagem?: string; success?: boolean; message?: string }> {
-    const loginNormalizado = login.trim().toLowerCase();
-    const contaLocal = this.obterContas().find(conta =>
-      conta.email.toLowerCase() === loginNormalizado || conta.nome.toLowerCase() === loginNormalizado
-    );
-
-    if (contaLocal) {
-      if (contaLocal.senha !== senha && contaLocal.password !== senha) {
-        return { sucesso: false, mensagem: 'Senha incorreta. Tente novamente.', success: false, message: 'Senha incorreta. Tente novamente.' };
-      }
-      this.iniciarSessao(contaLocal);
-      return { sucesso: true, success: true };
-    }
-
-    if (loginNormalizado === 'teste' && senha === '12345678') {
-      this.iniciarSessao({ id: 'demo-teste', nome: 'Conta de Teste', name: 'Conta de Teste', email: 'teste@licenfy.com.br', teste: true, trial: true });
-      return { sucesso: true, success: true };
-    }
-
-    if (loginNormalizado === 'admin' && senha === '123456') {
-      this.iniciarSessao({ id: 'demo-admin', nome: 'Administrador', name: 'Administrador', email: 'admin@email.com' });
-      return { sucesso: true, success: true };
-    }
-
+  constructor(private readonly http: HttpClient) {
     try {
-      const resposta = await firstValueFrom(this.http.post<RespostaLoginApi>(`${this.urlBaseApi}/login`, {
-        nome: login,
-        senha
-      }).pipe(timeout(1500)));
-      this.iniciarSessao({ id: String(resposta.id), nome: resposta.nome, name: resposta.nome, email: resposta.email });
-      return { sucesso: true, success: true };
+      for (const key of ['licenfy-contas-teste', 'licenfy-trial-accounts', 'licenfy-sessao', 'licenfy-session']) {
+        localStorage.removeItem(key);
+      }
     } catch {
-      return {
-        sucesso: false,
-        success: false,
-        mensagem: 'Usuário ou senha inválidos. Confira suas credenciais e tente novamente.',
-        message: 'Invalid username or password. Check your credentials and try again.'
-      };
+      // O navegador pode bloquear o acesso ao armazenamento.
     }
   }
 
-  login(login: string, pass: string) {
-    return this.entrar(login, pass);
-  }
-
-  cadastrar(nome: string, email: string, senha: string): { sucesso: boolean; mensagem?: string; success?: boolean; message?: string } {
-    const nomeLimpo = nome.trim();
-    const emailNormalizado = email.trim().toLowerCase();
-    if (senha.length < 8) {
-      return { sucesso: false, success: false, mensagem: 'A senha deve ter no mínimo 8 caracteres.', message: 'Password must be at least 8 characters.' };
+  async restaurarSessao() {
+    try {
+      const user = await firstValueFrom(
+        this.http.get<UsuarioAutenticado>('/api/auth?action=session').pipe(timeout(6000)),
+      );
+      if (!user?.id || !user.email) return false;
+      this.usuario.set({ ...user, name: user.nome });
+      return true;
+    } catch {
+      return false;
     }
-    if (this.obterContas().some(conta => conta.email.toLowerCase() === emailNormalizado)) {
-      return { sucesso: false, success: false, mensagem: 'Já existe uma conta com este e-mail.', message: 'Já existe uma conta com este e-mail.' };
+  }
+
+  async logout() {
+    if (this.user()) {
+      await firstValueFrom(this.http.post('/api/auth?action=logout', null).pipe(timeout(6000)));
     }
-    const novaConta: ContaArmazenada = {
-      id: 'teste-' + Date.now(),
-      nome: nomeLimpo,
-      name: nomeLimpo,
-      email: emailNormalizado,
-      senha,
-      password: senha,
-      teste: true,
-      trial: true
-    };
-    this.salvarContas([...this.obterContas(), novaConta]);
-    this.iniciarSessao(novaConta);
-    return { sucesso: true, success: true };
-  }
-
-  register(name: string, email: string, pass: string) {
-    return this.cadastrar(name, email, pass);
-  }
-
-  sair() {
-    localStorage.removeItem(this.chaveSessao);
-    localStorage.removeItem('licenfy-session');
     this.usuario.set(null);
   }
 
-  logout() {
-    this.sair();
-  }
-
   atualizarPerfil(dados: Partial<UsuarioAutenticado>) {
-    const atual = this.usuario();
-    if (!atual) return;
-    this.iniciarSessao({ ...atual, ...dados, nome: dados.nome?.trim() || atual.nome, name: dados.nome?.trim() || atual.name || atual.nome, email: dados.email?.trim() || atual.email });
-  }
-
-  private iniciarSessao(usuario: UsuarioAutenticado) {
-    localStorage.setItem(this.chaveSessao, JSON.stringify(usuario));
-    this.usuario.set(usuario);
-  }
-
-  private obterContas(): ContaArmazenada[] {
-    try {
-      const salvas = localStorage.getItem(this.chaveContas) || localStorage.getItem('licenfy-trial-accounts') || '[]';
-      return JSON.parse(salvas);
-    } catch {
-      return [];
-    }
-  }
-
-  private salvarContas(contas: ContaArmazenada[]) {
-    localStorage.setItem(this.chaveContas, JSON.stringify(contas));
-  }
-
-  private carregarSessao(): UsuarioAutenticado | null {
-    try {
-      const sessao = localStorage.getItem(this.chaveSessao) || localStorage.getItem('licenfy-session') || 'null';
-      return JSON.parse(sessao);
-    } catch {
-      return null;
-    }
+    this.usuario.update(user => user && {
+      ...user,
+      nome: dados.nome?.trim() || user.nome,
+      name: dados.nome?.trim() || user.nome,
+      cargo: dados.cargo,
+      telefone: dados.telefone,
+      empresa: dados.empresa,
+      cnpj: dados.cnpj,
+    });
   }
 }
 

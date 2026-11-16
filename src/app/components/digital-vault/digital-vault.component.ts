@@ -97,9 +97,9 @@ export class CofreDigitalComponente {
     this.estaDigitalizando.set(true);
     this.digitalizadoComSucesso.set(false);
 
-    if (arquivo.size > 4 * 1024 * 1024) {
+    if (arquivo.size > 3 * 1024 * 1024) {
       this.estaDigitalizando.set(false);
-      this.erroOcr.set('O arquivo excede o limite de 4 MB para processamento por IA.');
+      this.erroOcr.set('O arquivo excede o limite de 3 MB para processamento por IA.');
       return;
     }
 

@@ -24,49 +24,19 @@
     <app-preferences-toolbar class="floating-preferences" />
     <div class="cartao-autenticacao auth-card">
       <div class="introducao-formulario form-intro">
-        <span class="subtitulo-olho eyebrow">{{ prefs.t('auth.welcomeBack') }}</span>
-        <h2>{{ prefs.t('auth.loginTitle') }}</h2>
-        <p>{{ prefs.t('auth.loginSub') }}</p>
+        <h2>{{ prefs.t(servico.modoAutenticacao() === 'signup' ? 'auth.signupTitle' : 'auth.loginTitle') }}</h2>
+        <p>{{ prefs.t('auth.googleDescription') }}</p>
       </div>
-
-      <form (submit)="$event.preventDefault(); enviarLogin()" class="formulario-autenticacao auth-form">
-        <label>
-          {{ prefs.t('auth.email') }}
-          <input [(ngModel)]="dadosLogin.login" name="login" type="email" autocomplete="email" [placeholder]="prefs.t('auth.emailPlaceholder')" required />
-        </label>
-        <label>
-          {{ prefs.t('auth.password') }}
-          <input [(ngModel)]="dadosLogin.senha" name="password" type="password" autocomplete="current-password" [placeholder]="prefs.t('auth.passwordPlaceholder')" required />
-        </label>
-
-        @if (erro()) {
-          <div class="erro-formulario form-error">
-            <span class="material-symbols-rounded">error</span>
-            <span>{{ erro() }}</span>
-          </div>
-        }
-
-        <label class="caixa-lgpd lgpd-box" [class.is-checked]="aceiteLgpdLogin()">
-          <input type="checkbox" [checked]="aceiteLgpdLogin()" (change)="aceiteLgpdLogin.set($any($event.target).checked)" name="aceiteLgpdLogin" required />
-          <span class="lgpd-text">
-            {{ prefs.idioma() === 'pt' ? 'Li e concordo com os ' : 'I agree to the ' }}
-            <a href="#" (click)="$event.preventDefault()">{{ prefs.t('landing.terms') }}</a>
-            {{ prefs.idioma() === 'pt' ? ' e a ' : ' and ' }}
-            <a href="#" (click)="$event.preventDefault()">{{ prefs.t('landing.privacy') }}</a>{{ prefs.idioma() === 'pt' ? ', conforme a LGPD.' : ' under LGPD.' }}
-          </span>
-        </label>
-
-        <button class="botao-submeter auth-submit" [disabled]="carregando()">
-          {{ carregando() ? prefs.t('auth.authenticating') : prefs.t('auth.loginBtn') }}
-          <span class="material-symbols-rounded">arrow_forward</span>
+      @if (servico.erroAutenticacao()) {
+        <p class="erro-formulario form-error" role="alert">{{ prefs.t('auth.googleError') }}</p>
+      }
+      <form action="/api/auth" method="get" class="formulario-autenticacao auth-form">
+        <input type="hidden" name="action" value="google">
+        <button class="botao-submeter auth-submit" type="submit">
+          {{ prefs.t('auth.googleContinue') }}
+          <span class="material-symbols-rounded" aria-hidden="true">arrow_forward</span>
         </button>
-          <a class="link-esqueci-senha forgot-password-link" href="mailto:suporte@licenfy.com.br?subject=Recupera%C3%A7%C3%A3o%20de%20senha">{{ prefs.t('auth.forgot') }}</a>
       </form>
-
-      <p class="trocar-modo auth-switch">
-        {{ prefs.t('auth.noAccount') }}
-        <button type="button" (click)="verPlanos()">{{ prefs.t('common.seePlans') }}</button>
-      </p>
     </div>
   </section>
 </main>

@@ -28,6 +28,7 @@ export class ServicoLicenfy {
 
   readonly modoAutenticacao = signal<'login' | 'signup'>('login');
   readonly authMode = this.modoAutenticacao;
+  readonly erroAutenticacao = signal(false);
 
   readonly unidadeSelecionadaId = signal<string>('all');
   readonly selectedBranchId = this.unidadeSelecionadaId;

@@ -664,3 +664,13 @@
 .icon-sm { font-size: 18px; }
 .text-muted { color: var(--color-text-muted); }
 .text-primary { color: var(--color-primary); }
+.workspace-notice {
+  padding: 1rem 1.5rem;
+  background: #fff4d6;
+  color: #382400;
+  text-align: center;
+}
+
+.workspace-notice p {
+  margin: 0 0 .5rem;
+}

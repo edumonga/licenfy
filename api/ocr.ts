@@ -1,8 +1,17 @@
-const CANDIDATE_MODELS = ['gemini-3.5-flash-lite', 'gemini-3.5-flash', 'gemini-3.6-flash', 'gemini-3.1-flash-lite'];
-const MAX_BASE64_LENGTH = 5_500_000;
+import type { IncomingMessage, ServerResponse } from 'node:http';
+
+const { session } = require('../server/session.cjs');
+const signatures: Readonly<Record<string, Buffer>> = {
+  'application/pdf': Buffer.from('%PDF-'),
+  'image/jpeg': Buffer.from([0xff, 0xd8, 0xff]),
+  'image/png': Buffer.from([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a]),
+};
+const MAX_BASE64_LENGTH = 4 * 1024 * 1024;
 const OCR_PROMPT = `Você é um especialista em OCR de documentos regulatórios brasileiros. Analise o arquivo e retorne APENAS um JSON válido com: title, category (Alvará | Bombeiros | Sanitária | Ambiental | Segurança do Trabalho | Outros), issuingBody, documentNumber, issueDate (YYYY-MM-DD), expirationDate (YYYY-MM-DD), renewalCostEstimate (número inteiro), estimatedFineIfExpired (número inteiro), linkedAssetName e legalRequirementNote. Use "Outros" para uma categoria incerta e 0 para valores indisponíveis.`;
 
-function sendJson(res: any, status: number, body: unknown) { res.status(status).json(body); }
+function sendJson(res: ServerResponse, status: number, body: unknown) {
+  return res.writeHead(status, { 'Content-Type': 'application/json; charset=utf-8' }).end(JSON.stringify(body));
+}
 
 function normalizeResult(text: string) {
   const raw = text.trim().replace(/^```json\s*/i, '').replace(/^```\s*/i, '').replace(/\s*```$/, '');
@@ -21,34 +30,52 @@ function normalizeResult(text: string) {
   };
 }
 
-async function handler(req: any, res: any) {
-  if (req.method !== 'POST') return sendJson(res, 405, { message: 'Método não permitido.' });
+async function handler(req: IncomingMessage & { body?: { data?: unknown; mimeType?: unknown } }, res: ServerResponse) {
+  res.setHeader('Cache-Control', 'no-store');
+  if (req.method !== 'POST') {
+    res.setHeader('Allow', 'POST');
+    return sendJson(res, 405, { message: 'Método não permitido.' });
+  }
+  const user = session(req);
+  if (!user) return sendJson(res, 401, { message: 'Entre com sua conta Google para usar o OCR.' });
+  const origin = process.env.APP_ORIGIN;
+  if (!origin || req.headers.origin !== origin) return sendJson(res, 403, { message: 'Origem não autorizada.' });
+  const allowed = process.env.OCR_ALLOWED_GOOGLE_SUBS?.split(',').map(value => value.trim()) ?? [];
+  if (!allowed.includes(user.id)) return sendJson(res, 403, { message: 'OCR ainda não liberado para esta conta.' });
   const apiKey = process.env.GEMINI_API_KEY;
-  if (!apiKey) return sendJson(res, 503, { message: 'OCR indisponível: configure GEMINI_API_KEY na Vercel.' });
+  if (!apiKey) return sendJson(res, 503, { message: 'OCR temporariamente indisponível.' });
+  if (req.headers['content-type']?.split(';')[0].trim().toLowerCase() !== 'application/json') {
+    return sendJson(res, 415, { message: 'Envie o arquivo em JSON.' });
+  }
   const { data, mimeType } = req.body || {};
   if (typeof data !== 'string' || !data || typeof mimeType !== 'string') return sendJson(res, 400, { message: 'Arquivo inválido para OCR.' });
-  if (data.length > MAX_BASE64_LENGTH) return sendJson(res, 413, { message: 'O arquivo excede o limite de 4 MB para OCR.' });
-
-  let lastError = 'Não foi possível processar o documento.';
-  for (const model of CANDIDATE_MODELS) {
-    try {
-      const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent`, {
-        method: 'POST', headers: { 'Content-Type': 'application/json', 'x-goog-api-key': apiKey },
-        body: JSON.stringify({
-          contents: [{ parts: [{ text: OCR_PROMPT }, { inline_data: { mime_type: mimeType, data } }] }],
-          generationConfig: { temperature: 0.1, maxOutputTokens: 2048, responseMimeType: 'application/json' }
-        })
-      });
-      const payload: any = await response.json();
-      if (!response.ok) {
-        lastError = payload?.error?.message || lastError;
-        if ([404, 429, 500, 503].includes(response.status)) continue;
-        return sendJson(res, response.status, { message: `Erro no OCR: ${lastError}` });
-      }
-      return sendJson(res, 200, normalizeResult(payload?.candidates?.[0]?.content?.parts?.[0]?.text || ''));
-    } catch (error: any) { lastError = error?.message || lastError; }
+  if (data.length > MAX_BASE64_LENGTH) return sendJson(res, 413, { message: 'O arquivo excede o limite de 3 MB para OCR.' });
+  if (data.length % 4 !== 0 || !/^[A-Za-z0-9+/]+={0,2}$/.test(data)) {
+    return sendJson(res, 400, { message: 'Codificação do arquivo inválida.' });
   }
-  return sendJson(res, 502, { message: `OCR indisponível: ${lastError}` });
+  const signature = Object.hasOwn(signatures, mimeType) ? signatures[mimeType] : undefined;
+  const fileHeader = Buffer.from(data.slice(0, 12), 'base64');
+  if (!signature || !fileHeader.subarray(0, signature.length).equals(signature)) {
+    return sendJson(res, 415, { message: 'Envie um arquivo PDF, JPG ou PNG válido.' });
+  }
+
+  try {
+    const response = await fetch('https://generativelanguage.googleapis.com/v1beta/models/gemini-3.5-flash-lite:generateContent', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'x-goog-api-key': apiKey },
+      signal: AbortSignal.timeout(25000),
+      body: JSON.stringify({
+        contents: [{ parts: [{ text: OCR_PROMPT }, { inline_data: { mime_type: mimeType, data } }] }],
+        generationConfig: { temperature: 0.1, maxOutputTokens: 2048, responseMimeType: 'application/json' },
+      }),
+    });
+    if (response.status === 429) return sendJson(res, 429, { message: 'Limite de OCR atingido. Tente novamente mais tarde.' });
+    if (!response.ok) return sendJson(res, 502, { message: 'OCR temporariamente indisponível.' });
+    const payload = await response.json();
+    return sendJson(res, 200, normalizeResult(payload?.candidates?.[0]?.content?.parts?.[0]?.text || ''));
+  } catch {
+    return sendJson(res, 502, { message: 'Não foi possível processar o documento.' });
+  }
 }
 
 // O projeto usa o runtime CommonJS da Vercel; evitar `export default` impede

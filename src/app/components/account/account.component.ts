@@ -26,12 +26,12 @@ export class AccountComponent {
   private formFromUser() {
     const user = this.user();
     return {
-      nome: user?.nome || 'Mariana Silveira',
-      email: user?.email || 'mariana.silveira@empresa.com.br',
-      cargo: user?.cargo || 'Jurídico e Compliance',
-      telefone: user?.telefone || '+55 11 4000-1234',
-      empresa: user?.empresa || 'Grupo Alpha Brasil S.A.',
-      cnpj: user?.cnpj || '12.345.678/0001-90'
+      nome: user?.nome || '',
+      email: user?.email || '',
+      cargo: user?.cargo || '',
+      telefone: user?.telefone || '',
+      empresa: user?.empresa || '',
+      cnpj: user?.cnpj || ''
     };
   }
 

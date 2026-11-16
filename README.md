@@ -36,15 +36,36 @@ ng build
 
 This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
 
-## Vercel: OCR e QR Codes
+## Google e OCR na Vercel
 
-O OCR usa a função TypeScript `api/ocr.ts`. Configure a variável de ambiente `GEMINI_API_KEY` no projeto Vercel para os ambientes Production, Preview e Development. A chave fica exclusivamente no servidor e nunca é enviada ao navegador.
+Crie um cliente OAuth do tipo Web no Google Cloud e registre o URI de redirecionamento exato `https://licenfy.vercel.app/api/auth?action=callback`. Para outro domínio, use a origem HTTPS correspondente tanto no Google Cloud quanto na Vercel. Use uma origem HTTPS fixa para cada ambiente onde o login precisa funcionar.
 
-Depois de configurar a variável, faça um novo deploy. O endpoint `/api/ocr` aceita PDF, JPG e PNG de até 4 MB.
+Configure as variáveis abaixo no servidor da Vercel e faça um novo deploy.
+
+| Variável | Valor |
+| --- | --- |
+| `APP_ORIGIN` | Origem HTTPS do site, como `https://licenfy.vercel.app`, sem barra final. |
+| `GOOGLE_CLIENT_ID` | ID do cliente OAuth Web. |
+| `GOOGLE_CLIENT_SECRET` | Segredo do cliente OAuth Web. |
+| `AUTH_SESSION_SECRET` | Valor aleatório com no mínimo 32 bytes, gerado por exemplo com `node -e "console.log(require('node:crypto').randomBytes(32).toString('hex'))"`. |
+| `GEMINI_API_KEY` | Chave do Gemini usada pelo OCR. |
+| `OCR_ALLOWED_GOOGLE_SUBS` | IDs Google autorizados para o piloto, separados por vírgula. O campo `id` da resposta de `GET /api/auth?action=session` após login mostra o ID da própria conta. |
+
+O OCR aceita PDF, JPG e PNG de até 3 MB. Para liberar o OCR em escala, adicione cotas por empresa ou usuário com armazenamento compartilhado.
+
+## Banco de dados Supabase
+
+O projeto `licenfy` usa o Supabase Free em São Paulo. O esquema em [supabase/workspaces.sql](supabase/workspaces.sql) foi aplicado ao projeto. Cada identidade Google tem um espaço de trabalho privado. O banco bloqueia acesso direto dos papéis da Data API e limita o papel do backend à identidade configurada dentro da transação.
+
+No Supabase, crie uma credencial de login dedicada e conceda a ela o papel `licenfy_app`. Guarde o valor de conexão de **Transaction pooler** na variável de servidor `LICENFY_DATABASE_URL`, com o usuário dedicado e `sslmode=verify-full`. Configure o certificado CA fornecido pelo Supabase em `LICENFY_DATABASE_CA` se o pooler exigir uma CA explícita. Use segredos do ambiente de hospedagem para o URI, a senha e o segredo de sessão.
+
+O painel salva unidades, licenças, ativos, regras e histórico no banco. A gravação usa uma revisão para impedir que duas abas sobrescrevam os dados uma da outra. Os binários dos documentos e o perfil ainda não são persistidos, e o acesso compartilhado por equipe ainda precisa de convites e permissões. Planeje exportações seguras e testes de restauração para operar no plano gratuito.
+
+## QR Codes
 
 Os QR Codes apontam para `https://licenfy.vercel.app/asset/<patrimonio>`. O `vercel.json` redireciona essa URL para a página pública de identificação do ativo. Os ativos de demonstração já são consultáveis dessa forma.
 
-Ativos criados na interface atual ainda vivem apenas na memória do navegador. Para que novos ativos continuem disponíveis depois de um reload ou em outro dispositivo, conecte o cadastro a um banco de dados (por exemplo, Vercel Postgres ou KV).
+Os ativos cadastrados por clientes aparecem apenas no espaço privado. A consulta pública por QR ainda só serve os ativos de demonstração.
 
 ## Running unit tests
 
