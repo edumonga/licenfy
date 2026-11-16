@@ -6,33 +6,6 @@
     </div>
 
     <div class="acoes-cabecalho header-actions">
-      <div class="alerta-vinculo notification-alert">
-        <button
-          class="botao-alerta notification-trigger"
-          type="button"
-          (click)="alternarAlertaVinculo()"
-          [attr.aria-expanded]="alertaVinculoAberto"
-          aria-controls="detalhes-alerta-vinculo"
-          [attr.aria-label]="prefs.t('dashboard.alertAria')">
-          <span class="material-symbols-rounded">notifications</span>
-          <span class="contador-alerta notification-count" aria-hidden="true">1</span>
-        </button>
-
-        <section *ngIf="alertaVinculoAberto" id="detalhes-alerta-vinculo" class="cartao-alerta notification-popover" role="status">
-          <div class="cabecalho-alerta notification-popover-header">
-            <span class="material-symbols-rounded">link</span>
-            <div>
-              <p>{{ prefs.t('dashboard.alertTitle') }}</p>
-              <strong>{{ prefs.t('dashboard.alertText') }}</strong>
-            </div>
-          </div>
-          <p class="texto-alerta notification-popover-text">{{ prefs.t('dashboard.alertDesc') }}</p>
-          <button class="acao-alerta notification-action" type="button" (click)="irParaAtivos()">
-            {{ prefs.t('dashboard.viewAsset') }}
-            <span class="material-symbols-rounded">arrow_forward</span>
-          </button>
-        </section>
-      </div>
       <button class="botao botao-contorno btn btn-outline" (click)="irParaCofre()">
         <span class="material-symbols-rounded">cloud_upload</span>
         {{ prefs.t('dashboard.upload') }}
@@ -77,7 +50,7 @@
           <span class="legenda-cartao card-caption">{{ prefs.t('dashboard.scoreCaption') }}</span>
           <h2 class="titulo-score score-title">{{ prefs.t('dashboard.scoreTitle') }}</h2>
         </div>
-        <span class="selo-status badge-status" [ngClass]="prefs.statusClass(status())">
+        <span *ngIf="licencas().length" class="selo-status badge-status" [ngClass]="prefs.statusClass(status())">
           <span class="ponto-status status-dot" [ngClass]="status()"></span>
           {{ prefs.statusLabel(status() === 'regular' ? 'current' : status()) }}
         </span>
@@ -97,7 +70,7 @@
             </circle>
           </svg>
           <div class="conteudo-central-gauge gauge-center-content">
-            <span class="valor-gauge gauge-value">{{ pontuacao() }}%</span>
+            <span class="valor-gauge gauge-value">{{ licencas().length ? pontuacao() + '%' : '—' }}</span>
             <span class="unidade-gauge gauge-unit">{{ prefs.t('dashboard.compliance') }}</span>
           </div>
         </div>
@@ -129,7 +102,7 @@
 
       <div class="rodape-score score-footer">
         <span class="material-symbols-rounded icon-sm text-primary">shield</span>
-        <span>{{ prefs.t('dashboard.zeroFines') }}</span>
+        <span>{{ prefs.t(licencas().length ? 'dashboard.scoreBasis' : 'dashboard.emptyLicenses') }}</span>
       </div>
     </div>
 

@@ -1,4 +1,4 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, computed, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ServicoLicenfy } from '../../core/services/licenfy.service';
@@ -16,7 +16,10 @@ export class GestaoUnidadesComponente {
   readonly servico = inject(ServicoLicenfy);
   readonly prefs = inject(PreferenciasService);
   readonly unidades = this.servico.unidades;
-  readonly unidadeSelecionadaId = signal('sp-matriz');
+  readonly unidadesComLicencas = computed(() => new Set(
+    this.servico.licencas().map(licenca => licenca.unidadeId || licenca.branchId),
+  ));
+  readonly unidadeSelecionadaId = signal(this.unidades()[0]?.id ?? '');
   readonly exibirFormulario = signal(false);
   readonly exibirFormularioResponsavel = signal(false);
 
@@ -52,10 +55,10 @@ export class GestaoUnidadesComponente {
   get newUnit() { return this.novaUnidade; }
   set newUnit(v: any) { this.novaUnidade = v; }
 
-  get unidadeSelecionada(): Unidade {
+  get unidadeSelecionada(): Unidade | undefined {
     return this.unidades().find(u => u.id === this.unidadeSelecionadaId()) || this.unidades()[0];
   }
-  get selectedUnit(): Unidade { return this.unidadeSelecionada; }
+  get selectedUnit(): Unidade | undefined { return this.unidadeSelecionada; }
 
   selecionarUnidade(id: string) {
     this.unidadeSelecionadaId.set(id);
@@ -63,11 +66,14 @@ export class GestaoUnidadesComponente {
   selectUnit(id: string) { this.selecionarUnidade(id); }
 
   abrirFormularioResponsavel() {
+    if (!this.unidadeSelecionada) return;
     this.novoResponsavel = { nome: '', cargo: '', email: '', telefone: '' };
     this.exibirFormularioResponsavel.set(true);
   }
 
   salvarResponsavel() {
+    const unidade = this.unidadeSelecionada;
+    if (!unidade) return;
     const nome = this.novoResponsavel.nome.trim();
     const cargo = this.novoResponsavel.cargo.trim();
     const email = this.novoResponsavel.email.trim();
@@ -86,7 +92,7 @@ export class GestaoUnidadesComponente {
       principal: false,
       primary: false
     };
-    this.servico.adicionarResponsavelUnidade(this.unidadeSelecionadaId(), responsavel);
+    this.servico.adicionarResponsavelUnidade(unidade.id, responsavel);
     this.exibirFormularioResponsavel.set(false);
   }
 
@@ -114,8 +120,6 @@ export class GestaoUnidadesComponente {
       state: estado,
       endereco,
       address: endereco,
-      razaoSocial: 'Grupo Alpha Brasil S.A.',
-      companyName: 'Grupo Alpha Brasil S.A.',
       gerenteResponsavel: `${gestor} (Gestor da unidade)`,
       responsibleManager: `${gestor} (Gestor da unidade)`,
       responsaveis: [{

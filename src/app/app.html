@@ -201,7 +201,9 @@
 
           <button class="topbar-icon-btn" (click)="setTab('notifications')" [title]="prefs.t('common.notifications')">
             <span class="material-symbols-rounded">notifications</span>
-            <span class="notif-badge">4</span>
+            @if (alertCount()) {
+              <span class="notif-badge">{{ alertCount() }}</span>
+            }
           </button>
 
           <button class="btn btn-outline btn-sm topbar-action-btn" (click)="logout()" [title]="prefs.t('shell.logoutBtn')">

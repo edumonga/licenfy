@@ -54,6 +54,10 @@ export class App {
   readonly selectedBranchId = this.service.selectedBranchId;
   readonly score = this.service.overallComplianceScore;
   readonly status = this.service.overallComplianceStatus;
+  readonly alertCount = computed(() => {
+    const summary = this.service.resumoContadores();
+    return summary.atencao + summary.urgente;
+  });
   readonly selectedBranchName = computed(() => {
     const id = this.selectedBranchId();
     return id === 'all' ? this.prefs.t('shell.allUnits') : this.branches().find(branch => branch.id === id)?.name || this.prefs.t('shell.allUnits');

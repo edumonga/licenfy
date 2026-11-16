@@ -14,7 +14,7 @@
 
   <div class="barra-hierarquia hierarchy-bar">
     <span class="material-symbols-rounded text-primary">corporate_fare</span>
-    <strong>Grupo Alpha Brasil S.A.</strong>
+    <strong>{{ prefs.t('units.network') }}</strong>
     <span class="seta-hierarquia hierarchy-arrow">→</span>
     <span>{{ unidades().length }} {{ prefs.t('units.active') }}</span>
     <span class="seta-hierarquia hierarchy-arrow">→</span>
@@ -28,38 +28,39 @@
         <span>{{ unidades().length }} {{ prefs.t('units.registered') }}</span>
       </div>
       <button *ngFor="let u of unidades()" class="linha-unidade unit-row" [class.selecionada]="u.id === unidadeSelecionadaId()" [class.selected]="u.id === unidadeSelecionadaId()" (click)="selecionarUnidade(u.id)">
-        <span class="ponto-status status-dot" [ngClass]="u.status"></span>
+        <span *ngIf="unidadesComLicencas().has(u.id)" class="ponto-status status-dot" [ngClass]="u.status"></span>
         <span class="texto-linha-unidade unit-row-copy">
           <strong>{{ prefs.localizarTexto(u.nome || u.name) }}</strong>
           <small>{{ u.cidade || u.city }} · {{ u.cnpj }}</small>
         </span>
-        <span class="pontuacao-unidade unit-score">{{ u.pontuacaoConformidade ?? u.complianceScore }}%</span>
+        <span *ngIf="unidadesComLicencas().has(u.id)" class="pontuacao-unidade unit-score">{{ u.pontuacaoConformidade ?? u.complianceScore }}%</span>
       </button>
     </section>
 
+    @if (unidadeSelecionada; as unidade) {
     <section class="cartao-detalhe-unidade unit-detail-card">
       <div class="topo-detalhe detail-top">
         <div>
           <span class="destaque-detalhe detail-kicker">UNIDADE SELECIONADA</span>
-          <h2>{{ prefs.localizarTexto(unidadeSelecionada.nome || unidadeSelecionada.name) }}</h2>
-          <p>{{ unidadeSelecionada.razaoSocial || unidadeSelecionada.companyName }} · {{ unidadeSelecionada.cnpj }}</p>
+          <h2>{{ prefs.localizarTexto(unidade.nome || unidade.name) }}</h2>
+          <p>{{ unidade.razaoSocial || unidade.companyName ? (unidade.razaoSocial || unidade.companyName) + ' · ' : '' }}{{ unidade.cnpj }}</p>
         </div>
-        <span class="selo-status badge-status" [ngClass]="prefs.statusClass(unidadeSelecionada.status)">
-          {{ prefs.statusLabel(unidadeSelecionada.status) }}
+        <span *ngIf="unidadesComLicencas().has(unidade.id)" class="selo-status badge-status" [ngClass]="prefs.statusClass(unidade.status)">
+          {{ prefs.statusLabel(unidade.status) }}
         </span>
       </div>
       <div class="grade-informacoes-detalhe detail-info-grid">
         <div>
           <span class="material-symbols-rounded">location_on</span>
-          <p><strong>{{ prefs.t('units.address') }}</strong>{{ unidadeSelecionada.endereco || unidadeSelecionada.address }}</p>
+          <p><strong>{{ prefs.t('units.address') }}</strong>{{ unidade.endereco || unidade.address }}</p>
         </div>
         <div>
           <span class="material-symbols-rounded">description</span>
-          <p><strong>{{ prefs.t('units.documents') }}</strong>{{ (unidadeSelecionada.contagemLicencas?.total ?? unidadeSelecionada.licensesCount?.total) || 0 }} {{ prefs.t('units.managedDocs') }}</p>
+          <p><strong>{{ prefs.t('units.documents') }}</strong>{{ (unidade.contagemLicencas?.total ?? unidade.licensesCount?.total) || 0 }} {{ prefs.t('units.managedDocs') }}</p>
         </div>
         <div>
           <span class="material-symbols-rounded">precision_manufacturing</span>
-          <p><strong>{{ prefs.t('units.assets') }}</strong>{{ (unidadeSelecionada.contagemAtivos?.total ?? unidadeSelecionada.assetsCount?.total) || 0 }} {{ prefs.t('units.linkedAssets') }}</p>
+          <p><strong>{{ prefs.t('units.assets') }}</strong>{{ (unidade.contagemAtivos?.total ?? unidade.assetsCount?.total) || 0 }} {{ prefs.t('units.linkedAssets') }}</p>
         </div>
       </div>
       <div class="cabecalho-responsaveis responsibles-heading">
@@ -72,7 +73,7 @@
         </button>
       </div>
       <div class="lista-responsaveis responsibles-list">
-        <div *ngFor="let pessoa of (unidadeSelecionada.responsaveis || unidadeSelecionada.responsiblePeople)" class="linha-responsavel responsible-row">
+        <div *ngFor="let pessoa of (unidade.responsaveis || unidade.responsiblePeople)" class="linha-responsavel responsible-row">
           <div class="avatar-responsavel avatar">{{ (pessoa.nome || pessoa.name || 'U').slice(0, 1) }}</div>
           <div class="texto-pessoa person-copy">
             <strong>{{ prefs.localizarTexto(pessoa.nome || pessoa.name) }} <span *ngIf="pessoa.principal || pessoa.primary" class="etiqueta-principal primary-tag">{{ prefs.t('units.primary') }}</span></strong>
@@ -85,6 +86,12 @@
         </div>
       </div>
     </section>
+    } @else {
+      <section class="cartao-detalhe-unidade unit-detail-card">
+        <h2>{{ prefs.t('units.emptyTitle') }}</h2>
+        <p>{{ prefs.t('units.emptyHint') }}</p>
+      </section>
+    }
   </div>
 
   <div *ngIf="exibirFormulario()" class="fundo-modal modal-backdrop" (click)="exibirFormulario.set(false)">
@@ -129,13 +136,13 @@
     </form>
   </div>
 
-  <div *ngIf="exibirFormularioResponsavel()" class="fundo-modal modal-backdrop" (click)="exibirFormularioResponsavel.set(false)">
+  <div *ngIf="exibirFormularioResponsavel() && unidadeSelecionada as unidade" class="fundo-modal modal-backdrop" (click)="exibirFormularioResponsavel.set(false)">
     <form class="modal-unidade unit-modal responsible-modal" (submit)="$event.preventDefault(); salvarResponsavel()" (click)="$event.stopPropagation()">
       <div class="titulo-modal modal-title">
         <div>
           <span class="destaque-detalhe detail-kicker">RESPONSÁVEL DA UNIDADE</span>
           <h2>Adicionar responsável</h2>
-          <p class="responsible-modal-context">{{ prefs.localizarTexto(unidadeSelecionada.nome || unidadeSelecionada.name) }}</p>
+          <p class="responsible-modal-context">{{ prefs.localizarTexto(unidade.nome || unidade.name) }}</p>
         </div>
         <button type="button" class="botao-fechar close-button" (click)="exibirFormularioResponsavel.set(false)" [attr.aria-label]="prefs.t('common.close')">×</button>
       </div>
