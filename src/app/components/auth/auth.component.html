@@ -27,16 +27,29 @@
         <h2>{{ prefs.t(servico.modoAutenticacao() === 'signup' ? 'auth.signupTitle' : 'auth.loginTitle') }}</h2>
         <p>{{ prefs.t('auth.googleDescription') }}</p>
       </div>
-      @if (servico.erroAutenticacao()) {
+      @if (servico.avisoCadastro()) {
+        <p class="erro-formulario form-error" role="status">{{ prefs.t(servico.avisoCadastro() === 'required' ? 'auth.accountRequired' : 'auth.noticeRequired') }}</p>
+      } @else if (servico.erroAutenticacao()) {
         <p class="erro-formulario form-error" role="alert">{{ prefs.t('auth.googleError') }}</p>
       }
-      <form action="/api/auth" method="get" class="formulario-autenticacao auth-form">
-        <input type="hidden" name="action" value="google">
-        <button class="botao-submeter auth-submit" type="submit">
-          {{ prefs.t('auth.googleContinue') }}
-          <span class="material-symbols-rounded" aria-hidden="true">arrow_forward</span>
-        </button>
-      </form>
+      @if (servico.modoAutenticacao() === 'signup') {
+        <form action="/api/auth?action=signup" method="post" class="formulario-autenticacao auth-form">
+          <label class="caixa-lgpd lgpd-box">
+            <input type="checkbox" name="privacyAcknowledged" value="yes" required>
+            <span class="lgpd-text">{{ prefs.t('auth.noticeRead') }}
+              <a href="/privacidade" target="_blank" rel="noopener">{{ prefs.t('landing.privacy') }}</a>.
+            </span>
+          </label>
+          <button class="botao-submeter auth-submit" type="submit">{{ prefs.t('auth.googleSignup') }}</button>
+        </form>
+        <button class="auth-mode-link" type="button" (click)="servico.openLogin()">{{ prefs.t('auth.loginTitle') }}</button>
+      } @else {
+        <form action="/api/auth" method="get" class="formulario-autenticacao auth-form">
+          <input type="hidden" name="action" value="google">
+          <button class="botao-submeter auth-submit" type="submit">{{ prefs.t('auth.googleLogin') }}</button>
+        </form>
+        <button class="auth-mode-link" type="button" (click)="servico.openSignup()">{{ prefs.t('auth.signupTitle') }}</button>
+      }
     </div>
   </section>
 </main>

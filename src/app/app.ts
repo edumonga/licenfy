@@ -72,16 +72,19 @@ export class App {
     if (this.publicAssetTag()) return;
     const url = new URL(window.location.href);
     const result = url.searchParams.get('login');
-    if (result === 'ok' || result === 'erro') {
+    if (result === 'ok' || result === 'erro' || result === 'criar' || result === 'privacidade') {
       url.searchParams.delete('login');
       window.history.replaceState(null, '', url);
     }
 
     void this.auth.restaurarSessao().then(authenticated => {
       if (authenticated) void this.workspace.load();
-      if (result === 'erro' || (result === 'ok' && !authenticated)) {
-        this.service.erroAutenticacao.set(true);
+      if (result === 'criar' || result === 'privacidade') {
+        this.service.openSignup();
+        this.service.avisoCadastro.set(result === 'criar' ? 'required' : 'notice');
+      } else if (result === 'erro' || (result === 'ok' && !authenticated)) {
         this.service.openLogin();
+        this.service.erroAutenticacao.set(true);
       } else if (authenticated && this.currentView() === 'landing') {
         this.service.setView('app');
       }

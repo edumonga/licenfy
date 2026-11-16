@@ -67,4 +67,18 @@ function save(ownerId, revision, state) {
   });
 }
 
-module.exports = { load, save };
+function hasAccount(ownerId) {
+  return withWorkspace(ownerId, async client => {
+    const { rowCount } = await client.query('select 1 from licenfy.accounts where owner_id = $1', [ownerId]);
+    return rowCount === 1;
+  });
+}
+
+function registerAccount(ownerId) {
+  return withWorkspace(ownerId, client => client.query(
+    'insert into licenfy.accounts (owner_id, privacy_notice_version) values ($1, $2) on conflict (owner_id) do nothing',
+    [ownerId, '2026-11-16'],
+  ));
+}
+
+module.exports = { load, save, hasAccount, registerAccount };
