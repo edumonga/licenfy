@@ -321,10 +321,10 @@
           {{ prefs.t('landing.footerDesc') }}
         </p>
         <div class="security-badges">
-          <span class="sec-badge">
+          <a class="sec-badge" href="/seguranca">
             <span class="material-symbols-rounded icon-xs">lock</span>
             {{ prefs.t('landing.encryption') }}
-          </span>
+          </a>
           <a class="sec-badge" href="https://www.gov.br/governodigital/pt-br/lgpd-pagina-do-cidadao/o-que-e-a-lgpd" target="_blank" rel="noopener noreferrer">
             <span class="material-symbols-rounded icon-xs">verified_user</span>
             {{ prefs.t('common.lgpdLaw') }}
@@ -365,9 +365,9 @@
 
     <div class="footer-bottom">
       <div class="footer-legal-links">
-        <a href="#" (click)="$event.preventDefault()">{{ prefs.t('landing.terms') }}</a>
+        <a href="/termos">{{ prefs.t('landing.terms') }}</a>
         <a href="/privacidade">{{ prefs.t('landing.privacy') }}</a>
-        <a href="#" (click)="$event.preventDefault()">{{ prefs.t('landing.security') }}</a>
+        <a href="/seguranca">{{ prefs.t('landing.security') }}</a>
       </div>
       <div class="footer-socials" aria-label="Redes sociais">
         <a href="#" (click)="$event.preventDefault()" aria-label="LinkedIn"><span class="material-symbols-rounded">business_center</span></a>

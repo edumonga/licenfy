@@ -1,4 +1,4 @@
-import { Component, inject, signal, computed } from '@angular/core';
+import { Component, inject, signal, computed, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ServicoLicenfy } from '../../core/services/licenfy.service';
@@ -12,18 +12,18 @@ import { Unidade, DocumentoLicenca, Branch, LicenseDocument } from '../../core/m
   templateUrl: './inspection-mode.component.html',
   styleUrls: ['./inspection-mode.component.css']
 })
-export class ModoInspecaoComponente {
+export class ModoInspecaoComponente implements OnInit {
   readonly servico = inject(ServicoLicenfy);
   readonly prefs = inject(PreferenciasService);
 
   readonly unidades = this.servico.unidades;
-  readonly unidadeSelecionadaId = signal<string>('sp-matriz');
-  readonly idsDocumentosSelecionados = signal<string[]>(['lic-001', 'lic-002']);
+  readonly unidadeSelecionadaId = signal('');
+  readonly idsDocumentosSelecionados = signal<string[]>([]);
   readonly historicoDossie = this.servico.historicoDossie;
 
-  readonly unidadeAtual = computed<Unidade>(() => {
-    return this.unidades().find(b => b.id === this.unidadeSelecionadaId()) || this.unidades()[0];
-  });
+  readonly unidadeAtual = computed<Unidade | undefined>(() =>
+    this.unidades().find(b => b.id === this.unidadeSelecionadaId()),
+  );
 
   readonly licencasDaUnidade = computed<DocumentoLicenca[]>(() => {
     return this.servico.licencas().filter(l =>
@@ -40,8 +40,13 @@ export class ModoInspecaoComponente {
     )
   );
 
-  readonly dataHoraGeracao = signal<string>('15/09/2026 às 14:32:10');
-  readonly hashVerificacao = signal<string>('LCFY-8819-7261-F992-B831');
+  readonly dataHoraGeracao = signal('');
+  readonly hashVerificacao = signal('');
+
+  ngOnInit() {
+    const unidade = this.unidades()[0];
+    if (unidade) this.selecionarUnidade(unidade.id);
+  }
 
   get service() { return this.servico; }
   get branches() { return this.unidades; }
@@ -83,7 +88,9 @@ export class ModoInspecaoComponente {
   regenerateDossier() { this.regenerarDossie(); }
 
   imprimirDossie() {
-    const nomeUnidade = this.unidadeAtual().nome || this.unidadeAtual().name || '';
+    const unidade = this.unidadeAtual();
+    if (!unidade) return;
+    const nomeUnidade = unidade.nome || unidade.name || '';
     this.servico.adicionarHistoricoDossie({
       id: 'dos-' + Date.now(),
       unidadeId: this.unidadeSelecionadaId(),

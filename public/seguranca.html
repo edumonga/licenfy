@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Como o Licenfy protege contas, sessões e dados operacionais.">
+  <title>Segurança da Informação | Licenfy</title>
+  <link rel="stylesheet" href="/privacidade.css">
+</head>
+<body>
+  <header class="site-header">
+    <a href="/" aria-label="Página inicial do Licenfy"><img src="/logo.png" alt="Licenfy" width="112"></a>
+    <a href="/">Voltar ao site</a>
+  </header>
+
+  <main>
+    <h1>Segurança da Informação</h1>
+    <p class="date">Versão de <time datetime="2026-11-16">16 de novembro de 2026</time></p>
+    <p>Veja como o Licenfy protege o acesso à plataforma e os dados do seu espaço de trabalho.</p>
+
+    <h2>Login e sessões</h2>
+    <p>O acesso exige autenticação com Google ou com e-mail e senha, conforme o cadastro. As senhas mantidas pelo Licenfy são protegidas com scrypt e salt individual. O login por senha tem limite de tentativas, e o navegador mantém a sessão em um cookie protegido.</p>
+
+    <h2>Conexões e acesso aos dados</h2>
+    <p>O acesso ao site usa HTTPS. O servidor se conecta ao banco por TLS com verificação de certificado. Os cadastros são armazenados no Supabase, em São Paulo, e o banco aplica regras de acesso por conta. As credenciais do banco e as chaves de API ficam no servidor.</p>
+
+    <h2>Processamento de documentos</h2>
+    <p>O OCR é restrito a contas autorizadas. Quando usado, o arquivo selecionado é enviado ao Google Gemini para extrair informações. O Licenfy salva os campos confirmados no cadastro. Os arquivos originais não ficam disponíveis para download no cofre atual.</p>
+
+    <h2>Consultas públicas por QR Code</h2>
+    <p>A consulta pública por QR Code mostra ativos de demonstração. Os ativos cadastrados por clientes ficam no espaço privado da conta.</p>
+
+    <h2>Como reportar um problema</h2>
+    <p>Em caso de atividade suspeita ou problema de segurança, fale com o <a href="https://wa.me/5571982389118">suporte no WhatsApp (71) 98238-9118</a>. Informe a página, o que aconteceu e o horário aproximado. Preserve suas senhas, códigos de acesso e documentos sensíveis ao descrever o problema.</p>
+
+    <nav class="legal-nav" aria-label="Informações legais">
+      <a href="/termos">Termos de Uso</a>
+      <a href="/privacidade">Política de Privacidade</a>
+      <a href="/seguranca" aria-current="page">Segurança da Informação</a>
+    </nav>
+  </main>
+</body>
+</html>

@@ -34,3 +34,19 @@ h2 { margin: 1.75rem 0 .35rem; font-size: 1.25rem; }
 p { margin: .65rem 0; }
 .date { color: #526278; }
 a { color: #164eb9; text-underline-offset: .2em; }
+
+.legal-nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .5rem 1.25rem;
+  margin-top: 2rem;
+  padding-top: 1rem;
+  border-top: 1px solid #dce5f0;
+  font-size: .875rem;
+}
+
+.legal-nav a[aria-current="page"] {
+  color: inherit;
+  font-weight: 600;
+  text-decoration: none;
+}

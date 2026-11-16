@@ -6,7 +6,7 @@
         Modo Fiscalização Imediata
       </div>
       <h1 class="titulo-pagina page-title">{{ prefs.t('mod.inspectionTitle') }}</h1>
-      <p class="descricao-pagina page-desc">Compilação instantânea de todos os alvarás, laudos e licenças vigentes, pronta para auditoria externa e fiscais.</p>
+      <p class="descricao-pagina page-desc">Organize os alvarás, laudos e licenças cadastrados e exporte um resumo da unidade.</p>
     </div>
 
     <div class="acoes-controle control-actions">
@@ -17,7 +17,7 @@
         </select>
       </div>
 
-      <button class="botao botao-primario btn btn-primary" (click)="imprimirDossie()">
+      <button class="botao botao-primario btn btn-primary" (click)="imprimirDossie()" [disabled]="!unidadeAtual()">
         <span class="material-symbols-rounded">print</span>
         Imprimir / Exportar PDF do Dossiê
       </button>
@@ -37,6 +37,7 @@
     </div>
   </div>
 
+  @if (unidadeAtual(); as unidade) {
   <div class="folha-dossie area-impressao dossier-paper printable-area">
     <div class="cabecalho-dossie dossier-header">
       <div class="bloco-marca brand-block">
@@ -46,12 +47,11 @@
 
       <div class="carimbo-autenticacao auth-stamp">
         <div class="titulo-carimbo stamp-title">
-          <span class="material-symbols-rounded icon-xs text-primary">verified</span>
-          CERTIFICADO DIGITAL DE CONFORMIDADE
+          <span class="material-symbols-rounded icon-xs text-primary">description</span>
+          RELATÓRIO DE CADASTROS
         </div>
         <div class="linha-carimbo stamp-row"><strong>Emissão:</strong> {{ dataHoraGeracao() }}</div>
-        <div class="linha-carimbo stamp-row"><strong>Autenticação:</strong> <span class="codigo-hash hash-code">{{ hashVerificacao() }}</span></div>
-        <div class="linha-carimbo stamp-row"><strong>Status Geral:</strong> <span class="texto-selo-status status-badge-text">REGULAR E AUDITADO</span></div>
+        <div class="linha-carimbo stamp-row"><strong>Referência do relatório:</strong> <span class="codigo-hash hash-code">{{ hashVerificacao() }}</span></div>
       </div>
     </div>
 
@@ -59,46 +59,42 @@
       <div class="grade-empresa company-grid">
         <div class="item-empresa company-item">
           <span class="rotulo-c c-label">Razão Social / Filial</span>
-          <span class="valor-c c-val">{{ unidadeAtual().nome || unidadeAtual().name }}</span>
+          <span class="valor-c c-val">{{ unidade.nome || unidade.name }}</span>
         </div>
         <div class="item-empresa company-item">
-          <span class="rotulo-c c-label">CNPJ Oficial</span>
-          <span class="valor-c texto-mono c-val mono-font">{{ unidadeAtual().cnpj }}</span>
+          <span class="rotulo-c c-label">CNPJ informado</span>
+          <span class="valor-c texto-mono c-val mono-font">{{ unidade.cnpj }}</span>
         </div>
         <div class="item-empresa company-item">
           <span class="rotulo-c c-label">Município / UF</span>
-          <span class="valor-c c-val">{{ unidadeAtual().cidade || unidadeAtual().city }} - {{ unidadeAtual().estado || unidadeAtual().state }}</span>
+          <span class="valor-c c-val">{{ unidade.cidade || unidade.city }} - {{ unidade.estado || unidade.state }}</span>
         </div>
         <div class="item-empresa company-item">
-          <span class="rotulo-c c-label">Responsável Legal / Jurídico</span>
-          <span class="valor-c c-val">{{ unidadeAtual().gerenteResponsavel || unidadeAtual().responsibleManager }}</span>
+          <span class="rotulo-c c-label">Responsável informado</span>
+          <span class="valor-c c-val">{{ unidade.gerenteResponsavel || unidade.responsibleManager }}</span>
         </div>
       </div>
     </div>
 
     <div class="resumo-executivo exec-summary">
       <div class="caixa-metrica-resumo summary-metric-box">
-        <span class="numero-metrica metric-num">{{ unidadeAtual().pontuacaoConformidade ?? unidadeAtual().complianceScore }}%</span>
-        <span class="rotulo-metrica metric-label">Score de Regularidade</span>
+        <span class="numero-metrica metric-num">{{ unidade.pontuacaoConformidade ?? unidade.complianceScore }}%</span>
+        <span class="rotulo-metrica metric-label">Indicador interno</span>
       </div>
       <div class="caixa-metrica-resumo summary-metric-box">
         <span class="numero-metrica metric-num">{{ licencasDaUnidade().length }}</span>
-        <span class="rotulo-metrica metric-label">Licenças Válidas Anexadas</span>
+        <span class="rotulo-metrica metric-label">Documentos selecionados</span>
       </div>
       <div class="caixa-metrica-resumo summary-metric-box">
-        <span class="numero-metrica metric-num">{{ (unidadeAtual().contagemAtivos?.total ?? unidadeAtual().assetsCount?.total) || 0 }}</span>
-        <span class="rotulo-metrica metric-label">Ativos Físicos Inspecionados</span>
-      </div>
-      <div class="caixa-metrica-resumo summary-metric-box">
-        <span class="numero-metrica text-regular metric-num">ZERO</span>
-        <span class="rotulo-metrica metric-label">Autuações Pendentes</span>
+        <span class="numero-metrica metric-num">{{ (unidade.contagemAtivos?.total ?? unidade.assetsCount?.total) || 0 }}</span>
+        <span class="rotulo-metrica metric-label">Ativos cadastrados</span>
       </div>
     </div>
 
     <div class="secao-dossie dossier-section">
       <h3 class="titulo-secao section-heading">
         <span class="material-symbols-rounded icon-sm text-primary">fact_check</span>
-        1. Relação Oficial de Alvarás, Licenças e Laudos Técnicos
+        Alvarás, licenças e laudos cadastrados
       </h3>
 
       <div class="tabela-dossie-responsiva dossier-table-wrap">
@@ -109,8 +105,8 @@
               <th>Órgão Expedidor</th>
               <th>Nº Registro / Protocolo</th>
               <th>Data de Emissão</th>
-              <th>Validade Oficial</th>
-              <th>Status Legal</th>
+              <th>Validade informada</th>
+              <th>Status no Licenfy</th>
             </tr>
           </thead>
           <tbody>
@@ -128,7 +124,7 @@
               <td>
                 <span class="selo-status badge-status" [ngClass]="prefs.statusClass(lic.status)">
                   <span class="ponto-status status-dot" [ngClass]="lic.status"></span>
-                  {{ lic.status === 'regular' ? 'Vigente' : 'Em Renovação' }}
+                  {{ prefs.statusLabel(lic.status) }}
                 </span>
               </td>
             </tr>
@@ -137,51 +133,13 @@
       </div>
     </div>
 
-    <div class="secao-dossie dossier-section">
-      <h3 class="titulo-secao section-heading">
-        <span class="material-symbols-rounded icon-sm text-primary">precision_manufacturing</span>
-        2. Certificação de Manutenção Preventiva dos Ativos de Segurança
-      </h3>
-
-      <div class="caixa-operacional operational-box">
-        <p class="descricao-operacional op-desc">
-          Todos os equipamentos críticos vinculados às licenças municipais e estaduais possuem plano de manutenção preventiva contínuo e etiquetas patrimoniais com QR Code registradas na plataforma:
-        </p>
-        <div class="grade-operacional op-grid">
-          <div class="cartao-operacional op-card">
-            <div class="titulo-cartao-operacional op-card-title">Sistemas de Prevenção e Combate a Incêndio</div>
-            <div class="item-cartao-operacional op-card-item"><strong>Recarga de Extintores:</strong> Teste hidrostático e anéis de identificação atualizados.</div>
-            <div class="item-cartao-operacional op-card-item"><strong>Pressurização dos Hidrantes:</strong> Válvulas e mangueiras com laudo de teste estanque.</div>
-          </div>
-          <div class="cartao-operacional op-card">
-            <div class="titulo-cartao-operacional op-card-title">Instalações Elétricas & SPDA (Para-raios)</div>
-            <div class="item-cartao-operacional op-card-item"><strong>Laudo NR-10:</strong> Termografia de painéis e aterramento conformes à norma regulamentadora.</div>
-            <div class="item-cartao-operacional op-card-item"><strong>Geradores de Emergência:</strong> Bateria de testes de partida quinzenais registrada.</div>
-          </div>
-        </div>
-      </div>
-    </div>
-
     <div class="rodape-dossie dossier-footer">
-      <div class="assinaturas-rodape footer-signatures">
-        <div class="coluna-assinatura signature-col">
-          <div class="linha-assinatura sig-line"></div>
-          <div class="nome-assinatura sig-name">{{ unidadeAtual().gerenteResponsavel || unidadeAtual().responsibleManager }}</div>
-          <div class="cargo-assinatura sig-title">Gestor Responsável de Compliance & Operações</div>
-        </div>
-
-        <div class="coluna-assinatura signature-col">
-          <div class="linha-assinatura sig-line"></div>
-          <div class="nome-assinatura sig-name">Licenfy Automated Compliance Engine</div>
-          <div class="cargo-assinatura sig-title">Assinatura Digital ICP-Brasil Padrão PAdES</div>
-        </div>
-      </div>
-
-      <div class="rodape-hash-dossie dossier-hash-footer">
-        Dossiê emitido em ambiente seguro pela plataforma Licenfy. Código de validação pública: <strong>{{ hashVerificacao() }}</strong>. Documento válido para exibição a auditores e autoridades públicas fiscalizadoras.
-      </div>
+      <p>Relatório informativo com dados cadastrados no Licenfy. Consulte os documentos originais para comprovar emissão, validade ou conformidade.</p>
     </div>
   </div>
+  } @else {
+    <p class="nao-imprimir no-print">Cadastre uma unidade para gerar o relatório.</p>
+  }
 
   <div class="cartao-historico-dossie nao-imprimir dossier-history-card no-print">
     <div>
