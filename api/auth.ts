@@ -2,7 +2,7 @@ import type { IncomingMessage, ServerResponse } from 'node:http';
 
 const { createHash, randomBytes } = require('node:crypto');
 const { SESSION_COOKIE, cookie, read, seal, session } = require('../server/session.cjs');
-const { hasAccount, registerAccount } = require('../server/workspaces.cjs');
+const { hasAccount } = require('../server/workspaces.cjs');
 const passwordAuth = require('../server/password-auth.cjs');
 const OAUTH_COOKIE = '__Host-licenfy-oauth';
 const TRANSACTION_AGE = 600;
@@ -24,7 +24,7 @@ function formData(req: AuthRequest) {
     : req.body as Record<string, unknown> | undefined;
 }
 
-async function passwordLogin(req: AuthRequest, res: ServerResponse, signup: boolean) {
+async function passwordLogin(req: AuthRequest, res: ServerResponse) {
   if (!process.env.APP_ORIGIN || req.headers.origin !== process.env.APP_ORIGIN) {
     return json(res, 403, { message: 'Origem não autorizada.' });
   }
@@ -33,30 +33,27 @@ async function passwordLogin(req: AuthRequest, res: ServerResponse, signup: bool
   try {
     const body = formData(req);
     const email = typeof body?.email === 'string' ? body.email.trim().toLowerCase() : '';
-    const name = typeof body?.name === 'string' ? body.name.trim() : '';
     const password = typeof body?.password === 'string' ? body.password : '';
-    if (signup && body?.privacyAcknowledged !== 'yes') return redirect(res, '/?login=privacidade');
     if (email.length > 254 || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)
-      || !password || Buffer.byteLength(password) > 256
-      || (signup && (!name || name.length > 100 || password.length < 12))) {
-      return redirect(res, signup ? '/?login=manual-dados' : '/?login=manual-invalido');
+      || !password || Buffer.byteLength(password) > 256) {
+      return redirect(res, '/?login=manual-invalido');
     }
 
     const forwarded = req.headers['x-vercel-forwarded-for'];
     const ip = typeof forwarded === 'string' ? forwarded.split(',')[0].trim() : 'unknown';
     if (!await passwordAuth.incrementAttempts(ip || 'unknown')) {
       res.setHeader('Retry-After', '900');
-      return redirect(res, signup ? '/?login=manual-limite-cadastro' : '/?login=manual-limite');
+      return redirect(res, '/?login=manual-limite');
     }
 
-    const user = signup ? await passwordAuth.signUp(email, name, password) : await passwordAuth.signIn(email, password);
-    if (!user) return redirect(res, signup ? '/?login=manual-dados' : '/?login=manual-invalido');
+    const user = await passwordAuth.signIn(email, password);
+    if (!user) return redirect(res, '/?login=manual-invalido');
     const value = seal('session', { user: { ...user, trial: true, teste: true } }, SESSION_AGE);
     res.setHeader('Set-Cookie', cookie(SESSION_COOKIE, value, SESSION_AGE));
     return redirect(res, '/?login=ok');
   } catch (error) {
     logAuthFailure('password', error);
-    return redirect(res, signup ? '/?login=manual-erro-cadastro' : '/?login=manual-erro');
+    return redirect(res, '/?login=manual-erro');
   }
 }
 
@@ -72,8 +69,12 @@ async function auth(req: AuthRequest, res: ServerResponse) {
   const query = new URL(req.url || '/', 'https://licenfy.invalid').searchParams;
   const action = query.get('action');
 
-  if (action === 'password' || action === 'password-signup') {
-    return passwordLogin(req, res, action === 'password-signup');
+  if (action === 'signup' || action === 'password-signup') {
+    return redirect(res, '/?login=contato');
+  }
+
+  if (action === 'password') {
+    return passwordLogin(req, res);
   }
 
   if (action === 'session' && req.method === 'GET') {
@@ -89,8 +90,7 @@ async function auth(req: AuthRequest, res: ServerResponse) {
     return res.writeHead(204).end();
   }
 
-  const signup = action === 'signup' && req.method === 'POST';
-  if (!signup && (req.method !== 'GET' || (action !== 'google' && action !== 'callback'))) {
+  if (req.method !== 'GET' || (action !== 'google' && action !== 'callback')) {
     return json(res, 405, { message: 'Operação não permitida.' });
   }
 
@@ -102,13 +102,7 @@ async function auth(req: AuthRequest, res: ServerResponse) {
     if (origin.origin !== APP_ORIGIN || origin.protocol !== 'https:') throw new Error('OAuth origin');
     const callback = origin.origin + '/api/auth?action=callback';
 
-    if (signup) {
-      if (req.headers.origin !== origin.origin) return json(res, 403, { message: 'Origem não autorizada.' });
-      const body = formData(req);
-      if (body?.privacyAcknowledged !== 'yes') return redirect(res, '/?login=privacidade');
-    }
-
-    if (action === 'google' || signup) {
+    if (action === 'google') {
       const state = randomBytes(32).toString('base64url');
       const verifier = randomBytes(32).toString('base64url');
       const params = new URLSearchParams({
@@ -120,7 +114,7 @@ async function auth(req: AuthRequest, res: ServerResponse) {
         code_challenge: createHash('sha256').update(verifier).digest('base64url'),
         code_challenge_method: 'S256',
       });
-      res.setHeader('Set-Cookie', cookie(OAUTH_COOKIE, seal('oauth', { state, verifier, signup }, TRANSACTION_AGE), TRANSACTION_AGE));
+      res.setHeader('Set-Cookie', cookie(OAUTH_COOKIE, seal('oauth', { state, verifier }, TRANSACTION_AGE), TRANSACTION_AGE));
       return redirect(res, 'https://accounts.google.com/o/oauth2/v2/auth?' + params);
     }
 
@@ -163,11 +157,7 @@ async function auth(req: AuthRequest, res: ServerResponse) {
     const value = seal('session', { user }, SESSION_AGE);
     if (value.length > 3900) throw new Error('OAuth profile size');
     stage = 'google-account';
-    if (transaction.signup === true) {
-      await registerAccount(sub);
-    } else if (!await hasAccount(sub)) {
-      return redirect(res, '/?login=criar');
-    }
+    if (!await hasAccount(sub)) return redirect(res, '/?login=contato');
     res.setHeader('Set-Cookie', [cookie(OAUTH_COOKIE, '', 0), cookie(SESSION_COOKIE, value, SESSION_AGE)]);
     return redirect(res, '/?login=ok');
   } catch (error) {

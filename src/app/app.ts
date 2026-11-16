@@ -74,15 +74,13 @@ export class App {
     const result = url.searchParams.get('login');
     const passwordResults = {
       'manual-invalido': 'credentials',
-      'manual-dados': 'signup',
       'manual-limite': 'rate',
-      'manual-limite-cadastro': 'rate',
       'manual-erro': 'unavailable',
-      'manual-erro-cadastro': 'unavailable',
     } as const;
     const passwordError = result && Object.hasOwn(passwordResults, result)
       ? passwordResults[result as keyof typeof passwordResults] : null;
-    if (passwordError || result === 'ok' || result === 'erro' || result === 'criar' || result === 'privacidade') {
+    const needsContact = result === 'contato' || result === 'criar' || result === 'privacidade';
+    if (passwordError || result === 'ok' || result === 'erro' || needsContact) {
       url.searchParams.delete('login');
       window.history.replaceState(null, '', url);
     }
@@ -90,12 +88,11 @@ export class App {
     void this.auth.restaurarSessao().then(authenticated => {
       if (authenticated) void this.workspace.load();
       if (passwordError) {
-        if (result === 'manual-dados' || result?.endsWith('-cadastro')) this.service.openSignup();
-        else this.service.openLogin();
+        this.service.openLogin();
         this.service.erroSenha.set(passwordError);
-      } else if (result === 'criar' || result === 'privacidade') {
-        this.service.openSignup();
-        this.service.avisoCadastro.set(result === 'criar' ? 'required' : 'notice');
+      } else if (needsContact) {
+        this.service.openLogin();
+        this.service.acessoPorContato.set(true);
       } else if (result === 'erro' || (result === 'ok' && !authenticated)) {
         this.service.openLogin();
         this.service.erroAutenticacao.set(true);

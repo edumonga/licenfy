@@ -28,7 +28,6 @@ export class PaginaInicialComponente implements OnInit, OnDestroy {
   readonly autenticacao = inject(ServicoAutenticacao);
   readonly prefs = inject(PreferenciasService);
 
-  readonly modalDemonstracaoAberto = signal<boolean>(false);
   readonly cabecalhoFlutuante = signal<boolean>(false);
 
   readonly slides: SlideImagem[] = [
@@ -62,7 +61,6 @@ export class PaginaInicialComponente implements OnInit, OnDestroy {
   private temporizadorCarrossel: any = null;
 
   get service() { return this.servico; }
-  get isDemoModalOpen() { return this.modalDemonstracaoAberto; }
   get isHeaderFloating() { return this.cabecalhoFlutuante; }
   get currentSlideIndex() { return this.indiceSlideAtual; }
   get idioma() { return this.prefs.idioma; }
@@ -115,16 +113,6 @@ export class PaginaInicialComponente implements OnInit, OnDestroy {
   }
   setSlide(index: number) { this.definirSlide(index); }
 
-  abrirModalDemonstracao() {
-    this.modalDemonstracaoAberto.set(true);
-  }
-  openDemoModal() { this.abrirModalDemonstracao(); }
-
-  fecharModalDemonstracao() {
-    this.modalDemonstracaoAberto.set(false);
-  }
-  closeDemoModal() { this.fecharModalDemonstracao(); }
-
   abrirLogin() {
     if (this.autenticacao.user()) {
       this.servico.definirVisao('app');
@@ -137,10 +125,6 @@ export class PaginaInicialComponente implements OnInit, OnDestroy {
   alternarIdioma() { this.prefs.alternarIdioma(); }
   toggleLanguage() { this.alternarIdioma(); }
 
-  abrirCadastro() {
-    this.servico.abrirCadastro();
-  }
-  openSignup() { this.abrirCadastro(); }
 
   abrirCheckout(plano: 'monthly' | 'annual') { this.servico.abrirCheckout(plano); }
 

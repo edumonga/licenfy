@@ -3982,3 +3982,8 @@
     margin-bottom: -30px;
   }
 }
+a.btn-primary-pill,
+a.btn-cta-blue,
+a.footer-cta-primary {
+  text-decoration: none;
+}

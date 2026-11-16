@@ -19,9 +19,9 @@
           <small>{{ prefs.t(annual() ? 'landing.annualPeriod' : 'landing.monthlyPeriod') }}</small>
         </strong>
       </div>
-      <button type="button" class="checkout-submit" (click)="service.openSignup()">
-        {{ prefs.t('checkout.trial') }}
-      </button>
+      <a class="checkout-submit" [href]="service.whatsappUrl" target="_blank" rel="noopener noreferrer">
+        {{ prefs.t('common.whatsappContact') }}
+      </a>
     </div>
   </section>
 </main>

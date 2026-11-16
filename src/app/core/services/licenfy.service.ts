@@ -26,11 +26,11 @@ export class ServicoLicenfy {
   readonly currentView = this.visaoAtual;
   readonly planoCheckout = signal<'monthly' | 'annual'>('annual');
 
-  readonly modoAutenticacao = signal<'login' | 'signup'>('login');
-  readonly authMode = this.modoAutenticacao;
+  readonly whatsappUrl = 'https://wa.me/5571982389118?text='
+    + encodeURIComponent('Olá! Tenho interesse em conhecer o Licenfy.');
   readonly erroAutenticacao = signal(false);
-  readonly avisoCadastro = signal<'required' | 'notice' | null>(null);
-  readonly erroSenha = signal<'credentials' | 'signup' | 'rate' | 'unavailable' | null>(null);
+  readonly acessoPorContato = signal(false);
+  readonly erroSenha = signal<'credentials' | 'rate' | 'unavailable' | null>(null);
 
   readonly unidadeSelecionadaId = signal<string>('all');
   readonly selectedBranchId = this.unidadeSelecionadaId;
@@ -49,28 +49,13 @@ export class ServicoLicenfy {
     this.definirVisao('checkout');
   }
 
-  definirModoAutenticacao(modo: 'login' | 'signup') {
-    this.modoAutenticacao.set(modo);
-  }
-  setAuthMode(m: 'login' | 'signup') { this.definirModoAutenticacao(m); }
-
   abrirLogin() {
     this.erroSenha.set(null);
-    this.avisoCadastro.set(null);
+    this.acessoPorContato.set(false);
     this.erroAutenticacao.set(false);
-    this.modoAutenticacao.set('login');
     this.definirVisao('auth');
   }
   openLogin() { this.abrirLogin(); }
-
-  abrirCadastro() {
-    this.erroSenha.set(null);
-    this.avisoCadastro.set(null);
-    this.erroAutenticacao.set(false);
-    this.modoAutenticacao.set('signup');
-    this.definirVisao('auth');
-  }
-  openSignup() { this.abrirCadastro(); }
 
   readonly unidades = signal<Unidade[]>([
     {

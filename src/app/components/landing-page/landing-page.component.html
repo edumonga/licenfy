@@ -21,10 +21,10 @@
         {{ prefs.t('header.signin') }}
       </button>
 
-      <button class="btn-primary-pill header-demo-btn" (click)="openDemoModal()" [title]="prefs.t('header.bookDemo')">
+      <a class="btn-primary-pill header-demo-btn" [href]="servico.whatsappUrl" target="_blank" rel="noopener noreferrer" [title]="prefs.t('header.bookDemo')">
         <span class="btn-pill-text-desktop">{{ prefs.t('header.bookDemo') }}</span>
-        <span class="btn-pill-text-mobile">Demo</span>
-      </button>
+        <span class="btn-pill-text-mobile">WhatsApp</span>
+      </a>
     </div>
 
   </div>
@@ -46,10 +46,10 @@
       </p>
 
       <div class="hero-cta-group">
-        <button class="btn-cta-blue" (click)="openDemoModal()">
+        <a class="btn-cta-blue" [href]="servico.whatsappUrl" target="_blank" rel="noopener noreferrer">
           <span>{{ prefs.t('header.bookDemo') }}</span>
           <span class="material-symbols-rounded arrow-icon">north_east</span>
-        </button>
+        </a>
 
       </div>
 
@@ -305,10 +305,10 @@
     <h2>{{ prefs.t('landing.footerTitle') }}</h2>
     <p>{{ prefs.t('landing.footerSub') }}</p>
     <div class="footer-cta-actions">
-      <button class="footer-cta-primary" (click)="openDemoModal()">
+      <a class="footer-cta-primary" [href]="servico.whatsappUrl" target="_blank" rel="noopener noreferrer">
         {{ prefs.t('header.bookDemo') }}
         <span class="material-symbols-rounded">arrow_forward</span>
-      </button>
+      </a>
     </div>
   </div>
 
@@ -349,8 +349,8 @@
           <li><a href="#modulos">{{ prefs.t('landing.footerLicenseAutomation') }}</a></li>
           <li><a href="#modulos">{{ prefs.t('landing.footerAssetManagement') }}</a></li>
           <li><a href="#planos">{{ prefs.t('landing.footerRisk') }}</a></li>
-          <li><a href="#" (click)="$event.preventDefault(); openDemoModal()">{{ prefs.t('common.enterpriseNetworks') }}</a></li>
-          <li><a href="#" (click)="$event.preventDefault(); openDemoModal()">{{ prefs.t('landing.footerEnterprise') }}</a></li>
+          <li><a [href]="servico.whatsappUrl" target="_blank" rel="noopener noreferrer">{{ prefs.t('common.enterpriseNetworks') }}</a></li>
+          <li><a [href]="servico.whatsappUrl" target="_blank" rel="noopener noreferrer">{{ prefs.t('landing.footerEnterprise') }}</a></li>
         </ul>
       </div>
 
@@ -358,7 +358,7 @@
         <h4 class="footer-col-title">{{ prefs.t('landing.contact') }}</h4>
         <ul class="footer-links">
           <li><a href="tel:+5571982389118">(71) 98238-9118</a></li>
-          <li><a href="#" (click)="$event.preventDefault(); openDemoModal()">{{ prefs.t('landing.scheduleConsultant') }}</a></li>
+          <li><a [href]="servico.whatsappUrl" target="_blank" rel="noopener noreferrer">{{ prefs.t('landing.scheduleConsultant') }}</a></li>
         </ul>
       </div>
     </div>
@@ -379,32 +379,3 @@
     </div>
   </footer>
 </section>
-
-<!-- Modal -->
-@if (isDemoModalOpen()) {
-  <div class="demo-modal-overlay" (click)="closeDemoModal()">
-    <div class="demo-modal-box" (click)="$event.stopPropagation()">
-      <div class="modal-header">
-        <div class="modal-title-wrap">
-          <span class="material-symbols-rounded text-primary">calendar_month</span>
-          <h3>{{ prefs.t('landing.modalTitle') }}</h3>
-        </div>
-        <button class="modal-close" (click)="closeDemoModal()">
-          <span class="material-symbols-rounded">close</span>
-        </button>
-      </div>
-
-      <div class="modal-body">
-        <p class="modal-intro">
-          {{ prefs.t('landing.modalIntro') }}
-        </p>
-
-        <div class="modal-actions">
-          <button type="button" class="btn-cta-blue w-full" (click)="openSignup()">
-            {{ prefs.t('checkout.trial') }}
-          </button>
-        </div>
-      </div>
-    </div>
-  </div>
-}

@@ -1,6 +1,6 @@
-const { createHmac, randomBytes, scrypt, timingSafeEqual } = require('node:crypto');
+const { createHmac, scrypt, timingSafeEqual } = require('node:crypto');
 const { promisify } = require('node:util');
-const { withWorkspace, privacyNoticeVersion } = require('./workspaces.cjs');
+const { withWorkspace } = require('./workspaces.cjs');
 
 const deriveKey = promisify(scrypt);
 const dummySalt = '0'.repeat(32);
@@ -43,26 +43,4 @@ async function signIn(email, password) {
     : null;
 }
 
-async function signUp(email, name, password) {
-  const id = 'manual-' + randomBytes(16).toString('hex');
-  const salt = randomBytes(16).toString('hex');
-  const key = await hashPassword(password, salt);
-  try {
-    await withWorkspace(id, async client => {
-      await client.query(
-        'insert into licenfy.accounts (owner_id, privacy_notice_version) values ($1, $2)',
-        [id, privacyNoticeVersion],
-      );
-      await client.query(
-        'insert into licenfy.password_accounts (owner_id, email, name, salt, password_hash) values ($1, $2, $3, $4, $5)',
-        [id, email, name, salt, key.toString('hex')],
-      );
-    });
-    return { id, nome: name, email };
-  } catch (error) {
-    if (error.code === '23505' && error.constraint === 'password_accounts_email_key') return null;
-    throw error;
-  }
-}
-
-module.exports = { incrementAttempts, signIn, signUp };
+module.exports = { incrementAttempts, signIn };

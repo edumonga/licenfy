@@ -57,7 +57,7 @@ O OCR aceita PDF, JPG e PNG de até 3 MB. Para liberar o OCR em escala, adicione
 
 O projeto `licenfy` usa o Supabase Free em São Paulo. Os esquemas em [supabase/workspaces.sql](supabase/workspaces.sql) e [supabase/accounts.sql](supabase/accounts.sql) foram aplicados ao projeto nessa ordem. Cada identidade Google tem um espaço de trabalho privado. O banco bloqueia acesso direto dos papéis da Data API e limita o papel do backend à identidade configurada dentro da transação.
 
-O cadastro com Google ou com e-mail e senha registra a data e a versão da política de privacidade apresentada em `/privacidade`. Depois do cadastro, a pessoa entra pelo método escolhido. Contas com o mesmo e-mail, criadas por métodos diferentes, têm espaços separados. A migração [supabase/password_accounts.sql](supabase/password_accounts.sql) adiciona a autenticação com senha ao banco.
+O site encaminha pedidos de acesso ao WhatsApp do Licenfy e mantém o login para contas existentes por Google ou e-mail e senha. Contas com o mesmo e-mail, criadas por métodos diferentes, têm espaços separados. A migração [supabase/password_accounts.sql](supabase/password_accounts.sql) adiciona a autenticação com senha ao banco.
 
 No Supabase, crie uma credencial de login dedicada e conceda a ela o papel `licenfy_app`. Guarde o valor de conexão de **Transaction pooler** na variável de servidor `LICENFY_DATABASE_URL`, com o usuário dedicado e `sslmode=verify-full`. Configure o certificado CA fornecido pelo Supabase em `LICENFY_DATABASE_CA` se o pooler exigir uma CA explícita. Use segredos do ambiente de hospedagem para o URI, a senha e o segredo de sessão.
 
