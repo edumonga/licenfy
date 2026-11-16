@@ -500,6 +500,5 @@ export const TRADUCOES_ES: Record<string, string> = {
   'common.createError': 'No se pudo crear la cuenta.',
   'common.demoName': 'Ej.: Carlos Eduardo',
   'common.demoEmail': 'carlos@empresa.com',
-  'common.demoPhone': '(555) 999-8888',
   'landing.oneClick': '1 CLIC',
 };

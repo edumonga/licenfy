@@ -572,7 +572,6 @@ const TRADUCOES: Record<string, Traducao> = {
   'common.createError': { pt: 'Não foi possível criar a conta.', en: 'Could not create the account.' },
   'common.demoName': { pt: 'Ex: Carlos Eduardo', en: 'E.g.: Alex Johnson' },
   'common.demoEmail': { pt: 'carlos@empresa.com.br', en: 'alex@company.com' },
-  'common.demoPhone': { pt: '(11) 99999-8888', en: '(555) 999-8888' },
   'landing.oneClick': { pt: '1-CLIQUE', en: '1-CLICK' },
 
   // Estados e rótulos auxiliares

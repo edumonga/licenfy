@@ -86,8 +86,8 @@ export class ServicoLicenfy {
       gerenteResponsavel: 'Mariana Silveira (Jurídico & Compliance)',
       responsibleManager: 'Mariana Silveira (Jurídico & Compliance)',
       responsaveis: [
-        { id: 'resp-sp-1', nome: 'Mariana Silveira', name: 'Mariana Silveira', cargo: 'Jurídico & Compliance', role: 'Jurídico & Compliance', email: 'mariana@grupoalpha.com.br', telefone: '+55 11 98877-6655', phone: '+55 11 98877-6655', principal: true, primary: true },
-        { id: 'resp-sp-2', nome: 'Rafael Moura', name: 'Rafael Moura', cargo: 'Facilities', role: 'Facilities', email: 'rafael.moura@grupoalpha.com.br', telefone: '+55 11 98810-4421', phone: '+55 11 98810-4421' }
+        { id: 'resp-sp-1', nome: 'Mariana Silveira', name: 'Mariana Silveira', cargo: 'Jurídico & Compliance', role: 'Jurídico & Compliance', email: 'mariana@grupoalpha.com.br', principal: true, primary: true },
+        { id: 'resp-sp-2', nome: 'Rafael Moura', name: 'Rafael Moura', cargo: 'Facilities', role: 'Facilities', email: 'rafael.moura@grupoalpha.com.br' }
       ],
       pontuacaoConformidade: 94,
       complianceScore: 94,
